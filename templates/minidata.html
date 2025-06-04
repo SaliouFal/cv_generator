@@ -1,0 +1,85 @@
+<!doctype html><html lang="fr"><head>
+  <meta charset="utf-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Infos minimum pour ton CV</title>
+</head><body class="p-4">
+<h2>Étape 1 : informations essentielles</h2>
+
+<form method="post" enctype="multipart/form-data">
+  <div class="row g-3">
+
+    <div class="col-md-6">
+      <label>Poste visé</label>
+      <input name="target_role" class="form-control" required>
+    </div>
+
+    <div class="col-md-3">
+      <label>Prénom</label>
+      <input name="first_name" class="form-control" required>
+    </div>
+    <div class="col-md-3">
+      <label>Nom</label>
+      <input name="last_name" class="form-control" required>
+    </div>
+
+    <div class="col-md-6">
+      <label>E-mail</label>
+      <input type="email" name="email" class="form-control" required>
+    </div>
+    <div class="col-md-6">
+      <label>Téléphone</label>
+      <input name="phone" class="form-control" required>
+    </div>
+
+    <div class="col-md-6">
+      <label>Photo (optionnel)</label>
+      <input type="file" name="photo" class="form-control">
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  <h4>Expériences — au minimum intitulé + dates</h4>
+  <div id="jobs-wrapper"></div>
+  <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addJob()">+ Ajouter une expérience</button>
+
+  <hr class="my-4">
+
+  <h4>Éducation — diplôme + établissement + dates</h4>
+  <div id="edu-wrapper"></div>
+  <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addEdu()">+ Ajouter une formation</button>
+
+  <button class="btn btn-primary mt-4">Construire mon CV</button>
+</form>
+
+<script>
+let jobIdx = 0, eduIdx = 0;
+
+function addJob(){
+  const div = document.createElement('div');
+  div.className = "border rounded p-2 mb-2";
+  div.innerHTML = `
+    <input class="form-control my-1" name="jobs[${jobIdx}][title]" placeholder="Intitulé de poste" required>
+    <input class="form-control my-1" name="jobs[${jobIdx}][company]" placeholder="Entreprise ou organisation">
+    <input class="form-control my-1" name="jobs[${jobIdx}][dates]" placeholder="Dates (ex : 2022–2024)" required>
+  `;
+  document.getElementById('jobs-wrapper').appendChild(div);
+  jobIdx++;
+}
+
+function addEdu(){
+  const div = document.createElement('div');
+  div.className = "border rounded p-2 mb-2";
+  div.innerHTML = `
+    <input class="form-control my-1" name="degrees[${eduIdx}][degree]" placeholder="Diplôme" required>
+    <input class="form-control my-1" name="degrees[${eduIdx}][institution]" placeholder="Établissement" required>
+    <input class="form-control my-1" name="degrees[${eduIdx}][dates]" placeholder="Dates (ex : 2019–2022)" required>
+  `;
+  document.getElementById('edu-wrapper').appendChild(div);
+  eduIdx++;
+}
+
+// ajoute une ligne par défaut
+addJob(); addEdu();
+</script>
+</body></html>

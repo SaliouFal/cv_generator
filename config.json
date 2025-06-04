@@ -1,0 +1,21 @@
+[
+  {
+    "id": "classic",
+    "name": "Classic Clean",
+    "image": "cv_images/classic.png",
+    "latex_path": "latex_templates/classic/main.tex"
+  },
+  {
+    "id": "modern",
+    "name": "Modern Minimal",
+    "image": "cv_images/modern.png",
+    "latex_path": "latex_templates/modern/main.tex"
+  },
+
+  {
+    "id": "cl",
+    "name": "Classic Simple",
+    "image": "cv_images/cl.png",
+    "latex_path": "latex_templates/cl/main.tex"
+  }
+]

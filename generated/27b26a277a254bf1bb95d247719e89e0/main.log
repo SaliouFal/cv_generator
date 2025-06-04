@@ -1,0 +1,773 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.5.29)  4 JUN 2025 01:43
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**./main.tex
+(main.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-04>
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/base\size11.clo
+File: size11.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count187
+\c@section=\count188
+\c@subsection=\count189
+\c@subsubsection=\count190
+\c@paragraph=\count191
+\c@subparagraph=\count192
+\c@figure=\count193
+\c@table=\count194
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks17
+\inpenc@posthook=\toks18
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.sty
+Package: babel 2024/01/07 v24.1 The Babel package
+\babel@savecnt=\count195
+\U@D=\dimen141
+\l@unhyphenated=\language79
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
+\bbl@readstream=\read2
+\bbl@dirlevel=\count196
+
+*************************************
+* Local config file bblopts.cfg used
+*
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/arabi\bblopts.cfg
+File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of
+ babel
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/babel-english\british.l
+df
+Language: british 2017/06/06 v3.3r English support from the babel system
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/babel-english\english.l
+df
+Language: english 2017/06/06 v3.3r English support from the babel system
+Package babel Info: Hyphen rules for 'canadian' set to \l@english
+(babel)             (\language0). Reported on input line 102.
+Package babel Info: Hyphen rules for 'australian' set to \l@ukenglish
+(babel)             (\language73). Reported on input line 105.
+Package babel Info: Hyphen rules for 'newzealand' set to \l@ukenglish
+(babel)             (\language73). Reported on input line 108.
+)))
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/generic/babel/locale/en\babel
+-british.tex
+Package babel Info: Importing font and identification data for british
+(babel)             from babel-en-GB.ini. Reported on input line 11.
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks19
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+))
+\Gm@cnth=\count197
+\Gm@cntv=\count198
+\c@Gm@tempcnt=\count199
+\Gm@bindingoffset=\dimen142
+\Gm@wd@mp=\dimen143
+\Gm@odd@mp=\dimen144
+\Gm@even@mp=\dimen145
+\Gm@layoutwidth=\dimen146
+\Gm@layoutheight=\dimen147
+\Gm@layouthoffset=\dimen148
+\Gm@layoutvoffset=\dimen149
+\Gm@dimlist=\toks20
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg))
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/setspace\setspace.sty
+Package: setspace 2022/12/04 v6.7b set line spacing
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/fira\FiraSans.sty
+Package: FiraSans 2022/09/17 (Bob Tennent and autoinst) Style file for Fira San
+s fonts.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifxetex.sty
+Package: ifxetex 2019/10/25 v0.7 ifxetex legacy package. Use iftex instead.
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifluatex.sty
+Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/xkeyval\xkeyval.sty
+Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkeyval.tex
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkvutils.tex
+\XKV@toks=\toks21
+\XKV@tempa@toks=\toks22
+)
+\XKV@depth=\count266
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+)) (C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/base\textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/fontaxes\fontaxes.sty
+Package: fontaxes 2025-05-17 v2.0 Font selection axes (deprecated)
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/figureversions\figureve
+rsions.sty
+
+LaTeX Warning: You have requested release `2024-11-01' of LaTeX,
+               but only release `2023-11-01' is available.
+
+Package: figureversions 2025-04-29 v1.0.1 Figure versions
+! Undefined control sequence.
+<argument> \prop_gput_if_not_in:NnV 
+                                    \g__figureversions_figurestyles_proporti...
+l.435 ...figureversions_text_str { OsF  } { TOsF }
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.435 ...figureversions_text_str { OsF  } { TOsF }
+                                                  
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Undefined control sequence.
+<argument> \prop_gput_if_not_in:NnV 
+                                    \g__figureversions_figurestyles_tabular_...
+l.435 ...figureversions_text_str { OsF  } { TOsF }
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+<argument> \prop_gput_if_not_in:NnV 
+                                    \g__figureversions_figurestyles_proporti...
+l.436 ..._figureversions_lining_str { LF } { TLF }
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+<argument> \prop_gput_if_not_in:NnV 
+                                    \g__figureversions_figurestyles_tabular_...
+l.436 ..._figureversions_lining_str { LF } { TLF }
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\figureversions_new_figureversion:nn ...ot_in:Nnn 
+                                                  \g__figureversions_figurev...
+l.437 ..._figureversion:nn { text } { \txfigures }
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Package figureversions Warning: Ignoring unknown figure style `text' on line
+(figureversions)                437
+
+! Undefined control sequence.
+\figureversions_new_figureversion:nn ...ot_in:Nnn 
+                                                  \g__figureversions_figurev...
+l.438 ...w_figureversion:nn { osf } { \txfigures }
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Package figureversions Warning: Ignoring unknown figure style `text' on line
+(figureversions)                438
+
+! Undefined control sequence.
+\figureversions_new_figureversion:nn ...ot_in:Nnn 
+                                                  \g__figureversions_figurev...
+l.439 ...igureversion:nn { lining } { \lnfigures }
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Package figureversions Warning: Ignoring unknown figure style `lining' on line
+(figureversions)                439
+
+! Undefined control sequence.
+\figureversions_new_figureversion:nn ...ot_in:Nnn 
+                                                  \g__figureversions_figurev...
+l.440 ...ew_figureversion:nn { lf } { \lnfigures }
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Package figureversions Warning: Ignoring unknown figure style `lining' on line
+(figureversions)                440
+
+! Undefined control sequence.
+\figureversions_new_figureversion:nn ...ot_in:Nnn 
+                                                  \g__figureversions_figurev...
+l.442   { \tbfigures \tabularmath }
+                                   
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+LaTeX Font Info:    Trying to load font information for T1+cmr-TLF on input lin
+e 442.
+No file T1cmr-TLF.fd.
+LaTeX Font Info:    Trying to load font information for T1+cmr-TOsF on input li
+ne 442.
+No file T1cmr-TOsF.fd.
+LaTeX Font Info:    Trying to load font information for T1+cmr-LF on input line
+ 442.
+No file T1cmr-LF.fd.
+LaTeX Font Info:    Trying to load font information for T1+cmr-OsF on input lin
+e 442.
+No file T1cmr-OsF.fd.
+LaTeX Font Info:    Trying to load font information for T1+cmrx on input line 4
+42.
+No file T1cmrx.fd.
+
+! LaTeX Error: Math version `tabular' is not defined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.442   { \tbfigures \tabularmath }
+                                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Undefined control sequence.
+\figureversions_new_figureversion:nn ...ot_in:Nnn 
+                                                  \g__figureversions_figurev...
+l.444   { \tbfigures \tabularmath }
+                                   
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: Math version `tabular' is not defined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.444   { \tbfigures \tabularmath }
+                                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Undefined control sequence.
+\figureversions_new_figureversion:nn ...ot_in:Nnn 
+                                                  \g__figureversions_figurev...
+l.446   { \prfigures \proportionalmath }
+                                        
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 446.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 446.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 446.
+! Undefined control sequence.
+\figureversions_new_figureversion:nn ...ot_in:Nnn 
+                                                  \g__figureversions_figurev...
+l.448   { \prfigures \proportionalmath }
+                                        
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+))
+Overfull \hbox (10.68114pt too wide) in paragraph at lines 435--122
+[]\T1/cmr/m/n/10.95 textOsFtextTOsFliningLFliningTLFtextosflininglftabulartabpr
+oportionalprop 
+ []
+
+! Undefined control sequence.
+<argument> \prop_gput_if_not_in:NnV 
+                                    \g__figureversions_figurestyles_proporti...
+l.248 ...n{figures}{{superior}{proportional}}{Sup}
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.248 ...n{figures}{{superior}{proportional}}{Sup}
+                                                  
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Undefined control sequence.
+<argument> \prop_gput_if_not_in:NnV 
+                                    \g__figureversions_figurestyles_tabular_...
+l.249 ...eption{figures}{{superior}{tabular}}{Sup}
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/microtype\microtype.sty
+Package: microtype 2025/02/11 v3.2a Micro-typographical refinements (RS)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty
+Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count267
+)
+\MT@toks=\toks23
+\MT@tempbox=\box51
+\MT@count=\count268
+LaTeX Info: Redefining \noprotrusionifhmode on input line 1087.
+LaTeX Info: Redefining \leftprotrusion on input line 1088.
+\MT@prot@toks=\toks24
+LaTeX Info: Redefining \rightprotrusion on input line 1107.
+LaTeX Info: Redefining \textls on input line 1449.
+\MT@outer@kern=\dimen150
+LaTeX Info: Redefining \microtypecontext on input line 2053.
+LaTeX Info: Redefining \textmicrotypecontext on input line 2070.
+\MT@listname@count=\count269
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/microtype\microtype-pdf
+tex.def
+File: microtype-pdftex.def 2025/02/11 v3.2a Definitions specific to pdftex (RS)
+
+LaTeX Info: Redefining \lsstyle on input line 944.
+LaTeX Info: Redefining \lslig on input line 944.
+\MT@outer@space=\skip50
+)
+Package microtype Info: Loading configuration file microtype.cfg.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/microtype\microtype.cfg
+File: microtype.cfg 2025/02/11 v3.2a microtype main configuration file (RS)
+)
+LaTeX Info: Redefining \microtypesetup on input line 3065.
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/fontawesome5\fontawesom
+e5.sty
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+Package: expl3 2024-01-04 L3 programming layer (loader) 
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
+tex.def
+File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count270
+\l__pdf_internal_box=\box52
+))
+Package: fontawesome5 2022/05/02 v5.15.4 Font Awesome 5
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/l3keys2e\l3k
+eys2e.sty
+Package: l3keys2e 2023-10-10 LaTeX2e option processing using LaTeX3 keys
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpars
+e.sty
+Package: xparse 2023-10-10 L3 Experimental document command parser
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/fontawesome5\fontawesom
+e5-generic-helper.sty
+Package: fontawesome5-generic-helper 2022/05/02 v5.15.4 non-uTeX helper for fon
+tawesome5
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/fontawesome5\fontawesom
+e5-mapping.def)))
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+Package: xcolor 2023/11/15 v3.01 LaTeX color extensions (UK)
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1350.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1354.
+Package xcolor Info: Model `RGB' extended on input line 1366.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1368.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1371.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1372.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1373.
+) (C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
+fg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+)
+\Gin@req@height=\dimen151
+\Gin@req@width=\dimen152
+)
+LaTeX Font Info:    Trying to load font information for T1+FiraSans-OsF on inpu
+t line 44.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/fira\t1firasans-osf.fd
+File: T1FiraSans-OsF.fd 2019/10/10 (autoinst) Font definitions for T1/FiraSans-
+OsF.
+)
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/m/n' in size <10.95> not availa
+ble
+(Font)              Font shape `T1/FiraSans-OsF/regular/n' tried instead on inp
+ut line 44.
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/regular/n' will be
+(Font)              scaled to size 10.95pt on input line 44.
+No file main.aux.
+\openout1 = `main.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(56.9055pt, 483.69687pt, 56.9055pt)
+* v-part:(T,H,B)=(62.59596pt, 719.85492pt, 62.59596pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=483.69687pt
+* \textheight=719.85492pt
+* \oddsidemargin=-15.36449pt
+* \evensidemargin=-15.36449pt
+* \topmargin=-46.67403pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=11.0pt
+* \footskip=30.0pt
+* \marginparwidth=50.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+\c@mv@tabular=\count271
+\c@mv@boldtabular=\count272
+! Undefined control sequence.
+\__hook begindocument ...}{bold}\IfPackageLoadedT 
+                                                  {fontspec}{\bool_gset_true...
+l.44 \begin{document}
+                     \small
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\__hook begindocument ..._bool }\IfPackageLoadedT 
+                                                  {hyperref}{\pdfstringdefDi...
+l.44 \begin{document}
+                     \small
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\__hook begindocument ...stringdefDisableCommands 
+                                                  {\cs_set_eq:NN \figurevers...
+l.44 \begin{document}
+                     \small
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+LaTeX Info: Redefining \microtypecontext on input line 44.
+Package microtype Info: Applying patch `item' on input line 44.
+Package microtype Info: Applying patch `toc' on input line 44.
+Package microtype Info: Applying patch `eqnum' on input line 44.
+Package microtype Info: Applying patch `footnote' on input line 44.
+Package microtype Info: Applying patch `verbatim' on input line 44.
+LaTeX Info: Redefining \microtypesetup on input line 44.
+Package microtype Info: Generating PDF output.
+Package microtype Info: Character protrusion enabled (level 2).
+Package microtype Info: Using default protrusion set `alltext'.
+Package microtype Info: Automatic font expansion enabled (level 2),
+(microtype)             stretch: 25, shrink: 25, step: 1, non-selected.
+Package microtype Info: Using default expansion set `alltext-nott'.
+LaTeX Info: Redefining \showhyphens on input line 44.
+Package microtype Info: Tracking enabled.
+Package microtype Info: Using default tracking set `smallcaps'.
+Package microtype Info: No adjustment of interword spacing.
+Package microtype Info: No adjustment of character kerning.
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `FiraSans-OsF' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
+ii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count273
+\scratchdimen=\dimen153
+\scratchbox=\box53
+\nofMPsegments=\count274
+\nofMParguments=\count275
+\everyMPshowfont=\toks25
+\MPscratchCnt=\count276
+\MPscratchDim=\dimen154
+\MPnumerator=\count277
+\makeMPintoPDFobject=\count278
+\everyMPtoPDFconversion=\toks26
+)
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
+ase.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
+fg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/m/n' in size <10> not available
+
+(Font)              Font shape `T1/FiraSans-OsF/regular/n' tried instead on inp
+ut line 44.
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/regular/n' will be
+(Font)              scaled to size 10.0pt on input line 44.
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/m/n' in size <24.88> not availa
+ble
+(Font)              Font shape `T1/FiraSans-OsF/regular/n' tried instead on inp
+ut line 49.
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/regular/n' will be
+(Font)              scaled to size 24.88pt on input line 49.
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/b/n' in size <24.88> not availa
+ble
+(Font)              Font shape `T1/FiraSans-OsF/bold/n' tried instead on input 
+line 49.
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/bold/n' will be
+(Font)              scaled to size 24.88pt on input line 49.
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/b/sc' in size <24.88> not avail
+able
+(Font)              Font shape `T1/FiraSans-OsF/bold/sc' tried instead on input
+ line 51.
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/bold/sc' will be
+(Font)              scaled to size 24.88pt on input line 51.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/microtype\mt-cmr.cfg
+File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
+(RS)
+)
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 52.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 52.
+<2883d8ffff7a4b87b28685096b56c64e.png, id=1, 261.97874pt x 374.14781pt>
+File: 2883d8ffff7a4b87b28685096b56c64e.png Graphic file (type png)
+<use 2883d8ffff7a4b87b28685096b56c64e.png>
+Package pdftex.def Info: 2883d8ffff7a4b87b28685096b56c64e.png  used on input li
+ne 54.
+(pdftex.def)             Requested size: 111.2482pt x 158.87654pt.
+LaTeX Font Info:    Trying to load font information for U+fontawesomefree1 on i
+nput line 60.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/fontawesome5\ufontaweso
+mefree1.fd)
+LaTeX Font Info:    Trying to load font information for U+fontawesomefree2 on i
+nput line 61.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/fontawesome5\ufontaweso
+mefree2.fd)
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/b/n' in size <10> not available
+
+(Font)              Font shape `T1/FiraSans-OsF/bold/n' tried instead on input 
+line 75.
+LaTeX Font Info:    Font shape `T1/FiraSans-OsF/bold/n' will be
+(Font)              scaled to size 10.0pt on input line 75.
+LaTeX Font Info:    Trying to load font information for U+fontawesomefree0 on i
+nput line 86.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/fontawesome5\ufontaweso
+mefree0.fd)
+LaTeX Font Info:    Trying to load font information for TS1+FiraSans-OsF on inp
+ut line 86.
+
+(C:\Users\papes\AppData\Local\Programs\MiKTeX\tex/latex/fira\ts1firasans-osf.fd
+File: TS1FiraSans-OsF.fd 2019/10/10 (autoinst) Font definitions for TS1/FiraSan
+s-OsF.
+)
+LaTeX Font Info:    Font shape `TS1/FiraSans-OsF/m/n' in size <10> not availabl
+e
+(Font)              Font shape `TS1/FiraSans-OsF/regular/n' tried instead on in
+put line 86.
+LaTeX Font Info:    Font shape `TS1/FiraSans-OsF/regular/n' will be
+(Font)              scaled to size 10.0pt on input line 86.
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `FiraSans-OsF' (encoding: TS1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+
+Underfull \hbox (badness 10000) in paragraph at lines 94--99
+[]\T1/FiraSans-OsF/regular/n/10 (+25) Python, R, SQL, Git, CI/CD, BigQuery,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 94--99
+\T1/FiraSans-OsF/regular/n/10 (+25) Pandas, NumPy, SciPy, scikit-learn,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 94--99
+\T1/FiraSans-OsF/regular/n/10 (+25) TensorFlow, Py-T-orch, Mat-plot-lib, Seabor
+n,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 94--99
+\T1/FiraSans-OsF/regular/n/10 (+25) Power BI, Air-flow,
+ []
+
+
+Underfull \hbox (badness 6110) in paragraph at lines 102--105
+[]\T1/FiraSans-OsF/regular/n/10 (+25) Machine Learn-ing su-per-visé / non-super
+visé,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 102--105
+\T1/FiraSans-OsF/regular/n/10 (+25) Deep Learn-ing, Stat-istiques et prob-ab-il
+-ités,
+ []
+
+[1
+
+{C:/Users/papes/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/pape
+s/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fira/fir_iln36p.enc}{C:/Users/p
+apes/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fira/fir_2mfh3o.enc}{C:/User
+s/papes/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5free1.enc
+}{C:/Users/papes/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5
+free2.enc}{C:/Users/papes/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawe
+some5/fa5free0.enc}{C:/Users/papes/AppData/Local/Programs/MiKTeX/fonts/enc/dvip
+s/fira/fir_d67aat.enc} <./2883d8ffff7a4b87b28685096b56c64e.png>] (main.aux)
+ ***********
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-04>
+ ***********
+ ) 
+Here is how much of TeX's memory you used:
+ 10165 strings out of 474486
+ 196410 string characters out of 5743755
+ 1934542 words of memory out of 5000000
+ 32260 multiletter control sequences out of 15000+600000
+ 669227 words of font info for 105 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 73i,6n,91p,1009b,321s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\papes\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm
+1095.pk><C:/Users/papes/AppData/Local/Programs/MiKTeX/fonts/type1/public/fira/F
+iraSans-Bold.pfb><C:/Users/papes/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/fira/FiraSans-Regular.pfb><C:/Users/papes/AppData/Local/Programs/MiKTeX/font
+s/type1/public/fontawesome5/FontAwesome5Free-Regular.pfb><C:/Users/papes/AppDat
+a/Local/Programs/MiKTeX/fonts/type1/public/fontawesome5/FontAwesome5Free-Solid.
+pfb>
+Output written on main.pdf (1 page, 374093 bytes).
+PDF statistics:
+ 68 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 34822 words of extra memory for PDF output out of 35830 (max. 10000000)
+

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Compléter votre CV</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>.repeater-row{border:1px solid #dee2e6;padding:1rem;border-radius:.5rem}</style>
+</head>
+<body class="p-5">
+<div class="container">
+
+  <h1 class="mb-4">Votre CV</h1>
+
+  <form method="post" enctype="multipart/form-data">
+
+    {% for section in schema.sections %}
+      <h3 class="mt-4">{{ section.title }}</h3>
+      <div class="row g-3">
+      {% for f in section.fields %}
+        <div class="col-md-6">
+          <label class="form-label">{{ f.label }}</label>
+
+          {# ---------- Champ simple #}
+          {% if f.type in ['text','email','phone','date','url'] %}
+            <input type="{{ 'text' if f.type in ['phone','text'] else f.type }}"
+                   class="form-control"
+                   name="{{ f.id }}"
+                   {% if f.required %}required{% endif %}>
+
+          {% elif f.type == 'textarea' %}
+            <textarea class="form-control" rows="4"
+                      name="{{ f.id }}"
+                      {% if f.required %}required{% endif %}></textarea>
+
+          {% elif f.type == 'file' %}
+            <input type="file"   class="form-control"
+                   name="{{ f.id }}"
+                   {% if f.required %}required{% endif %}>
+
+          {# ---------- Tableau répétable (array) #}
+          {% elif f.type == 'array' %}
+            <div id="{{ f.id }}-wrapper" class="mb-2">
+              <!-- première ligne index 0 -->
+              <div class="repeater-row mb-2">
+                {% for subid, sub in f.item.items() %}
+                  <label class="form-label mt-2">{{ sub.label or subid|title }}</label>
+                  {% if sub.type == 'textarea' %}
+                    <textarea class="form-control"
+                              name="{{ f.id }}[0][{{ subid }}]"></textarea>
+                  {% else %}
+                    <input class="form-control"
+                           type="text"
+                           name="{{ f.id }}[0][{{ subid }}]">
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline-secondary btn-sm"
+                    onclick="addRow('{{ f.id }}')">+ Ajouter</button>
+          {% endif %}
+        </div>
+      {% endfor %}
+      </div>
+    {% endfor %}
+
+    <button class="btn btn-primary mt-4">Générer le CV</button>
+  </form>
+</div>
+
+<script>
+function addRow(id){
+  const wrap=document.getElementById(id+'-wrapper');
+  const index=wrap.querySelectorAll('.repeater-row').length;
+  const clone=wrap.querySelector('.repeater-row').cloneNode(true);
+  clone.querySelectorAll('[name]').forEach(el=>{
+      el.name=el.name.replace(/\\[\\d+]/, '['+index+']');
+      el.value='';
+  });
+  wrap.appendChild(clone);
+}
+</script>
+</body>
+</html>
