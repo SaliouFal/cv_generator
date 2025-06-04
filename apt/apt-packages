@@ -1,0 +1,5 @@
+texlive-latex-base
+texlive-latex-recommended
+texlive-latex-extra     # facultatif mais utile pour fontspec, tcolorbox…
+texlive-xetex           # moteur XeLaTeX
+ghostscript             # (fonts subsetting)
