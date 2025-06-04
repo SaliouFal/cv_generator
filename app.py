@@ -118,7 +118,7 @@ def compile_pdf(tex: str, meta: dict, ctx: dict) -> Path:
 
 def gpt_render(template_tex:str, data:dict)->str:
     """Injecte les données + améliore la mise en page, renvoie le LaTeX final."""
-    sys = ("Tu es un expert LaTeX. On te donne un template et un objet JSON. "
+    sys = ("Tu es un expert LaTeX en Français donc les cv doivent etre en français c'est important. On te donne un template et un objet JSON. "
       "Remplace toutes les variables/structures par les valeurs JSON. "
       "N'invente pas les champs déjà fournis (nom, email, téléphone, jobs.dates...). "
       "Ajoute descriptions, compétences, profil, skills, hobbies, Education si manquants, "
@@ -132,6 +132,7 @@ def gpt_render(template_tex:str, data:dict)->str:
     out  = openai.ChatCompletion.create(model=OPENAI_MODEL,
              messages=[{"role":"system","content":sys},{"role":"user","content":user}]
            ).choices[0].message.content
+    
     return re.sub(r"^```.*?\\n|\\n?```$", "", out, flags=re.S).strip()
 
 
@@ -296,32 +297,58 @@ def legacy_form():
 #                            pdf_filename=session["pdf_filename"])
 
 
+# @app.route("/preview")
+# def preview():
+#     if "template_id" not in session:
+#         return redirect(url_for("index"))
+
+#     meta = get_template_meta(session["template_id"])
+
+#     # 1️⃣  on regarde d’abord s’il y a une version éditée
+#     if "last_tex" in session:
+#         final_tex = session["last_tex"]
+#     else:
+#         template_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
+#         final_tex    = gpt_render(template_tex, session["cv_data"])
+#         session["last_tex"] = final_tex          # on la garde pour plus tard
+
+#     # 2️⃣  compile uniquement si le PDF n’a pas déjà été produit
+#     if "pdf_filename" not in session:
+#         print("1")
+#         pdf_path = compile_pdf(final_tex, meta, session["cv_data"])
+#         session["pdf_filename"] = pdf_path.relative_to(
+#             app.config["OUTPUT_FOLDER"]
+#         ).as_posix()
+#     print("0")
+#     return render_template("preview.html",
+#                            pdf_filename=session["pdf_filename"])
+
 @app.route("/preview")
 def preview():
-    if "template_id" not in session:
+    # sécurité minimale
+    if "template_id" not in session or "cv_data" not in session:
         return redirect(url_for("index"))
 
     meta = get_template_meta(session["template_id"])
 
-    # 1️⃣  on regarde d’abord s’il y a une version éditée
-    if "last_tex" in session:
-        final_tex = session["last_tex"]
-    else:
+    # 1. quel LaTeX utiliser ?
+    latex_src = session.get("last_tex")
+    if latex_src is None:                          # première fois
         template_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
-        final_tex    = gpt_render(template_tex, session["cv_data"])
-        session["last_tex"] = final_tex          # on la garde pour plus tard
+        latex_src    = gpt_render(template_tex, session["cv_data"])
 
-    # 2️⃣  compile uniquement si le PDF n’a pas déjà été produit
-    if "pdf_filename" not in session:
-        pdf_path = compile_pdf(final_tex, meta, session["cv_data"])
-        session["pdf_filename"] = pdf_path.relative_to(
-            app.config["OUTPUT_FOLDER"]
-        ).as_posix()
+    # 2. compile À CHAQUE APPEL
+    pdf_path = compile_pdf(latex_src, meta, session["cv_data"])
 
+    # 3. met à jour la session (toujours)
+    session["last_tex"]     = latex_src
+    session["pdf_filename"] = pdf_path.relative_to(
+        app.config["OUTPUT_FOLDER"]).as_posix()
+
+    # 4. time-stamp pour l’anti-cache
     return render_template("preview.html",
-                           pdf_filename=session["pdf_filename"])
-
-
+                           pdf_filename=session["pdf_filename"],
+                           ts=int(uuid.uuid4().int % 1e6))     # petit nombre aléatoire
 
 
 
@@ -364,38 +391,74 @@ def gpt_edit(tex,instr):
     return re.sub(r"^```.*?\n|\n?```$", "", out, flags=re.S)
 
 
+# @app.route("/edit", methods=["POST"])
+# def edit():
+#     # # aucun LaTeX en session ⇒ retour à l’aperçu
+#     if "last_tex" not in session:
+#         return redirect(url_for("preview"))
+
+#     instruction = request.form.get("instruction", "").strip()
+#     print(instruction)
+#     if not instruction:
+#         flash("Veuillez saisir une instruction !", "warning")
+#         return redirect(url_for("preview"))
+
+#     try:
+#         # 1. GPT applique la modification
+#         new_tex = gpt_edit(session["last_tex"], instruction)
+        
+#         # 2. On recompile
+#         meta = get_template_meta(session["template_id"])
+#         pdf_path = compile_pdf(new_tex, meta, session["cv_data"])
+
+#         # 3. On met à jour la session
+#         session["last_tex"] = new_tex
+#         session["pdf_filename"] = pdf_path.relative_to(
+#             app.config["OUTPUT_FOLDER"]
+#         ).as_posix()
+
+#         flash("Modification appliquée !", "success")
+
+#     except Exception as exc:
+#         flash(f"Erreur GPT/LaTeX : {exc}", "danger")
+
+#     return redirect(url_for("preview"))
+
+
+
 @app.route("/edit", methods=["POST"])
 def edit():
-    # # aucun LaTeX en session ⇒ retour à l’aperçu
-    if "last_tex" not in session:
+    if "template_id" not in session or "last_tex" not in session:
         return redirect(url_for("preview"))
 
-    instruction = request.form.get("instruction", "").strip()
-    print(instruction)
-    if not instruction:
+    instr = request.form.get("instruction", "").strip()
+    if not instr:
         flash("Veuillez saisir une instruction !", "warning")
         return redirect(url_for("preview"))
 
     try:
-        # 1. GPT applique la modification
-        new_tex = gpt_edit(session["last_tex"], instruction)
-        
-        # 2. On recompile
-        meta = get_template_meta(session["template_id"])
+        # 1️⃣ GPT applique l’instruction
+        new_tex = gpt_edit(session["last_tex"], instr)
+        print(new_tex)
+        # 2️⃣ Recompile systématiquement
+        meta     = get_template_meta(session["template_id"])
         pdf_path = compile_pdf(new_tex, meta, session["cv_data"])
 
-        # 3. On met à jour la session
-        session["last_tex"] = new_tex
+        # 3️⃣ Met à jour la session
+        session["last_tex"]     = new_tex
         session["pdf_filename"] = pdf_path.relative_to(
-            app.config["OUTPUT_FOLDER"]
-        ).as_posix()
+            app.config["OUTPUT_FOLDER"]).as_posix()
 
         flash("Modification appliquée !", "success")
-
-    except Exception as exc:
-        flash(f"Erreur GPT/LaTeX : {exc}", "danger")
+    except Exception as e:
+        flash(f"Erreur GPT/LaTeX : {e}", "danger")
 
     return redirect(url_for("preview"))
+
+
+
+
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":

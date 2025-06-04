@@ -14,7 +14,6 @@
 \renewcommand{\familydefault}{\sfdefault}
 \definecolor{cvblue}{HTML}{304263}
 
-{% raw %}
 % --- Macros perso ------------------------------------------------------------
 \newcommand{\dates}[1]{\hfill\mbox{\textbf{#1}}}
 \newcommand{\is}{\par\vskip.5ex plus .4ex}
@@ -25,10 +24,8 @@
      \vspace*{-2ex}{\color{cvblue}\hrulefill}\par}
 
 \usepackage[colorlinks=true,urlcolor=white,linkcolor=white]{hyperref}
-{% endraw %}
 
 % -----------------------------------------------------------------------------
-
 
 \begin{document}
 \setlength{\topskip}{0pt}\setlength{\parindent}{0pt}\setlength{\parskip}{0pt}
@@ -46,38 +43,41 @@
 \vspace*{2.5ex}
 
 % ---- Identité ---------------------------------------------------------------
-\Large {{ first_name }} \textbf{\textsc{{ last_name }}} \normalsize
+\Large Pape Saliou \textbf{\textsc{Fall}} \normalsize\\
+\textit{Data Scientist}
 
-{% if photo %}
-\null\hfill\includegraphics[width=0.65\textwidth]{ {{ photo }} }\hfill\null
-{% endif %}
+\null\hfill\includegraphics[width=0.65\textwidth]{38e0137e987843fea393ad1a95590721.png}\hfill\null
 
 \vspace*{0.5ex}
 
 % ---- Résumé -----------------------------------------------------------------
 \headleft{Profile Summary}
-{{ profile_summary }}
+Jeune data scientist passionné par l’extraction d’informations à forte valeur ajoutée, disposant d’un solide bagage académique en statistique, machine learning et visualisation de données. Habitué à manipuler des jeux de données complexes et à présenter des résultats clairs aux parties prenantes.
 
 % ---- Contact ----------------------------------------------------------------
 \headleft{Contact details}\small
-\MVAt\ {\small {{ email }}} \\[0.4ex]
-\Mobilefone\ {{ phone }} \\[0.5ex]
-\Letter\ {{ address }}
-\MVAt\ {\small {{ pLinkedIn }}} \\[0.4ex]
+\MVAt\ {\small papesalioufall2@gmail.com} \\[0.4ex]
+\Mobilefone\ 0753481453 \\[0.5ex]
+\Letter\ \href{https://www.linkedin.com/in/pape-saliou-fall-43154a211}{LinkedIn} \\[0.5ex]
 \normalsize
 
 % ---- Infos perso ------------------------------------------------------------
 \headleft{Personal information}
-Citizenship: \textbf{{ citizenship }} \\[0.5ex]
-Family: \textbf{{ family }} \\[0.5ex]
-Languages: \textbf{{ languages }}
+Languages: \textbf{Français, Anglais}
 
 % ---- Compétences ------------------------------------------------------------
 \headleft{Skills}
 \begin{itemize}
-{% for skill in skills.splitlines() if skill.strip() %}
-  \item {{ skill }}
-{% endfor %}
+  \item Python
+  \item R
+  \item SQL
+  \item Machine Learning
+  \item Deep Learning
+  \item NLP
+  \item Power BI
+  \item Data Visualization
+  \item Statistiques
+  \item TensorFlow
 \end{itemize}
 
 \end{minipage}\kern 0.09\textwidth
@@ -92,30 +92,24 @@ Languages: \textbf{{ languages }}
 \vspace{2ex}
 
 % ------------------------ EXPÉRIENCE ----------------------------------------
-% ------------------------ EXPÉRIENCE ----------------------------------------
 \headright{Experience}
-{% for job in jobs %}
-\textsc{{ job.title }} at \textit{{ job.company }}{% if job.location %} ({{ job.location }}){% endif %}  \dates{{ job.dates }} \\
-{% for bullet in job.bullets %}
-\smaller{{ bullet }}\is
-{% endfor %}
-{% endfor %}
+\textsc{staigiaire en data science} at \textit{Cursanova} (Paris, France)  \dates{2022-2023} \\
+\smaller{Collecte, nettoyage et préparation de jeux de données volumineux}\is
+\smaller{Conception et entraînement de modèles de machine learning pour la prédiction de comportements clients}\is
+\smaller{Mise en place de tableaux de bord Power BI afin de communiquer les insights aux équipes métiers}\is
+\smaller{Collaboration avec les data engineers pour l’industrialisation des pipelines de données}\is
 
 % ------------------------ ÉDUCATION ----------------------------------------
 \headright{Education}
-{% for deg in degrees %}
-\textsc{{ deg.degree }}. \textit{{ deg.institution }}. \dates{{ deg.dates }} \\
-{% endfor %}
+\textsc{master 1 data science}. \textit{Sorbonne Université}. \dates{2022-2023} \\
 
 % ------------------------ CERTIFICATIONS ------------------------------------
 \headright{Certifications}
-{% for cert in certifications %}
-\smaller{\textsc{{ cert.title }}}, \textit{{ cert.issuer }}. \dates{{ cert.date }} \\
-{% endfor %}
+\smaller{\textsc{nk}}, \textit{knp}. \dates{mai 2023} \\
 
 % ------------------------ HOBBIES -------------------------------------------
 \headright{Hobbies}
-\textit{{ hobbies }}
+\textit{Football, Lecture, Musique}
 
 \end{minipage}
 
