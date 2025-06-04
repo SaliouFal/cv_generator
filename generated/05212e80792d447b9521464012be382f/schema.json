@@ -1,0 +1,98 @@
+{
+  "sections": [
+    {
+      "title": "Identité",
+      "fields": [
+        { "id": "first_name",  "label": "Prénom",                 "type": "text",     "required": true },
+        { "id": "last_name",   "label": "Nom",                    "type": "text",     "required": true },
+        { "id": "photo",       "label": "Photo (portrait carré)", "type": "file" },
+        { "id": "tagline",     "label": "Titre professionnel",    "type": "text" }
+      ]
+    },
+
+    {
+      "title": "Résumé",
+      "fields": [
+        { "id": "profile_summary", "label": "Profil / Résumé", "type": "textarea" }
+      ]
+    },
+
+    {
+      "title": "Contact",
+      "fields": [
+        { "id": "email",   "label": "Adresse e-mail", "type": "email", "required": true },
+        { "id": "phone",   "label": "Téléphone",      "type": "phone" },
+        { "id": "address", "label": "Adresse postale","type": "textarea" }
+      ]
+    },
+
+    {
+      "title": "Informations personnelles",
+      "fields": [
+        { "id": "citizenship", "label": "Nationalité",               "type": "text" },
+        { "id": "family",      "label": "Situation familiale",       "type": "text" },
+        { "id": "languages",   "label": "Langues parlées",           "type": "text",
+          "help": "Séparées par des virgules (ex : English, Hindi, Telugu)" }
+      ]
+    },
+
+    {
+      "title": "Compétences",
+      "fields": [
+        { "id": "skills", "label": "Compétences (une par ligne)", "type": "textarea",
+          "help": "Ex : SQL, Power BI, Python …" }
+      ]
+    },
+
+    {
+      "title": "Expérience",
+      "fields": [
+        { "id": "jobs", "label": "Expériences professionnelles", "type": "array",
+          "item": {
+            "title":       { "type": "text",     "label": "Intitulé de poste" },
+            "company":     { "type": "text",     "label": "Entreprise" },
+            "location":    { "type": "text",     "label": "Lieu (ville/pays)" },
+            "start_date":  { "type": "date",     "label": "Date début (AAAA-MM)" },
+            "end_date":    { "type": "date",     "label": "Date fin (AAAA-MM ou présent)" },
+            "bullets":     { "type": "textarea", "label": "Points clés (une ligne = une puce)",
+                             "help": "Max. 8 lignes conseillées" }
+          }
+        }
+      ]
+    },
+
+    {
+      "title": "Éducation",
+      "fields": [
+        { "id": "degrees", "label": "Diplômes", "type": "array",
+          "item": {
+            "degree":      { "type": "text", "label": "Diplôme / formation" },
+            "institution": { "type": "text", "label": "Établissement" },
+            "dates":       { "type": "text", "label": "Période (ex : 2012–2015)" }
+          }
+        }
+      ]
+    },
+
+    {
+      "title": "Certifications",
+      "fields": [
+        { "id": "certifications", "label": "Certifications", "type": "array",
+          "item": {
+            "title":  { "type": "text", "label": "Intitulé" },
+            "issuer": { "type": "text", "label": "Organisme" },
+            "date":   { "type": "text", "label": "Date (ex : Jul-2024)" }
+          }
+        }
+      ]
+    },
+
+    {
+      "title": "Centres d’intérêt",
+      "fields": [
+        { "id": "hobbies", "label": "Hobbies / Loisirs", "type": "text",
+          "help": "Ex : Listening music, Playing cricket" }
+      ]
+    }
+  ]
+}

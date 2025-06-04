@@ -93,14 +93,10 @@ def compile_pdf(tex: str, meta: dict, ctx: dict) -> Path:
             shutil.copy(up, build / photo)
 
     #engine = "pdflatex"
-    engine = "xelatex"
-    # if re.search(r"\\usepackage\{fontspec\}", tex) \
-    #    or re.search(r"!TEX program *= *xelatex", tex, flags=re.I):
-    #     engine = "xelatex"
+    engine = "tectonic"            # <── remplace xelatex/pdflatex
 
-    # ── on ne demande PAS à Python de décoder (pas de text=True) ──────────
     proc = subprocess.run(
-        [engine, "-interaction=nonstopmode", tex_path.name],
+        [engine, "--synctex", "--keep-logs", tex_path.name],
         cwd=build,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT
@@ -137,8 +133,6 @@ def gpt_render(template_tex:str, data:dict)->str:
 
 
 
-
-
 def extract_arrays(form) -> dict:
     """jobs[0][title] → {'jobs':[...], 'degrees':[...]}  (ordre conservé)."""
     buf = {}
@@ -152,12 +146,6 @@ def extract_arrays(form) -> dict:
     for (fld, idx), row in sorted(buf.items(), key=lambda p: p[0][1]):
         out[fld].append(row)
     return out
-
-
-
-
-
-
 
 
 
@@ -363,10 +351,24 @@ def preview():
 # ---------------------------------------------------------------------------
 #  Fichier PDF / Téléchargement – inchangés
 # ---------------------------------------------------------------------------
+# @app.route("/file/<path:filename>")
+# def file(filename):
+#     return send_file(app.config["OUTPUT_FOLDER"] / filename)
+
 @app.route("/file/<path:filename>")
 def file(filename):
-    return send_file(app.config["OUTPUT_FOLDER"] / filename)
+    """Servez le PDF + entêtes anti-cache."""
+    resp = send_file(app.config["OUTPUT_FOLDER"] / filename, conditional=False)
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    resp.headers["Pragma"]        = "no-cache"
+    resp.headers["Expires"]       = "0"
+    return resp
 
+
+
+
+
+# 
 @app.route("/download")
 def download():
     if "pdf_filename" not in session:
@@ -425,7 +427,6 @@ def gpt_edit(tex,instr):
 #     return redirect(url_for("preview"))
 
 
-
 @app.route("/edit", methods=["POST"])
 def edit():
     if "template_id" not in session or "last_tex" not in session:
@@ -436,27 +437,11 @@ def edit():
         flash("Veuillez saisir une instruction !", "warning")
         return redirect(url_for("preview"))
 
-    try:
-        # 1️⃣ GPT applique l’instruction
-        new_tex = gpt_edit(session["last_tex"], instr)
-        print(new_tex)
-        # 2️⃣ Recompile systématiquement
-        meta     = get_template_meta(session["template_id"])
-        pdf_path = compile_pdf(new_tex, meta, session["cv_data"])
+    # 1 : GPT applique l’instruction
+    session["last_tex"] = gpt_edit(session["last_tex"], instr)
 
-        # 3️⃣ Met à jour la session
-        session["last_tex"]     = new_tex
-        session["pdf_filename"] = pdf_path.relative_to(
-            app.config["OUTPUT_FOLDER"]).as_posix()
-
-        flash("Modification appliquée !", "success")
-    except Exception as e:
-        flash(f"Erreur GPT/LaTeX : {e}", "danger")
-
-    return redirect(url_for("preview"))
-
-
-
+    flash("Modification appliquée !", "success")
+    return redirect(url_for("preview"))     # 👉 preview() re-compi­lera
 
 
 
