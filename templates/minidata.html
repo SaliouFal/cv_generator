@@ -1,75 +1,150 @@
-<!doctype html><html lang="fr"><head>
+<!doctype html>
+<html lang="fr">
+<head>
   <meta charset="utf-8">
+  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <title>Infos minimum pour ton CV</title>
-</head><body class="p-4">
-<h2>Étape 1 : informations essentielles</h2>
+  <!-- Font-Awesome 6 Pro / Free (icônes) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <title>Informations essentielles – Générateur de CV IA</title>
 
-<form method="post" enctype="multipart/form-data">
-  <div class="row g-3">
+  <style>
+    /* Palette ---------------------------------------------------------*/
+    :root{
+      --prim:#004A99;           /* bleu foncé */
+      --prim-light:#E6F1FF;     /* bleu clair */
+    }
+    body{
+      background:var(--prim-light);
+      font-family:system-ui,Segoe UI,Roboto,sans-serif;
+    }
+    h1,h2,h4{color:var(--prim)}
+    .brand-badge{
+      background:var(--prim);
+      color:#fff;
+      border-radius:.5rem;
+      padding:.4rem 1rem;
+      font-weight:600;
+      letter-spacing:.5px;
+      font-size:1rem;
+    }
+    .icon-label i{color:var(--prim);margin-right:.3rem}
+    .section-card{
+      background:#fff;
+      border-radius:.6rem;
+      box-shadow:0 0 .75rem rgba(0,0,0,.05);
+      padding:2rem 2.5rem;
+      margin-top:1.5rem;
+    }
+  </style>
+</head>
+<body>
 
-    <div class="col-md-6">
-      <label>Poste visé</label>
-      <input name="target_role" class="form-control" required>
-    </div>
+<div class="container-lg py-4">
 
-    <div class="col-md-3">
-      <label>Prénom</label>
-      <input name="first_name" class="form-control" required>
-    </div>
-    <div class="col-md-3">
-      <label>Nom</label>
-      <input name="last_name" class="form-control" required>
-    </div>
-
-    <div class="col-md-6">
-      <label>E-mail</label>
-      <input type="email" name="email" class="form-control" required>
-    </div>
-    <div class="col-md-6">
-      <label>Téléphone</label>
-      <input name="phone" class="form-control" required>
-    </div>
-
-    <div class="col-md-6">
-      <label>Photo (optionnel)</label>
-      <input type="file" name="photo" class="form-control">
-    </div>
+  <!-- Bandeau -------------------------------------------------------->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 m-0">Étape 1 · informations essentielles</h1>
+    <span class="brand-badge"><i class="fa-solid fa-robot"></i> CV généré par IA</span>
   </div>
 
-  <hr class="my-4">
+  <!-- ---- FORMULAIRE  --------------------------------------------->
+  <form method="post" enctype="multipart/form-data" class="section-card">
 
-  <h4>Expériences — au minimum intitulé + dates</h4>
-  <div id="jobs-wrapper"></div>
-  <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addJob()">+ Ajouter une expérience</button>
+    <!------------------ Bloc coordonnés / identité ------------------>
+    <div class="row g-3">
 
-  <hr class="my-4">
+      <div class="col-md-6">
+        <label class="icon-label"><i class="fa-solid fa-briefcase"></i> Poste visé</label>
+        <input name="target_role" class="form-control" required>
+      </div>
 
-  <h4>Éducation — diplôme + établissement + dates</h4>
-  <div id="edu-wrapper"></div>
-  <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addEdu()">+ Ajouter une formation</button>
+      <div class="col-md-3">
+        <label class="icon-label"><i class="fa-solid fa-user"></i> Prénom</label>
+        <input name="first_name" class="form-control" required>
+      </div>
+      <div class="col-md-3">
+        <label class="icon-label"><i class="fa-solid fa-user"></i> Nom</label>
+        <input name="last_name" class="form-control" required>
+      </div>
 
-  <button class="btn btn-primary mt-4">Construire mon CV</button>
-</form>
+      <div class="col-md-6">
+        <label class="icon-label"><i class="fa-solid fa-envelope"></i> E-mail</label>
+        <input type="email" name="email" class="form-control" required>
+      </div>
+      <div class="col-md-4">
+        <label class="icon-label"><i class="fa-solid fa-phone"></i> Téléphone</label>
+        <input name="phone" class="form-control" required>
+      </div>
+      <div class="col-md-2">
+        <label class="icon-label"><i class="fa-brands fa-linkedin"></i> LinkedIn</label>
+        <input type="url" name="linkedin" class="form-control" placeholder="profil…">
+      </div>
 
+      <div class="col-md-6">
+        <label class="icon-label"><i class="fa-solid fa-image"></i> Photo</label>
+        <input type="file" name="photo" class="form-control">
+      </div>
+    </div>
+
+    <!-- EXPÉRIENCES ------------------------------------------------->
+    <hr class="my-4">
+    <h4><i class="fa-solid fa-suitcase"></i>  Expériences</h4>
+    <p class="text-muted mb-2">Titre, entreprise et dates suffisent — et un peu de détails</p>
+
+    <div id="jobs-wrapper"></div>
+    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addJob()">
+      <i class="fa-solid fa-plus"></i> Ajouter une expérience
+    </button>
+
+    <!-- ÉDUCATION ---------------------------------------------------->
+    <hr class="my-4">
+    <h4><i class="fa-solid fa-graduation-cap"></i>  Éducation</h4>
+
+    <div id="edu-wrapper"></div>
+    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addEdu()">
+      <i class="fa-solid fa-plus"></i> Ajouter une formation
+    </button>
+
+    <!-- CERTIFICATIONS --------------------------------------------->
+    <hr class="my-4">
+    <h4><i class="fa-solid fa-certificate"></i>  Certifications</h4>
+
+    <div id="cert-wrapper"></div>
+    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addCert()">
+      <i class="fa-solid fa-plus"></i> Ajouter une certification
+    </button>
+
+    <!-- BOUTON SUBMIT ----------------------------------------------->
+    <div class="text-end mt-4">
+      <button class="btn btn-success btn-lg">
+        <i class="fa-solid fa-rocket"></i> Construire mon CV
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<!-- -----------------------------------------------------------------
+     Scripts JS : génération dynamique des blocs
+------------------------------------------------------------------- -->
 <script>
-let jobIdx = 0, eduIdx = 0;
+let jobIdx = 0, eduIdx = 0, certIdx = 0;
 
 function addJob(){
   const div = document.createElement('div');
-  div.className = "border rounded p-2 mb-2";
+  div.className = "border rounded p-3 mb-3 bg-light";
   div.innerHTML = `
     <input class="form-control my-1" name="jobs[${jobIdx}][title]" placeholder="Intitulé de poste" required>
-    <input class="form-control my-1" name="jobs[${jobIdx}][company]" placeholder="Entreprise ou organisation">
+    <input class="form-control my-1" name="jobs[${jobIdx}][company]" placeholder="Entreprise">
     <input class="form-control my-1" name="jobs[${jobIdx}][dates]" placeholder="Dates (ex : 2022–2024)" required>
   `;
   document.getElementById('jobs-wrapper').appendChild(div);
   jobIdx++;
 }
-
 function addEdu(){
   const div = document.createElement('div');
-  div.className = "border rounded p-2 mb-2";
+  div.className = "border rounded p-3 mb-3 bg-light";
   div.innerHTML = `
     <input class="form-control my-1" name="degrees[${eduIdx}][degree]" placeholder="Diplôme" required>
     <input class="form-control my-1" name="degrees[${eduIdx}][institution]" placeholder="Établissement" required>
@@ -78,8 +153,23 @@ function addEdu(){
   document.getElementById('edu-wrapper').appendChild(div);
   eduIdx++;
 }
+function addCert(){
+  const div = document.createElement('div');
+  div.className = "border rounded p-3 mb-3 bg-light";
+  div.innerHTML = `
+    <input class="form-control my-1" name="certifications[${certIdx}][title]" placeholder="Titre de la certification" required>
+    <input class="form-control my-1" name="certifications[${certIdx}][issuer]" placeholder="Organisme" >
+    <input class="form-control my-1" name="certifications[${certIdx}][date]"  placeholder="Date (ex : mai 2024)" >
+  `;
+  document.getElementById('cert-wrapper').appendChild(div);
+  certIdx++;
+}
 
-// ajoute une ligne par défaut
-addJob(); addEdu();
+/* un bloc par défaut ------------------------------------------------ */
+addJob();
+addEdu();
+addCert();
 </script>
-</body></html>
+
+</body>
+</html>

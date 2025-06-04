@@ -13,8 +13,8 @@
   },
 
   {
-    "id": "cl",
-    "name": "Classic Simple",
+    "id": "cls",
+    "name": "Classic pure",
     "image": "cv_images/cl.png",
     "latex_path": "latex_templates/cl/main.tex"
   }
