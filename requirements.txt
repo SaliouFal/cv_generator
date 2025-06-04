@@ -2,5 +2,4 @@ flask
 openai==0.28
 jinja2
 gunicorn
-docx
-tectonic
+python-docx
