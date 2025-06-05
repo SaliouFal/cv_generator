@@ -93,10 +93,14 @@ def compile_pdf(tex: str, meta: dict, ctx: dict) -> Path:
             shutil.copy(up, build / photo)
 
     #engine = "pdflatex"
-    engine = "tectonic"            # <── remplace xelatex/pdflatex
+    engine = "xelatex"
+    # if re.search(r"\\usepackage\{fontspec\}", tex) \
+    #    or re.search(r"!TEX program *= *xelatex", tex, flags=re.I):
+    #     engine = "xelatex"
 
+    # ── on ne demande PAS à Python de décoder (pas de text=True) ──────────
     proc = subprocess.run(
-        [engine, "--synctex", "--keep-logs", tex_path.name],
+        [engine, "-interaction=nonstopmode", tex_path.name],
         cwd=build,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT
@@ -130,6 +134,7 @@ def gpt_render(template_tex:str, data:dict)->str:
            ).choices[0].message.content
     
     return re.sub(r"^```.*?\\n|\\n?```$", "", out, flags=re.S).strip()
+
 
 
 
