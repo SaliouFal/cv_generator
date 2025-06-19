@@ -16,6 +16,20 @@
     "id": "cls",
     "name": "Classic pure",
     "image": "cv_images/cl.png",
-    "latex_path": "latex_templates/cl/main.tex"
+    "latex_path": "latex_templates/cls/main.tex"
+  },
+  {
+    "id": "c1",
+    "name": "moderne 1",
+    "image": "cv_images/c1.png",
+    "latex_path": "latex_templates/c1/main.tex"
+  },
+  
+  {
+    "id": "c2",
+    "name": "moderne 2",
+    "image": "cv_images/c2.png",
+    "latex_path": "latex_templates/c2/main.tex"
   }
+
 ]

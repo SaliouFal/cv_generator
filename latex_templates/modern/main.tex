@@ -13,221 +13,227 @@
 \usepackage{tabularx}
 \usepackage{xcolor}
 \usepackage{enumitem}
-
+\usetikzlibrary{calc, positioning}      
 \newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
 
-\usepackage{enumitem}
-\setlist[itemize]{itemsep=1pt,leftmargin=*,topsep=-10pt}
-
+% Définition des couleurs
 \definecolor{maincolor}{HTML}{f0fafc}
 \definecolor{seccolor}{HTML}{ffffff}
 \definecolor{gray}{HTML}{8c94a9}
 \definecolor{sidetext}{HTML}{59cee5}
 
-\usepackage[contents={}]{background}
-\AddEverypageHook{\begin{tikzpicture}[remember picture,overlay]%
-  \node[inner sep=0pt,outer sep=0pt] at (current page.north west) [anchor=north west]{%
-  \fcolorbox{maincolor}{maincolor}{%
-\begin{minipage}[t][\paperheight][t]{0.3\paperwidth}
-        \color{white}
-        \hspace{0.08cm}
-\end{minipage}}
-\fcolorbox{seccolor}{seccolor}{
-\begin{minipage}[t][\paperheight][t]{0.67\paperwidth}
-        \color{black}
-        \hspace{1cm}
-\end{minipage}
-}
-  };%
-\end{tikzpicture}
+% Solution robuste pour la bande bleue sur toute la hauteur
+\usepackage{eso-pic}
+\AddToShipoutPictureBG{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[maincolor] 
+        (current page.north west) rectangle 
+        ([xshift=0.3\paperwidth] current page.south west);
+  \end{tikzpicture}%
 }
 
-\usepackage{enumitem}
+% Configuration des listes
 \setlist[itemize]{itemsep=-2pt,topsep=0pt,leftmargin=1.08cm}
 \renewcommand{\labelitemi}{\textcolor{sidetext}{\footnotesize$\bullet$}}
 
 \setlength{\parindent}{0pt}
 \usepackage{paracol}
+\columnratio{0.3}
 
 \begin{document}
 
 \pagestyle{empty}
 
-\columnratio{0.3}
 \begin{paracol}{2}
+% Colonne gauche - Section personnelle
 \color{sidetext}
 \begin{center}
-            \begin{tikzpicture}
-            \clip (0,0) circle (1.5cm) node[anchor=center] {\includegraphics[width=3cm]{%%photo%%}}; 
-            \end{tikzpicture}
+    \begin{tikzpicture}
+        \clip (0,0) circle (1.5cm) node[anchor=center] {\includegraphics[width=3cm]{example-image}}; 
+    \end{tikzpicture}
 
-            ~
-
-         {\color{black}\LARGE \textbf{%%name%%}}
-
-         ~
-
-         {\large{%%headline%%}}
-
-        
-        \end{center}
+    \vspace{5mm}
+    
+    {\color{black}\LARGE \textbf{Jean Dupont}}
+    
+    \vspace{3mm}
+    
+    {\large{Ingénieur Logiciel Senior}}
+\end{center}
 
 {\color{gray}\rule{\linewidth}{0.4pt}} \\
 
- \begin{tabular}{cl}
-            \faPhone{}      & 
-            \begin{tabular}{p{0.7\linewidth}}
-            {\color{gray}Phone}\\
-            {{%%phone%%}}
-            \end{tabular}
-            \\ \\
-               \faLinkedin{}      & 
-            \begin{tabular}{p{0.7\linewidth}}
-            {\color{gray}LinkedIn}\\
-            {{\href{%%linkedin%%}{%%linkedin%%} }}
-            \end{tabular}
-            \\ \\
-               \faMapMarker{}      & 
-            \begin{tabular}{p{0.7\linewidth}}
-            {\color{gray}Address}\\
-            {{%%address%%}}
-            \end{tabular}
-            \\ \\
-               \faGlobe{}      & 
-            \begin{tabular}{p{0.7\linewidth}}
-            {\color{gray}Website/Blog}\\
-            {{\href{%%website%%}{%%website%%} }}
-            \end{tabular}
-            \\
-        \end{tabular}
-        \vspace{.2cm} \\
-        {\color{gray}\rule{\linewidth}{0.4pt}} \\
+% Coordonnées
+\begin{tabular}{@{}c l}
+    \faPhone{} & 
+    \begin{tabular}[t]{@{}l@{}}
+        {\color{gray}Téléphone} \\
+        06 12 34 56 78
+    \end{tabular} \\
+    \\
+    \faLinkedin{} & 
+    \begin{tabular}[t]{@{}l@{}}
+        {\color{gray}LinkedIn} \\
+        \href{https://linkedin.com/in/jeandupont}{/in/jeandupont}
+    \end{tabular} \\
+    \\
+    \faMapMarker{} & 
+    \begin{tabular}[t]{@{}l@{}}
+        {\color{gray}Adresse} \\
+        123 Rue de Paris, 75001 Paris
+    \end{tabular} \\
+    \\
+    \faEnvelope{} & 
+    \begin{tabular}[t]{@{}l@{}}
+        {\color{gray} Mail} \\
+        papesalioufall2@gmail.com
+    \end{tabular} \\
+\end{tabular}
 
-        {\color{black}{Languages}}
+\vspace{3mm}
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
 
-        ~
-        
-        \begin{tabular}{cl}
-            {\Large\faLanguage{}} & \begin{tabular}{l}
-             {{%%languages[0].name%%}} \\
-             {\color{gray}{%%languages[0].level%%}}
-            \end{tabular} \\
-        \end{tabular}
-        \vspace{10pt} \\
-        {\color{gray}\rule{\linewidth}{0.4pt}} \\
+% Langues
+{\color{black}{Langues}}
 
-        \vspace{.4cm}
+\vspace{3mm}
 
-        {\color{black}{Key Skills}}
+\begin{tabular}{@{}c l}
+    {\Large\faLanguage{}} & 
+    \begin{tabular}[t]{@{}l@{}}
+        Français \\
+        {\color{gray}{Langue maternelle}} \\
+        \\
+        Anglais \\
+        {\color{gray}{Courant}} \\
+        \\
+        Espagnol \\
+        {\color{gray}{Intermédiaire}}
+    \end{tabular} \\
+\end{tabular}
 
-        ~
-        
-        \begin{tabular}{ll}
-         \begin{minipage}{0.1\linewidth}
-         \includegraphics[width=\linewidth]{picon.png}
-         \end{minipage} & {{%%skills[0]%%}} \\[10pt]
-         \begin{minipage}{0.1\linewidth}
-         \includegraphics[width=\linewidth]{picon.png}
-         \end{minipage} & {{%%skills[1]%%}} \\[10pt]
-         \begin{minipage}{0.1\linewidth}
-         \includegraphics[width=\linewidth]{picon.png}
-         \end{minipage} & {{%%skills[2]%%}} \\[10pt]
-         \begin{minipage}{0.1\linewidth}
-         \includegraphics[width=\linewidth]{picon.png}
-         \end{minipage} & {{%%skills[3]%%}} \\[10pt]
-         \begin{minipage}{0.1\linewidth}
-         \includegraphics[width=\linewidth]{picon.png}
-         \end{minipage} & {{%%skills[4]%%}} \\[10pt]
-        \end{tabular}
-        
+\vspace{5mm}
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
+
+% Compétences
+\vspace{5mm}
+{\color{black}{Compétences Clés}}
+
+\vspace{5mm}
+
+\begin{tabular}{@{}c l}
+    \textcolor{sidetext}{\faCode} & Développement Web (HTML/CSS/JS) \\
+    \\
+    \textcolor{sidetext}{\faDatabase} & Bases de données (SQL, NoSQL) \\
+    \\
+    \textcolor{sidetext}{\faServer} & Architecture Cloud (AWS, Azure) \\
+    \\
+    \textcolor{sidetext}{\faGit} & Git \& Méthodes Agile \\
+    \\
+    \textcolor{sidetext}{\faUsers} & Gestion d'équipe \\
+\end{tabular}
+
+
+
+% Compétences
+\vspace{5mm}
+{\color{black}{Interets}}
+
+\vspace{5mm}
+
+\begin{tabular}{@{}c l}
+    \textcolor{sidetext}{\faCode} & Lecture \\
+    \\
+    \textcolor{sidetext}{\faDatabase} & Musique\\
+    \\
+    \textcolor{sidetext}{\faServer} & Cuisines\\
+    
+    
+\end{tabular}
+
+
+% Espace flexible pour étendre la colonne gauche
+\vfill
+~
+
 \switchcolumn
+% Colonne droite - Contenu professionnel
 \color{black}
 
-\textcolor{black}{\Large \textbf{Professional Summary}} \\
+% Résumé professionnel
+\textcolor{black}{\Large \textbf{Profil Professionnel}} \\
 
-\textcolor{black}{%%summary%%}\\[8pt]
+\textcolor{black}{Ingénieur logiciel avec 10 ans d'expérience dans le développement d'applications web et mobiles. Expertise en architecture de systèmes distribués et en gestion de projets complexes. Passionné par les technologies émergentes et les méthodes de développement agile.}\\[8pt]
 
-\textcolor{black}{\Large \textbf{Work Experience}} \\
+% Expérience professionnelle
+\textcolor{black}{\Large \textbf{Expérience Professionnelle}} \\
 
+% Expérience 1
 \colorbox{maincolor}{%
   \begin{minipage}{\linewidth}
-    \begin{tabular}{@{}lp{0.72\linewidth}r}
-      \begin{minipage}{0.05\linewidth}
-        \includegraphics[width=\linewidth]{picon.png}
-      \end{minipage} & 
-      {{%%experiences[0].company%%}} &  
-      {\footnotesize {{%%experiences[0].start%%}} {{%%experiences[0].end%%}} } \\[-10pt]
-      & {\color{sidetext}{%%experiences[0].title%%}} & \\
-      & {\small {{%%experiences[0].role%%}} } & \\
+    \begin{tabular}{@{}l l r}
+        \textcolor{sidetext}{\faBriefcase} & 
+        \textbf{Senior Tech Lead} &  
+        \footnotesize{2020 - Présent} \\
+        & \textit{Innovatech Solutions} & \\
     \end{tabular}
-\begin{itemize}
-    \item {{%%experiences[0].description[0]%%}}
-\end{itemize}
+    \begin{itemize}
+        \item Direction d'une équipe de 10 développeurs sur des projets cloud
+        \item Conception d'architecture microservices pour applications critiques
+        \item Mise en place de pipelines CI/CD et d'infrastructure IaC
+    \end{itemize}
   \end{minipage}%
 }
 
-~ \\[-6pt]
+\vspace{5mm}
 
+% Expérience 2
 \colorbox{maincolor}{%
   \begin{minipage}{\linewidth}
-    \begin{tabular}{@{}lp{0.72\linewidth}r}
-      \begin{minipage}{0.05\linewidth}
-        \includegraphics[width=\linewidth]{picon.png}
-      \end{minipage} & 
-      {{%%experiences[1].company%%}} &  
-      {\footnotesize {{%%experiences[1].start%%}} {{%%experiences[1].end%%}} } \\[-10pt]
-      & {\color{sidetext}{%%experiences[1].title%%}} & \\
-      & {\small {{%%experiences[1].role%%}} } & \\
+    \begin{tabular}{@{}l l r}
+        \textcolor{sidetext}{\faBriefcase} & 
+        \textbf{Développeur Full Stack} &  
+        \footnotesize{2015 - 2020} \\
+        & \textit{WebCréation} & \\
     \end{tabular}
-\begin{itemize}
-    \item {{%%experiences[1].description[0]%%}}
-\end{itemize}
+    \begin{itemize}
+        \item Développement d'applications web avec React et Node.js
+        \item Optimisation des performances et expérience utilisateur
+        \item Intégration de solutions de paiement et d'API tierces
+    \end{itemize}
   \end{minipage}%
 }
 
+\vspace{8mm}
 
-\vspace{1cm}
+% Formation
+\textcolor{black}{\Large \textbf{Formation}} \\
 
-\textcolor{black}{\Large \textbf{Education}} \\
+% Diplôme 1
+\begin{tabular}{@{}c l}
+    \textcolor{sidetext}{\faGraduationCap} & 
+    \begin{tabular}[t]{@{}l@{}}
+        \textbf{Master en Informatique} \\
+        Université Paris-Saclay \\
+        Spécialisation: Architecture Logicielle \\
+        2012 - 2015
+    \end{tabular} \\
+\end{tabular}
 
+\vspace{5mm}
 
- \begin{tabular}{@{}cp{0.7\linewidth}}
-      \begin{minipage}{0.05\linewidth}
-        \includegraphics[width=\linewidth]{picon.png}
-      \end{minipage} & \vspace{-12pt}
-      {\color{sidetext} {{%%degrees[0].title%%}}} \\[-6pt]
-      & {{%%degrees[0].school%%}} \\
-      & {{%%degrees[0].subject%%}} \\
-      & {{%%degrees[0].year%%}} 
-    \end{tabular}
+% Diplôme 2
+\begin{tabular}{@{}c l}
+    \textcolor{sidetext}{\faGraduationCap} & 
+    \begin{tabular}[t]{@{}l@{}}
+        \textbf{Licence en Informatique} \\
+        Université Paris Descartes \\
+        Mention Très Bien \\
+        2009 - 2012
+    \end{tabular} \\
+\end{tabular}
 
-
-~
-
-~
-
- \begin{tabular}{@{}cp{0.7\linewidth}}
-      \begin{minipage}{0.05\linewidth}
-        \includegraphics[width=\linewidth]{picon.png}
-      \end{minipage} & \vspace{-12pt}
-      {\color{sidetext} {{%%degrees[1].title%%}}} \\[-6pt]
-      & {{%%degrees[1].school%%}} \\
-      & {{%%degrees[1].subject%%}} \\
-      & {{%%degrees[1].year%%}} 
-    \end{tabular}
-
-\vspace{0.5cm}
-
-\textcolor{black}{\Large \textbf{Certifications}} \\
-
-\begin{itemize}[leftmargin=12pt]
-\item {{%%certifications[0]%%}}
-\item {{%%certifications[1]%%}}
-\end{itemize}
-
-
+\vspace{8mm}
 \end{paracol}
-
-
 
 \end{document}

@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Aperçu du CV</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <!-- Ajout de l'attribut defer pour charger après le DOM -->
+  <script src="https://cdn.jsdelivr.net/npm/tectonic-wasm@0.0.3/dist/tectonic.min.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="worker-src 'self' blob:;">
+  
+
+
+  <style>
+    .pdf-container {
+      position: relative;
+      min-height: 700px;
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 0.25rem;
+    }
+    #pdf-iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 700px;
+      border: none;
+    }
+    .loader {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .btn-compile {
+      position: relative;
+    }
+    .btn-compile .spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+    .status-text {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      min-height: 1.5rem;
+    }
+    .success { color: #198754; }
+    .error { color: #dc3545; }
+    .info { color: #0dcaf0; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="p-5">
+<div class="container">
+
+  <h1 class="mb-4">Pré-visualisation</h1>
+  
+  <div class="alert alert-info d-flex align-items-center">
+    <i class="bi bi-info-circle me-2"></i>
+    <div>
+      Votre CV est prêt à être compilé. Cliquez sur "Compiler le PDF" pour générer votre document.
+      <div class="mt-1 text-muted small">
+        <i class="bi bi-lightning"></i> La compilation se fait directement dans votre navigateur.
+      </div>
+    </div>
+  </div>
+
+  <div class="pdf-container mb-4">
+    <iframe id="pdf-iframe"></iframe>
+    <div class="loader">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+      <div class="mt-2" id="loader-text">Initialisation du compilateur</div>
+    </div>
+  </div>
+
+  <form id="edit-form" action="{{ url_for('edit_prepare') }}" method="post" class="mt-4">
+    <label class="form-label fw-semibold">Modifier le CV :</label>
+    <textarea class="form-control" name="instruction" rows="2"
+              placeholder="Ex: augmente la taille du nom, change la couleur du titre..."
+              required></textarea>
+    
+    <div id="compilation-controls" class="mt-3">
+      <div class="d-flex gap-2 flex-wrap mb-2">
+        <button type="button" id="compile-btn" class="btn btn-primary btn-compile position-relative">
+          <span class="btn-text">
+            <i class="bi bi-gear me-1"></i>Compiler le PDF
+          </span>
+          <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
+        </button>
+        
+        <a href="#" id="download-btn" class="btn btn-success hidden">
+          <i class="bi bi-download me-1"></i>Télécharger
+        </a>
+        
+        <button type="submit" class="btn btn-warning">
+          <i class="bi bi-pencil me-1"></i>Appliquer les modifications
+        </button>
+      </div>
+      
+      <div id="status-text" class="status-text"></div>
+    </div>
+    
+    <div class="d-flex justify-content-between mt-4 pt-2 border-top">
+      <a href="{{ url_for('minidata') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Retour au formulaire
+      </a>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i class="bi bi-house me-1"></i>Changer de modèle
+      </a>
+    </div>
+  </form>
+
+</div>
+
+<script>
+  // Fonction pour vérifier si Tectonic est chargé
+  function waitForTectonic() {
+    return new Promise((resolve, reject) => {
+      let attempts = 0;
+      const checkInterval = setInterval(() => {
+        if (typeof Tectonic !== 'undefined') {
+          clearInterval(checkInterval);
+          resolve();
+        } else if (attempts > 30) { // 30 tentatives * 100ms = 3s
+          clearInterval(checkInterval);
+          reject(new Error('Tectonic n\'a pas été chargé après 3 secondes'));
+        }
+        attempts++;
+      }, 100);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    console.log("DOMContentLoaded: Début du script");
+    
+    // Attendre que Tectonic soit disponible
+    try {
+      await waitForTectonic();
+      console.log("Tectonic est chargé:", typeof Tectonic);
+    } catch (error) {
+      console.error("Erreur de chargement de Tectonic:", error);
+      document.getElementById('status-text').textContent = 'Erreur: Le compilateur PDF n\'a pas pu être chargé';
+      return;
+    }
+
+    // Éléments UI
+    const compileBtn = document.getElementById('compile-btn');
+    const downloadBtn = document.getElementById('download-btn');
+    const pdfIframe = document.getElementById('pdf-iframe');
+    const loader = document.querySelector('.loader');
+    const loaderText = document.getElementById('loader-text');
+    const btnSpinner = compileBtn.querySelector('.spinner');
+    const btnText = compileBtn.querySelector('.btn-text');
+    const statusText = document.getElementById('status-text');
+    
+    // Récupération des données
+    const photoDataUri = `{{ photo_data_uri }}`;
+    const latexCode = {{ latex_code | safe }};
+    
+    console.log("Données initialisées:", {
+      photoDataUri: photoDataUri ? photoDataUri.substring(0, 50) + "..." : "vide",
+      latexCode: latexCode.substring(0, 100) + "..."
+    });
+
+    // Fonctions d'état
+    function setStatus(message, type = 'info') {
+      console.log(`setStatus: ${message}`);
+      statusText.textContent = message;
+      statusText.className = `status-text ${type}`;
+    }
+    
+    function showLoader(message = 'Initialisation en cours...') {
+      console.log(`showLoader: ${message}`);
+      loaderText.textContent = message;
+      loader.style.display = 'block';
+    }
+    
+    function hideLoader() {
+      console.log("hideLoader");
+      loader.style.display = 'none';
+    }
+    
+    function setButtonState(loading) {
+      console.log(`setButtonState: ${loading ? 'loading' : 'ready'}`);
+      if (loading) {
+        btnSpinner.style.display = 'inline-block';
+        btnText.style.visibility = 'hidden';
+        compileBtn.disabled = true;
+      } else {
+        btnSpinner.style.display = 'none';
+        btnText.style.visibility = 'visible';
+        compileBtn.disabled = false;
+      }
+    }
+    
+    // Charger le moteur WASM
+    async function initEngine() {
+      console.log("initEngine: Début");
+      
+      try {
+        setStatus('Chargement du compilateur LaTeX...', 'info');
+        showLoader('Chargement du compilateur (20-30s)...');
+        setButtonState(true);
+        
+        console.log("Création du moteur Tectonic...");
+        const engine = await Tectonic.create();
+        
+        console.log("Moteur créé avec succès");
+        setStatus('Compilateur prêt! Cliquez sur "Compiler le PDF"', 'success');
+        return engine;
+      } catch (error) {
+        console.error('Erreur dans initEngine:', error);
+        setStatus('Erreur: ' + error.message, 'error');
+        throw error;
+      } finally {
+        hideLoader();
+        setButtonState(false);
+      }
+    }
+    
+    // Compiler le PDF
+    async function compilePDF(engine) {
+      console.log("compilePDF: Début");
+      
+      try {
+        setStatus('Démarrage de la compilation...', 'info');
+        showLoader('Compilation en cours...');
+        setButtonState(true);
+        
+        // Préparer le code LaTeX final
+        let finalLatex = latexCode;
+        
+        // Injecter la photo si elle existe
+        if (photoDataUri) {
+          console.log("Tentative d'injection de la photo");
+          finalLatex = finalLatex.replace(
+            /\\includegraphics\[[^\]]*\]\{[^\}]*\}/,
+            `\\\\includegraphics[width=2.5cm]{${photoDataUri}}`
+          );
+        }
+        
+        console.log("Code LaTeX final:", finalLatex.substring(0, 200) + "...");
+        
+        // Compilation avec XeLaTeX
+        console.log("Début de la compilation WASM");
+        const result = await engine.run({
+          format: 'xelatex',
+          content: finalLatex,
+          inputs: [],
+          products: []
+        });
+        
+        console.log("Compilation terminée");
+        
+        if (!result.pdf) {
+          const errorMsg = result.log || 'Aucun PDF généré';
+          throw new Error(errorMsg);
+        }
+        
+        // Créer le PDF
+        const blob = new Blob([result.pdf], {type: 'application/pdf'});
+        const url = URL.createObjectURL(blob);
+        
+        // Afficher le PDF
+        pdfIframe.src = url;
+        
+        // Activer le téléchargement
+        downloadBtn.href = url;
+        downloadBtn.download = "mon_cv.pdf";
+        downloadBtn.classList.remove('hidden');
+        
+        setStatus('Compilation réussie!', 'success');
+      } catch (error) {
+        console.error('Erreur dans compilePDF:', error);
+        setStatus('Erreur: ' + error.message, 'error');
+      } finally {
+        hideLoader();
+        setButtonState(false);
+      }
+    }
+    
+    // Initialisation principale
+    try {
+      const engine = await initEngine();
+      
+      // Configurer le bouton de compilation
+      compileBtn.addEventListener('click', () => {
+        console.log("Clic sur Compiler le PDF");
+        compilePDF(engine);
+      });
+      
+      // Déclencher la première compilation automatiquement
+      // compilePDF(engine);
+      
+    } catch (error) {
+      console.error("Échec de l'initialisation:", error);
+      setStatus('Erreur initiale: ' + error.message, 'error');
+    }
+  });
+</script>
+</body>
+</html>

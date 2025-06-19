@@ -1,5 +1,7 @@
 
 
+
+
 ######################################################################
 
 
@@ -12,6 +14,7 @@ from flask import (
     Flask, render_template, request, redirect, url_for,
     session, send_file, flash, jsonify
 )
+import docx
 import openai
 
 # ───────────────────── Configuration ──────────────────────
@@ -80,51 +83,236 @@ def copy_template(meta):
     dst = app.config["OUTPUT_FOLDER"]/uuid.uuid4().hex
     shutil.copytree(src, dst); return dst
 
+# def compile_pdf(tex: str, meta: dict, ctx: dict) -> Path:
+#     build     = copy_template(meta)
+#     tex_path  = build / "main.tex"
+#     tex_path.write_text(tex, encoding="utf-8")
+
+#     if (photo := ctx.get("photo")):
+#         print(photo)
+#         up = app.config["UPLOAD_FOLDER"] / photo
+#         if  up.is_file():
+#             shutil.copy(up, build / photo)
+    
+    
+#     #engine = "xelatex"
+#     engine="pdflatex"
+
+#     proc = subprocess.run(
+#         [engine, "-interaction=nonstopmode", tex_path.name],
+#         cwd=build,
+#         stdout=subprocess.PIPE,
+#         stderr=subprocess.STDOUT            # log complet
+#     )
+#     log = proc.stdout.decode("utf-8", errors="ignore")
+
+#     pdf = build / "main.pdf"
+
+#     # ➜ on ne teste plus *uniquement* le code de sortie ;
+#     #    on échoue seulement si le PDF n’existe pas.
+#     if not pdf.exists():
+#         raise RuntimeError(
+#             f"La compilation {engine} a échoué :\n" + log[-1500:]
+#         )
+
+#     # facultatif : journalise les overfull boxes plutôt que d’arrêter
+#     if proc.returncode != 0 or not pdf.exists() or pdf.stat().st_size < 1000:
+#         raise RuntimeError(
+#             f"La compilation {engine} a échoué :\n" + log[-1500:]
+#         )
+#     return pdf
+
+
+
+# ---------------------------------------------------------------------------
+# Correctif : compile_pdf – tolérance warnings LaTeX
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Compilation PDF : pdflatex → fallback xelatex
+# ---------------------------------------------------------------------------
+
+#####################################################################################################
+#####################################################################################################
+# --- ajouts en tête du fichier ---------------------------------------------
+import requests, urllib.parse, cloudinary, cloudinary.uploader, mimetypes
+
+cloudinary.config(
+
+    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key    = os.getenv("CLOUDINARY_API_KEY"),
+    api_secret = os.getenv("CLOUDINARY_API_SECRET")
+)
+
+LATEX_ENDPOINT = "https://latexonline.cc/compile"
+
+
+# ---------------------------------------------------------------------------
+# compile_pdf :  latexonline  +  upload automatique des images locales
+# ---------------------------------------------------------------------------
+IMG_CMD   = re.compile(r"""\\includegraphics[^}]*\{([^}]+)\}""")
+BCKG_CMD  = re.compile(r"""\\includegraphics[^}]*\{([^}]+)\}""")  # même pattern
+
+def _push_to_cloud(path: Path) -> str:
+    """Envoie le fichier *path* sur Cloudinary, renvoie l’URL HTTPS."""
+    res = cloudinary.uploader.upload(
+        path.as_posix(),
+        resource_type="image",
+        folder="cvgen-assets",
+        overwrite=True,
+    )
+    return res["secure_url"]     # https://…
+
+def _rewrite_graphics(tex: str, build: Path) -> str:
+    """Remplace les fichiers locaux par leur URL Cloudinary."""
+    def repl(match):
+        fname = match.group(1)
+        p = (build / fname).resolve()
+        if not p.is_file():          # déjà une URL ou fichier absent
+            return match.group(0)
+        url = _push_to_cloud(p)
+        return match.group(0).replace(fname, url)
+    return IMG_CMD.sub(repl, tex)
 
 def compile_pdf(tex: str, meta: dict, ctx: dict) -> Path:
-    build = copy_template(meta)
+    """Compile *tex* → PDF (1ᵉʳ essai : latexonline, fallback local)."""
+    build    = copy_template(meta)
     tex_path = build / "main.tex"
     tex_path.write_text(tex, encoding="utf-8")
 
-    # éventuelle copie de la photo …
-    if (photo := ctx.get("photo")):
+    # copie éventuelle de la photo utilisateur (pour le fallback local)
+    if (photo := ctx.get("photo")) and not photo.startswith("http"):
         up = app.config["UPLOAD_FOLDER"] / photo
         if up.is_file():
             shutil.copy(up, build / photo)
 
-    #engine = "pdflatex"
-    engine = "xelatex"
-    # if re.search(r"\\usepackage\{fontspec\}", tex) \
-    #    or re.search(r"!TEX program *= *xelatex", tex, flags=re.I):
-    #     engine = "xelatex"
+    # ─── 1) tentative compilation distante ──────────────────────────────────
+    try:
+        tex_remote = _rewrite_graphics(tex, build)        # ⇦ URLs Cloudinary
+        encoded    = urllib.parse.quote_plus(tex_remote)
+        url        = f"{LATEX_ENDPOINT}?text={encoded}&command=xelatex&force=true"
+        r          = requests.get(url, timeout=70)
 
-    # ── on ne demande PAS à Python de décoder (pas de text=True) ──────────
-    proc = subprocess.run(
-        [engine, "-interaction=nonstopmode", tex_path.name],
-        cwd=build,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT
-    )
+        if r.ok and r.headers.get("Content-Type", "").startswith("application/pdf"):
+            pdf_path = build / "main.pdf"
+            pdf_path.write_bytes(r.content)
+            return pdf_path
 
-    # on décode nous-mêmes, sans lever d’exception UnicodeDecodeError
-    log = proc.stdout.decode("utf-8", errors="ignore")
+        app.logger.warning("latexonline %s – fallback local\n%s",
+                           r.status_code, r.text[:250])
+    except Exception as exc:
+        app.logger.warning("latexonline exception: %s – fallback local", exc)
 
-    pdf = build / "main.pdf"
-    if proc.returncode != 0 or not pdf.exists():
-        raise RuntimeError(f"La compilation {engine} a échoué :\n" + log[-1500:])
+    # ─── 2) fallback local (pdflatex → xelatex inchangé) ─────────────────────
+    def _run(engine: str):
+        proc = subprocess.run(
+            [engine, "-interaction=nonstopmode", tex_path.name],
+            cwd=build,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+        return build / "main.pdf", proc.stdout, proc.returncode
 
-    return pdf
+    for eng in ("xelatex","pdflatex"):
+        pdf, log, code = _run(eng)
+        if pdf.exists() and pdf.stat().st_size > 1024:
+            if code != 0:
+                app.logger.warning("%s terminé avec warnings (%s)", eng, code)
+            return pdf
+        app.logger.warning("%s KO – on essaie l’autre moteur…", eng)
+
+    raise RuntimeError("Compilation locale et distante impossibles.")
+
+
+
+########################################################################################################
+########################################################################################################
+
+
+# def compile_pdf(tex: str, meta: dict, ctx: dict) -> Path:
+#     """
+#     Compile *tex* en PDF.
+
+#     1. Tente d’abord **pdflatex**.
+#     2. Si le PDF n’est pas produit ou fait < 1 Ko, retente avec **xelatex**.
+#     3. Lève RuntimeError si les deux moteurs échouent.
+
+#     Tolère les codes de sortie ≠ 0 lorsqu’un PDF valide est généré
+#     (LaTeX émet souvent des warnings).
+#     """
+#     build = copy_template(meta)
+#     tex_path = build / "main.tex"
+#     tex_path.write_text(tex, encoding="utf-8")
+
+#     # ── copie éventuelle de la photo ────────────────────────────────────────
+#     if (photo := ctx.get("photo")):
+#         up = app.config["UPLOAD_FOLDER"] / photo
+#         if up.is_file():
+#             shutil.copy(up, build / photo)
+
+#     def _run(engine: str) -> tuple[Path, str, int]:
+#         """Exécute le moteur LaTeX et renvoie (pdf, log, code)."""
+#         proc = subprocess.run(
+#             [engine, "-interaction=nonstopmode", tex_path.name],
+#             cwd=build,
+#             stdout=subprocess.PIPE,
+#             stderr=subprocess.STDOUT,
+#             text=True,
+#         )
+#         return build / "main.pdf", proc.stdout, proc.returncode
+
+#     # # 1️⃣  premier essai : pdflatex
+#     # pdf, log, code = _run("pdflatex")
+#     # if pdf.exists() and pdf.stat().st_size > 1024:
+#     #     if code != 0:
+#     #         app.logger.warning("pdflatex terminé avec code %s (warnings)", code)
+#     #     return pdf
+
+#     # app.logger.warning("pdflatex a échoué – tentative xelatex…")
+
+#     # 2️⃣  second essai : xelatex
+#     pdf, log, code = _run("xelatex")
+#     if pdf.exists() and pdf.stat().st_size > 1024:
+#         if code != 0:
+#             app.logger.warning("xelatex terminé avec code %s (warnings)", code)
+#         return pdf
+
+#     # 3️⃣  échec total
+#     raise RuntimeError(
+#         "La compilation a échoué avec pdflatex puis xelatex.\n" + log[-1500:]
+#     )
 
 
 def gpt_render(template_tex:str, data:dict)->str:
     """Injecte les données + améliore la mise en page, renvoie le LaTeX final."""
-    sys = ("Tu es un expert LaTeX en Français donc les cv doivent etre en français c'est important. On te donne un template et un objet JSON. "
-      "Remplace toutes les variables/structures par les valeurs JSON. "
-      "N'invente pas les champs déjà fournis (nom, email, téléphone, jobs.dates...). "
-      "Ajoute descriptions, compétences, profil, skills, hobbies, Education si manquants, "
-      "et améliore la lisibilité (sauts de ligne, \\item, etc.). "
-      "Le champ 'photo' doit être inséré tel quel dans \\includegraphics. "
-      "Renvoie UNIQUEMENT le code LaTeX final, sans ```.")
+    sys = (
+    # — rôle et langue -----------------------------------------------------------------
+    "Tu es un expert LaTeX francophone. On te fournit 1) un template LaTeX complet "
+    "et 2) les données brutes d’un formulaire de CV.\n"
+    # — règle d’or ----------------------------------------------------------------------
+    "⚠️  Règle ABSOLUE : tu n’inventes JAMAIS de contenu ni de section. "
+    "Tu n’utilises QUE les clés et valeurs qui existent réellement dans l’objet "
+    "données. Si une clé, un tableau ou une valeur n’est pas présent, tu n’ajoutes "
+    "rien, tu laisses la section vide ou tu supprimes entièrement le bloc "
+    "correspondant du template.\n"
+    # — sections à ne pas créer ---------------------------------------------------------
+    "Ne crée donc pas (même vide) : Langues, Compétences, Centres d’intérêt, "
+    "Certifications, Descriptions de formation, Descriptions d’expérience et Projet de formation etc."
+    "s’ils ne sont pas déjà fournis.\n"
+    # — description : reformulation limitée --------------------------------------------
+    "Si un champ « description » existe déjà dans jobs/degrees, reformule-le de maniere un peu plus developpé en"
+    "bullet points clairs (verbe d’action, résultats). "
+    "S’il est vide ou inexistant, n’ajoute rien.\n"
+    # — résumé professionnel ------------------------------------------------------------
+    "Tu peux SEULEMENT rédiger un résumé (summary) **si le champ summary est présent "
+    "et fait moins de 20 mots**. Sinon, garde-le tel quel.\n"
+    # — rendu LaTeX --------------------------------------------------------------------
+    "Remplace les variables du template par les valeurs fournies, améliore la "
+    "lisibilité LaTeX (sauts de ligne, \\item) et insère le champ photo tel quel "
+    "dans \\includegraphics.\n"
+    # — sortie -------------------------------------------------------------------------
+    "Réponds STRICTEMENT avec le code LaTeX final, sans ``` ni explications."
+)
     
 
     user = ("TEMPLATE:\n" + template_tex +
@@ -136,23 +324,30 @@ def gpt_render(template_tex:str, data:dict)->str:
     return re.sub(r"^```.*?\\n|\\n?```$", "", out, flags=re.S).strip()
 
 
-
+def _first(val):
+    """Renvoie la 1ʳᵉ valeur si c’est une liste, sinon la valeur elle-même."""
+    return val[0] if isinstance(val, list) else val
 
 def extract_arrays(form) -> dict:
-    """jobs[0][title] → {'jobs':[...], 'degrees':[...]}  (ordre conservé)."""
+    """
+    Transforme jobs[0][title] → {'jobs':[...], 'degrees':[...]} en conservant l’ordre.
+    Accepte aussi bien ImmutableMultiDict que dict simple.
+    """
     buf = {}
-    for k, v in form.items():
+
+    # si c’est un ImmutableMultiDict on veut (.items()) → (clé, valeur unique)
+    # si c’est un dict classique issu de to_dict(flat=False) la valeur est liste
+    for k, v in (form.items() if hasattr(form, "items") else form):
         m = array_re.fullmatch(k)
-        if m:
-            fld, idx, key = m.group("fld"), int(m.group("idx")), m.group("key")
-            buf.setdefault((fld, idx), {})[key] = v.strip()
+        if not m:
+            continue
+        fld, idx, key = m.group("fld"), int(m.group("idx")), m.group("key")
+        buf.setdefault((fld, idx), {})[key] = _first(v).strip()
 
-    out = {"jobs": [], "degrees": []}
+    out = {"jobs": [], "degrees": [], "languages": []}
     for (fld, idx), row in sorted(buf.items(), key=lambda p: p[0][1]):
-        out[fld].append(row)
+        out.setdefault(fld, []).append(row)
     return out
-
-
 
 # ════════════════════════════════════════════════════════════════════════════
 #  1.  GPT / PDF helpers  (inchangés)
@@ -191,11 +386,318 @@ def choose_input():
 # ---------------------------------------------------------------------------
 #  2-A.  « IMPORTER » un CV PDF / DOCX  →  inchangé (travail rapide)
 # ---------------------------------------------------------------------------
+# @app.route("/import_cv", methods=["POST"])
+# def import_cv():
+#     # (code identique à votre version – pas modifié)
+#     # …
+#     return redirect(url_for("preview"))
+
+
+# ---------------------------------------------------------------
+# 0. utilitaires remplacement LaTeX
+# ---------------------------------------------------------------
+import re
+# ------------------------------------------------------------------
+# helpers remplacement
+# ------------------------------------------------------------------
+PLACEHOLDER_PAT = re.compile(r"%%[^%]+%%")
+
+def _first(val):                     # ⇒ str
+    return val[0] if isinstance(val, list) else val
+
+def _as_list(form, prefix):
+    """Renvoie toutes les valeurs dont la clé commence par prefix."""
+    return [v for k, v in form.items() if k.startswith(prefix)]
+
+CERT_RE = re.compile(r"certifications\[(\d+)]\[(title|issuer|date)]")
+def build_placeholders(form: dict, photo_name:str="") -> dict:
+    """
+    Construit un mapping {%%placeholder%%: valeur_str}.
+    """
+    ph = {}
+    print(form)
+    # --- champs simples -------------------------------------------------
+    simples = ["first_name", "last_name", "headline",
+               "phone", "linkedin", "address", "website", "summary"]
+    for k in simples:
+        ph[f"%%{k}%%"] = _first(form.get(k, ""))
+
+    # --- photo ----------------------------------------------------------
+    ph["%%photo%%"] = photo_name                     # balise LaTeX
+    # (on renverra aussi le vrai nom pour compile_pdf)
+
+    # --- compétences ----------------------------------------------------
+    # tes champs sont skills[0], skills[1]…
+    for k, v in form.items():
+        m = re.fullmatch(r"skills\[(\d+)]", k)
+        if m:
+            ph[f"%%skills[{m.group(1)}]%%"] = _first(v)
+
+    # --- certifications -------------------------------------------------
+    
+    # cert_rows = {}
+    # for k, v in form.items():
+    #     m = CERT_RE.fullmatch(k)
+    #     if m:
+    #         idx, field = int(m.group(1)), m.group(2)
+    #         cert_rows.setdefault(idx, {})[field] = _first(v)
+
+    # for i, row in cert_rows.items():
+    #     # On crée UNE seule chaîne par certif  ➜  "Titre — Organisme (Date)"
+    #     txt = row.get("title", "")
+    #     if issuer := row.get("issuer"): txt += f" — {issuer}"
+    #     if date   := row.get("date"):   txt += f" ({date})"
+    #     ph[f"%%certifications[{i}]%%"] = txt
+    # --- expériences & diplômes ----------------------------------------
+    arrs = extract_arrays(form)      # -> {'jobs':[…], 'degrees':[…]}
+
+    #  A) JOBS  ->  experiences[…]
+    for i, row in enumerate(arrs["jobs"]):
+        ph[f"%%experiences[{i}].company%%"]     = row.get("company", "")
+        ph[f"%%experiences[{i}].title%%"]       = row.get("title",   "")
+        ph[f"%%experiences[{i}].start%%"]       = row.get("dates","").split("–")[0]
+        ph[f"%%experiences[{i}].end%%"]         = row.get("dates","").split("–")[-1]
+        ph[f"%%experiences[{i}].description[0]%%"] = row.get("description","")
+
+    #  B) DEGREES
+    for i, row in enumerate(arrs["degrees"]):
+        ph[f"%%degrees[{i}].title%%"]       = row.get("degree","")
+        ph[f"%%degrees[{i}].school%%"]      = row.get("institution","")
+        ph[f"%%degrees[{i}].year%%"]        = row.get("dates","")
+        ph[f"%%degrees[{i}].subject%%"]     = row.get("description","")
+
+    return ph
+#PLACEHOLDER_PAT = re.compile(r"%%[^%]+%%")     # déjà défini ailleurs
+
+def _as_str(val):
+    """Garantie une string ; liste → join, autre → str()."""
+    if isinstance(val, list):
+        return ", ".join(map(str, val))
+    return str(val)
+
+LATEX_SPECIALS = {
+    '\\': r'\textbackslash{}',
+    '{':  r'\{',  '}': r'\}',
+    '$':  r'\$',
+    '&':  r'\&',
+    '%':  r'\%',
+    '#':  r'\#',
+    '_':  r'\_',
+    '^':  r'\^{}',
+    '~':  r'\~{}',
+}
+
+def latex_escape(text: str) -> str:
+    for c, repl in LATEX_SPECIALS.items():
+        text = text.replace(c, repl)
+    return text
+
+
+
+def apply_placeholders(template_tex: str, ph: dict) -> str:
+    tex = template_tex
+    for key, val in ph.items():
+        tex = tex.replace(key, latex_escape(str(val)))
+    return PLACEHOLDER_PAT.sub("", tex)
+
+
+
+# ───────── helper : extraction GPT depuis un CV PDF/Word ─────────
+def gpt_extract_from_cv(schema: dict, plain_text: str) -> dict:
+    """
+    Reçoit le texte intégral d’un CV (déjà OCR ou converti en texte brut)
+    et renvoie un JSON conforme au schema, complétant tous les champs.
+    """
+    sys = (
+      "Tu es un parser de CV. On te donne le texte brut d’un CV existant "
+      "et un schema JSON cible. "
+      "Récupère toutes les informations présentes ; "
+      "si un champ est manquant dans le texte, laisse-le vide. "
+      "Ne crée pas d’expérience ou de diplôme qui n’existe pas. "
+      "Réponds STRICTEMENT avec le JSON conforme au schema."
+    )
+    user = (
+      "SCHEMA :\n" + json.dumps(schema, ensure_ascii=False, indent=2) +
+      "\n\nCV EN TEXTE BRUT :\n" + plain_text[:6000]  # tranche pour rester court
+    )
+    out = openai.ChatCompletion.create(
+        model=OPENAI_MODEL, 
+        messages=[{"role":"system","content":sys},{"role":"user","content":user}]
+    ).choices[0].message.content
+    return json.loads(re.sub(r"^```json|```$","",out,flags=re.I).strip())
+
+
+
+
+
+
+
+
+
+# @app.route("/import_cv", methods=["POST"])
+# def import_cv():
+#     if "template_id" not in session:
+#         return redirect(url_for("index"))
+
+#     up = request.files.get("cvfile")
+#     if not up or not up.filename:
+#         flash("Choisissez un fichier !", "warning")
+#         return redirect(url_for("choose_input"))
+    
+
+#     # --- 2. photo optionnelle -------------------------------------------
+#     photo = request.files.get("photo")
+#     if photo and photo.filename:
+#         photo_name = f"{uuid.uuid4().hex}{Path(photo.filename).suffix}"
+#         dest = app.config["UPLOAD_FOLDER"] / photo_name
+#         dest.parent.mkdir(parents=True, exist_ok=True)
+#         photo.save(dest)
+#         session["photo_file"] = photo_name
+#     else:
+#         session["photo_file"] = ""
+
+
+
+
+#     ext = Path(up.filename).suffix.lower()
+#     fname = f"{uuid.uuid4().hex}{ext}"
+#     temp  = app.config["UPLOAD_FOLDER"]/fname
+#     temp.parent.mkdir(parents=True, exist_ok=True)
+#     up.save(temp)
+
+#     # --- 1. convertir en texte brut ----------------------------------------
+#     if ext == ".pdf":
+#         # nécessite 'pdftotext' installé (poppler) ou pdfminer
+#         txt = subprocess.check_output(["pdftotext", "-layout", str(temp), "-"]).decode("utf-8", errors="ignore")
+#     elif ext in (".docx", ".doc"):
+#         # simple extraction avec python-docx (docx) ou mammoth; ici pseudo-code
+        
+#         doc  = docx.Document(str(temp))
+#         txt  = "\n".join(p.text for p in doc.paragraphs)
+#     else:
+#         flash("Format non pris en charge (PDF ou DOCX)", "danger")
+#         return redirect(url_for("choose_input"))
+
+#     # --- 2. appeler GPT pour mapper le texte → JSON complet -----------------
+#     meta   = get_template_meta(session["template_id"])
+#     schema = json.loads(Path(meta["latex_path"]).with_name("schema.json").read_text())
+#     session["cv_data"] = gpt_extract_from_cv(schema, txt)
+
+#     return redirect(url_for("preview"))
+
+def gpt_fill_plain(template_tex: str, plain_text: str, photo_name: str = "", rules: str = "") -> str:
+    """Remplit *template_tex* avec *plain_text* (CV brut) + insère *photo_name*.
+    *photo_name* est le nom du fichier copié dans le dossier build, à utiliser
+    tel quel dans \includegraphics{…}."""
+
+    photo_instr = (
+        f"Le fichier photo à utiliser est : {photo_name}. "
+        "Si le template contient déjà une commande \\includegraphics, remplace son argument par ce nom. "
+        "Sinon, insère cette commande à l’endroit approprié (en haut du CV)."
+        if photo_name else ""
+    )
+
+    sys = (
+        "Tu es un expert LaTeX francophone. On te fournit :\\n"
+        "1) un template LaTeX complet ;\\n"
+        "2) le texte brut d’un CV existant.\\n"
+        "Ta mission : extraire les informations et les placer dans le template et le cv doit etre le modèle que le template fourni. Tu dois garder les memes couleurs et en gros le modèle tout entier.\\n"
+        "⚠️  N’invente JAMAIS de contenu (noms, dates, chiffres).\\n"
+        "Reformule toutes les descriptions d’expériences afin qu’elles deviennent "
+        "2–3 phrases fluides (ou bullet points) en réutilisant **uniquement** les "
+        "éléments présents.\\n"
+        "Pour chaque formation sans description, rédige UNE phrase générique "
+        "décrivant brièvement la spécialisation ou les compétences liées, "
+        "d’après le titre.\\n"
+        "Ne crée pas Langues, Compétences, Centres d’intérêt, Certifications, etc. "
+        "s’ils n’existent pas.\\n"
+        "Si le résumé (summary) est absent, crée un résumé de 3–4 phrases fluides en t’appuyant sur les informations du CV (poste cible, années d’expérience, compétences majeures) ; s’il existe déjà, reformule-le en 3–4 phrases plus naturelles.\n"
+        "sinon, laisse le champ vide.\\n"
+
+        + photo_instr + "\\n" + rules + "\\n"
+
+    )
+
+    user = (
+        "TEMPLATE:\n" + template_tex +
+        "\n\nCV TEXTE BRUT:\n" + plain_text[:6000]
+    )
+
+    out = openai.ChatCompletion.create(
+        model       = OPENAI_MODEL,
+        messages    = [
+            {"role": "system", "content": sys},
+            {"role": "user",   "content": user}
+        ]
+    ).choices[0].message.content
+
+    return re.sub(r"^```.*?\n|\n?```$", "", out, flags=re.S).strip()
+
+# ---------------------------------------------------------------------------
+# Route /import_cv  –  version sans JSON / schema + photo aware
+# ---------------------------------------------------------------------------
+
 @app.route("/import_cv", methods=["POST"])
 def import_cv():
-    # (code identique à votre version – pas modifié)
-    # …
+    """Importe un CV PDF/DOCX (+ photo) → GPT → LaTeX → PDF (photo incluse)."""
+
+    # 0. vérifie que le template est choisi ---------------------------------
+    if "template_id" not in session:
+        return redirect(url_for("index"))
+
+    # 1. récup fichiers ------------------------------------------------------
+    cv_file = request.files.get("cvfile")
+    if not cv_file or not cv_file.filename:
+        flash("Choisissez un fichier CV !", "warning")
+        return redirect(url_for("choose_input"))
+
+    photo_file = request.files.get("photo")
+
+    ext = Path(cv_file.filename).suffix.lower()
+    if ext not in (".pdf", ".doc", ".docx"):
+        flash("Format non pris en charge (PDF ou DOCX)", "danger")
+        return redirect(url_for("choose_input"))
+
+    cv_tmp = app.config["UPLOAD_FOLDER"] / f"{uuid.uuid4().hex}{ext}"
+    cv_tmp.parent.mkdir(parents=True, exist_ok=True)
+    cv_file.save(cv_tmp)
+
+    # 2. photo optionnelle ---------------------------------------------------
+    photo_name = ""
+    if photo_file and photo_file.filename:
+        photo_name = f"{uuid.uuid4().hex}{Path(photo_file.filename).suffix}"
+        dest = app.config["UPLOAD_FOLDER"] / photo_name
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        photo_file.save(dest)
+    session["photo_file"] = photo_name
+
+    # 3. extraction texte ----------------------------------------------------
+    if ext == ".pdf":
+        plain = subprocess.check_output(["pdftotext", "-layout", str(cv_tmp), "-"]).decode("utf-8", errors="ignore")
+    else:
+        doc = docx.Document(str(cv_tmp))
+        plain = "\n".join(p.text for p in doc.paragraphs)
+
+    # 4. GPT → LaTeX ---------------------------------------------------------
+    meta         = get_template_meta(session["template_id"])
+    template_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
+    final_tex    = gpt_fill_plain(template_tex, plain, photo_name)
+
+    # 5. compilation ---------------------------------------------------------
+    pdf_path = compile_pdf(final_tex, meta, {"photo": photo_name})
+
+    # 6. session + redirect preview -----------------------------------------
+    session.update({
+        "cv_data":      {},
+        "last_tex":     final_tex,
+        "pdf_filename": pdf_path.relative_to(app.config["OUTPUT_FOLDER"]).as_posix(),
+    })
     return redirect(url_for("preview"))
+
+
+
+
+
 
 
 # ---------------------------------------------------------------------------
@@ -217,7 +719,7 @@ def minidata():
     # ---------- traitement ultra-rapide (on NE lance plus GPT ici)
     # 1. tout le formulaire (listes afin de ne rien perdre)
     session["raw_form"] = request.form.to_dict(flat=False)
-
+    
     # 2. la photo
     f = request.files.get("photo")
     if f and f.filename:
@@ -240,34 +742,175 @@ def loading():
 
 
 # --------- AJAX : heavy work  (GPT + LaTeX) ---------------------------------
+# @app.route("/generate", methods=["POST"])
+# def generate():
+#     if "raw_form" not in session:
+#         return jsonify(error="no data"), 400
+
+#     # -------- reconstituer les données du form
+#     flat = {k: v[0] for k, v in session.pop("raw_form").items()}
+#     flat["photo"] = session.pop("photo_file", "")
+
+#     # tableaux dynamiques
+#     flat.update(extract_arrays(flat))
+
+#     # -------- GPT ➜ JSON complet
+#     meta   = get_template_meta(session["template_id"])
+#     schema = json.loads(Path(meta["latex_path"]).with_name("schema.json").read_text())
+#     full   = gpt_autofill(schema, flat)
+
+#     # -------- render & compile
+#     tpl_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
+#     final   = gpt_render(tpl_tex, full)
+#     pdf     = compile_pdf(final, meta, full)
+
+#     # -------- stocke pour /preview
+#     session["cv_data"]      = full
+#     session["last_tex"]     = final
+#     session["pdf_filename"] = pdf.relative_to(app.config["OUTPUT_FOLDER"]).as_posix()
+
+#     return jsonify(ok=True)
+
+# @app.route("/generate", methods=["POST"])
+# def generate():
+#     if "template_id" not in session:
+#         return jsonify(error="template"), 400
+
+#     flat  = session.pop("raw_form")
+    
+#     photo = session.pop("photo_file", "")
+
+#     placeholders = build_placeholders(flat, photo_name=photo)
+#     print(placeholders)
+#     meta     = get_template_meta(session["template_id"])
+
+#     tpl_tex  = Path(meta["latex_path"]).read_text(encoding="utf-8")
+#     final    = apply_placeholders(tpl_tex, placeholders)
+#     print(final)
+#     # ctx doit contenir 'photo' UNIQUEMENT (pas les %%…%%>)
+    
+#     pdf_path = compile_pdf(final, meta, {"photo": photo})
+#     session["photo_file"] = photo 
+
+#     session["last_tex"]     = final
+#     session["pdf_filename"] = pdf_path.relative_to(
+#                                 app.config["OUTPUT_FOLDER"]).as_posix()
+#     return jsonify(ok=True)
+
+# 
+
+
+
+# ---------------------------------------------------------------------------
+# 1️⃣  Helper : gpt_fill_latex  (remplace gpt_autofill + gpt_render)
+# ---------------------------------------------------------------------------
+
+def gpt_fill_latex(template_tex: str, data: dict) -> str:
+    """Renvoie le LaTeX final en injectant *data* dans *template_tex*.
+
+    - *data* provient directement du formulaire (y compris jobs/degrees).
+    - Si le résumé professionnel est manquant ou < 20 mots, GPT rédige
+      un **Professional Summary** (3 phrases max) pertinent pour le rôle
+      cible (`target_role`).
+    - GPT reformule les descriptions d’expériences et formations :
+      • style bullet points, verbs d’action, résultats chiffrés si dispo.
+    - Répond **strictement** par le code LaTeX complet, sans balises
+      ``` ni commentaires.
+    """
+
+    sys = (
+    # — rôle ----------------------------------------------------------
+    "Tu es un expert LaTeX francophone. On te donne un template complet "
+    "et les données brutes d’un formulaire de CV.\n"
+   
+    # — règle d’or ----------------------------------------------------
+    "Règle ABSOLUE : tu n’inventes aucun contenu. Tu ne modifies ni dates, "
+    "ni noms, ni nombres, ni valeurs chiffrées. Si un élément n’existe pas "
+    "dans les données, tu le laisses vide ou supprimes le bloc.\n"
+    # — reformulation limitée ----------------------------------------
+    "Pour chaque champ « description » présent, reformule uniquement la "
+    "syntaxe : orthographe, tournures plus fluides, phrases courtes. "
+    "**Ne change pas le sens ni n’ajoute de chiffres ou d’indicateurs.**\n"
+    # — résumé optionnel ---------------------------------------------
+    "Tu peux rédiger un résumé professionnel **seulement si le champ "
+    "summary est vide** ; dans ce cas, 3–4 phrases sans chiffres ni superlatifs.\n"
+    # — LaTeX ---------------------------------------------------------
+    "Remplace les variables du template par les valeurs fournies, améliore "
+    "la lisibilité LaTeX (\\item, sauts de ligne) et insère la photo telle quelle "
+    "dans \\includegraphics.\n"
+    # — sortie --------------------------------------------------------
+    "Réponds STRICTEMENT avec le code LaTeX final, sans ``` ni commentaires."
+)
+
+    user = (
+        "TEMPLATE:\n" + template_tex +
+        "\n\nDONNÉES:\n" + json.dumps(data, ensure_ascii=False)
+    )
+
+    out = openai.ChatCompletion.create(
+        model    = OPENAI_MODEL,
+        messages = [
+            {"role": "system", "content": sys},
+            {"role": "user",   "content": user}
+        ]
+    ).choices[0].message.content
+
+    # Nettoyage éventuel de ``` si le modèle en ajoute malgré l’instruction
+    return re.sub(r"^```.*?\n|\n?```$", "", out, flags=re.S).strip()
+
+# ---------------------------------------------------------------------------
+# 2️⃣  Route /generate (remplace totalement l’ancienne)
+# ---------------------------------------------------------------------------
+
 @app.route("/generate", methods=["POST"])
 def generate():
-    if "raw_form" not in session:
-        return jsonify(error="no data"), 400
+    """Pipeline : form → GPT (LaTeX) → PDF."""
+    if "template_id" not in session or "raw_form" not in session:
+        return jsonify(error="template ou formulaire manquant"), 400
 
-    # -------- reconstituer les données du form
-    flat = {k: v[0] for k, v in session.pop("raw_form").items()}
-    flat["photo"] = session.pop("photo_file", "")
+    # 1. Récupération / préparation des données ---------------------------------
+    flat   = {k: v[0] for k, v in session.pop("raw_form").items()}
+    photo  = session.pop("photo_file", "")
+    flat["photo"] = photo
 
-    # tableaux dynamiques
+    # Tableaux dynamiques (jobs[], degrees[], languages[], skills[], …)
     flat.update(extract_arrays(flat))
 
-    # -------- GPT ➜ JSON complet
-    meta   = get_template_meta(session["template_id"])
-    schema = json.loads(Path(meta["latex_path"]).with_name("schema.json").read_text())
-    full   = gpt_autofill(schema, flat)
+    # 2. Lecture du template -----------------------------------------------------
+    meta     = get_template_meta(session["template_id"])
+    template = Path(meta["latex_path"]).read_text(encoding="utf-8")
 
-    # -------- render & compile
-    tpl_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
-    final   = gpt_render(tpl_tex, full)
-    pdf     = compile_pdf(final, meta, full)
+    # 3. GPT produit le LaTeX complet -------------------------------------------
+    final_tex = gpt_fill_latex(template, flat)
 
-    # -------- stocke pour /preview
-    session["cv_data"]      = full
-    session["last_tex"]     = final
-    session["pdf_filename"] = pdf.relative_to(app.config["OUTPUT_FOLDER"]).as_posix()
+    # 4. Compilation PDF ---------------------------------------------------------
+    pdf_path = compile_pdf(final_tex, meta, {"photo": photo})
 
+    # 5. Stockage session --------------------------------------------------------
+    session.update({
+        "cv_data":      flat,           # éventuel usage ultérieur
+        "last_tex":     final_tex,
+        "pdf_filename": pdf_path.relative_to(app.config["OUTPUT_FOLDER"]).as_posix(),
+        "photo_file":   photo,
+    })
     return jsonify(ok=True)
+
+# ---------------------------------------------------------------------------
+# 3️⃣  Nettoyage à prévoir
+# ---------------------------------------------------------------------------
+# • Supprimez ou commentez toutes les anciennes fonctions liées aux placeholders
+#   (build_placeholders, apply_placeholders, PLACEHOLDER_PAT…).
+# • `gpt_autofill` n’est plus nécessaire.
+# • Le reste de l’app (routes /loading, /preview, /edit…) reste inchangé.
+
+
+
+
+
+
+
+
+
 
 
 # ---------------------------------------------------------------------------
@@ -316,36 +959,50 @@ def legacy_form():
 #     return render_template("preview.html",
 #                            pdf_filename=session["pdf_filename"])
 
+# @app.route("/preview")
+# def preview():
+#     # sécurité minimale
+#     if "template_id" not in session or "cv_data" not in session:
+#         return redirect(url_for("index"))
+
+#     meta = get_template_meta(session["template_id"])
+
+#     # 1. quel LaTeX utiliser ?
+#     latex_src = session.get("last_tex")
+#     if latex_src is None:                          # première fois
+#         template_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
+#         latex_src    = gpt_render(template_tex, session["cv_data"])
+
+#     # 2. compile À CHAQUE APPEL
+#     pdf_path = compile_pdf(latex_src, meta, session["cv_data"])
+
+#     # 3. met à jour la session (toujours)
+#     session["last_tex"]     = latex_src
+#     session["pdf_filename"] = pdf_path.relative_to(
+#         app.config["OUTPUT_FOLDER"]).as_posix()
+
+#     # 4. time-stamp pour l’anti-cache
+#     return render_template("preview.html",
+#                            pdf_filename=session["pdf_filename"],
+#                            ts=int(uuid.uuid4().int % 1e6))     # petit nombre aléatoire
+
 @app.route("/preview")
 def preview():
-    # sécurité minimale
-    if "template_id" not in session or "cv_data" not in session:
+    if "last_tex" not in session:
         return redirect(url_for("index"))
 
-    meta = get_template_meta(session["template_id"])
+    meta  = get_template_meta(session["template_id"])
+    photo = session.get("photo_file", "")
 
-    # 1. quel LaTeX utiliser ?
-    latex_src = session.get("last_tex")
-    if latex_src is None:                          # première fois
-        template_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
-        latex_src    = gpt_render(template_tex, session["cv_data"])
+    # ➜ on repasse le nom du fichier photo stocké juste après /minidata
+    pdf   = compile_pdf(session["last_tex"],
+                        meta,
+                        {"photo": photo})
 
-    # 2. compile À CHAQUE APPEL
-    pdf_path = compile_pdf(latex_src, meta, session["cv_data"])
-
-    # 3. met à jour la session (toujours)
-    session["last_tex"]     = latex_src
-    session["pdf_filename"] = pdf_path.relative_to(
-        app.config["OUTPUT_FOLDER"]).as_posix()
-
-    # 4. time-stamp pour l’anti-cache
+    session["pdf_filename"] = pdf.relative_to(app.config["OUTPUT_FOLDER"]).as_posix()
     return render_template("preview.html",
                            pdf_filename=session["pdf_filename"],
-                           ts=int(uuid.uuid4().int % 1e6))     # petit nombre aléatoire
-
-
-
-
+                           ts=uuid.uuid4().hex)        # anti-cache
 
 
 
@@ -388,14 +1045,157 @@ def download():
 # ...  (gardez votre fonction gpt_edit et la route /edit telles quelles)
 
 
-# ───────────────────── Édition libre ----------------------------------------
-def gpt_edit(tex,instr):
-    sys="Tu es un expert LaTeX. Applique l'instruction et renvoie le résultat."
-    out=openai.ChatCompletion.create(model=OPENAI_MODEL,
-        messages=[{"role":"system","content":sys},
-                  {"role":"user","content":f"Instruction : {instr} \n---\n{tex}"}]
-        ).choices[0].message.content
-    return re.sub(r"^```.*?\n|\n?```$", "", out, flags=re.S)
+def gpt_edit(tex: str, instr: str) -> str:
+    """Applique *instr* au code LaTeX *tex* sans rien inventer.
+
+    * L’instruction est libre (supprimer, modifier, ajouter une ligne, etc.).
+    * Aucune autre partie du document ne doit être altérée.
+    * La sortie doit être le **LaTeX complet**, sans balises ``` ni commentaires.
+    """
+
+    sys = (
+        "Tu es un expert en LaTeX. Tu reçois le code LaTeX complet d’un CV et une instruction unique. "
+        "Applique strictement cette instruction, sans rien inventer d’autre. "
+        "Ne modifie pas les parties non concernées et conserve tous les encodages/accents. "
+        "Réponds UNIQUEMENT avec le LaTeX final, sans balises ``` ni commentaires supplémentaires."
+    )
+
+    user = f"INSTRUCTION : {instr}\n\nCODE LATEX :\n{tex}"
+
+    out = openai.ChatCompletion.create(
+        model       = OPENAI_MODEL,
+        messages    = [
+            {"role": "system", "content": sys},
+            {"role": "user",   "content": user}
+        ]
+        
+    ).choices[0].message.content
+
+    # sécurité : retire tout bloc ``` éventuel
+    return re.sub(r"^```.*?\n|\n?```$", "", out, flags=re.S).strip()
+
+# ---------------------------------------------------------------------------
+# 1️⃣  Phase rapide : on stocke l’instruction et on affiche le spinner
+# ---------------------------------------------------------------------------
+@app.route("/edit_prepare", methods=["POST"])
+def edit_prepare():
+    if "template_id" not in session or "last_tex" not in session:
+        return redirect(url_for("preview"))
+
+    instr = request.form.get("instruction", "").strip()
+    if not instr:
+        flash("Veuillez saisir une instruction !", "warning")
+        return redirect(url_for("preview"))
+
+    session["pending_edit"] = instr  # sera consommé par /edit_apply
+    return render_template("edit_loading.html")  # spinner immédiat
+
+# ---------------------------------------------------------------------------
+# 2️⃣  Phase lourde : appelée en AJAX depuis edit_loading.html
+# ---------------------------------------------------------------------------
+@app.route("/edit_apply", methods=["POST"])
+def edit_apply():
+    if "pending_edit" not in session or "last_tex" not in session:
+        return jsonify(error="no edit"), 400
+
+    instr = session.pop("pending_edit")
+
+    # GPT modifie le LaTeX ----------------------------------------------------
+    new_tex = gpt_edit(session["last_tex"], instr)
+
+    # Compile ---------------------------------------------------------------
+    meta  = get_template_meta(session["template_id"])
+    photo = session.get("photo_file", "")
+    pdf_path = compile_pdf(new_tex, meta, {"photo": photo})
+
+    # Maj session -----------------------------------------------------------
+    session["last_tex"] = new_tex
+    session["pdf_filename"] = pdf_path.relative_to(
+        app.config["OUTPUT_FOLDER"],
+    ).as_posix()
+
+    return jsonify(ok=True)
+
+
+
+
+
+
+@app.route("/import_prepare", methods=["POST"])
+def import_prepare():
+    if "template_id" not in session:
+        return redirect(url_for("index"))
+
+    cv_file   = request.files.get("cvfile")
+    photo_file = request.files.get("photo")
+    if not cv_file or not cv_file.filename:
+        flash("Choisissez un fichier CV !", "warning")
+        return redirect(url_for("choose_input"))
+
+    # Sauvegarde temporaire ---------------------------------------------------
+    ext = Path(cv_file.filename).suffix.lower()
+    cv_tmp = app.config["UPLOAD_FOLDER"] / f"tmp_{uuid.uuid4().hex}{ext}"
+    cv_tmp.parent.mkdir(parents=True, exist_ok=True)
+    cv_file.save(cv_tmp)
+
+    photo_tmp = ""
+    if photo_file and photo_file.filename:
+        photo_tmp = app.config["UPLOAD_FOLDER"] / f"tmp_{uuid.uuid4().hex}{Path(photo_file.filename).suffix}"
+        photo_file.save(photo_tmp)
+
+    # Enregistre dans la session ---------------------------------------------
+    session["pending_cv"]    = cv_tmp.as_posix()
+    session["pending_photo"] = photo_tmp.as_posix() if photo_tmp else ""
+
+    return render_template("loading.html")  # spinner immédiat
+
+# ---------------------------------------------------------------------------
+# Étape 2 : travail lourd en AJAX -------------------------------------------
+# ---------------------------------------------------------------------------
+@app.route("/import_apply", methods=["POST"])
+def import_apply():
+    if "pending_cv" not in session:
+        return jsonify(error="no pending"), 400
+
+    cv_path   = Path(session.pop("pending_cv"))
+    photo_tmp = session.pop("pending_photo", "")
+    photo_name = ""
+
+    # Copie la photo définitive ----------------------------------------------
+    if photo_tmp:
+        photo_name = f"{uuid.uuid4().hex}{Path(photo_tmp).suffix}"
+        dest = app.config["UPLOAD_FOLDER"] / photo_name
+        shutil.move(photo_tmp, dest)
+
+    # Extraction texte brut ---------------------------------------------------
+    ext = cv_path.suffix.lower()
+    if ext == ".pdf":
+        plain = subprocess.check_output(["pdftotext", "-layout", str(cv_path), "-"]).decode("utf-8", errors="ignore")
+    else:
+        doc = docx.Document(str(cv_path))
+        plain = "".join(p.text for p in doc.paragraphs)
+
+    # GPT → LaTeX -------------------------------------------------------------
+    meta         = get_template_meta(session["template_id"])
+    template_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
+    final_tex    = gpt_fill_plain(template_tex, plain, photo_name)
+
+    # Compilation -------------------------------------------------------------
+    pdf_path = compile_pdf(final_tex, meta, {"photo": photo_name})
+
+    # Session update ----------------------------------------------------------
+    session.update({
+        "photo_file":  photo_name,
+        "last_tex":     final_tex,
+        "pdf_filename": pdf_path.relative_to(app.config["OUTPUT_FOLDER"]).as_posix(),
+    })
+
+    # Nettoyage du fichier temporaire
+    cv_path.unlink(missing_ok=True)
+
+    return jsonify(ok=True)
+
+
 
 
 # @app.route("/edit", methods=["POST"])
@@ -453,4 +1253,3 @@ def edit():
 # ─────────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
-
