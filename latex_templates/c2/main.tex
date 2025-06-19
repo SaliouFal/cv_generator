@@ -1,0 +1,197 @@
+\documentclass{article}
+
+\usepackage{times}
+\usepackage{geometry}
+\geometry{a4paper,left=0.6cm,right=0.7cm,top=1cm,bottom=1cm,columnsep=0.8cm}
+\usepackage{fontawesome}
+\usepackage[hidelinks]{hyperref}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{hyphsubst}
+\usepackage{moresize}
+\usepackage{hyphenat}
+\usepackage{adjustbox}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+
+\usepackage{enumitem}
+\setlist[itemize]{itemsep=1pt,leftmargin=*,topsep=-10pt}
+
+\definecolor{maincolor}{HTML}{2aaee7}
+
+\usepackage{enumitem}
+\setlist[itemize]{itemsep=-2pt,topsep=0pt,leftmargin=*}
+\renewcommand{\labelitemi}{\textcolor{black}{\footnotesize$\bullet$}}
+
+\setlength{\parindent}{0pt}
+\usepackage{paracol}
+
+
+
+\newcommand{\cvsection}[1]{
+\setlength{\arrayrulewidth}{1pt}
+\begin{tabular}{@{}p{\linewidth}}
+ \\
+\\
+\textbf{\Large #1}  \\[3pt]
+\hline
+ \\
+\end{tabular}
+}
+
+\newcommand*{\ClipSep}{0.4cm}
+
+\begin{document}
+
+\pagestyle{empty}
+
+\columnratio{0.7}
+\begin{paracol}{2}
+
+
+{\LARGE \textbf{name}} 
+
+~
+
+{\color{maincolor}\Large \textbf{headline}}
+
+
+\begin{tabular}{@{}cp{0.4\linewidth}cp{0.4\linewidth}}
+& \\
+{\color{maincolor}\faEnvelope} & \href{mailto:email}{{email}} & {\color{maincolor}\faMapMarker} & {address}\\[6pt]
+{\color{maincolor}\faPhone} & \href{tel:phone}{phone} &
+{\color{maincolor}\faLinkedin} & \href{linkedin}{linkedin}  \\
+\end{tabular}
+
+\cvsection{EXPERIENCE}
+
+{{experience.[0].title}} \hfill \textit{experiences.[0].start}-{experiences.[0].end}
+
+{\color{maincolor}{experience.[0].company}}
+
+{experience.[0].location}
+
+\begin{itemize}
+\item {experience.[0].description.[0]}
+\item {experience.[0].description.[1]}
+\end{itemize}
+
+~
+
+{{experience.[1].title}} \hfill \textit{experiences.[1].start}-{experiences.[1].end}
+
+{\color{maincolor}{experience.[1].company}}
+
+{experience.[1].location}
+
+\begin{itemize}
+\item {experience.[1].description.[0]}
+\item {experience.[1].description.[1]}
+\end{itemize}
+
+
+\cvsection{EDUCATION}
+
+\textbf{{education.[0].degree}} \hfill {education.[0].location}
+
+{\color{maincolor}{education.[0].institution}}
+
+{education.[0].year}
+
+\textit{{education.[0].description}}
+
+\cvsection{VOLUNTEER WORK}
+
+\begin{tabular}{@{}ll}
+         \begin{minipage}{0.04\linewidth}
+         \includegraphics[width=\linewidth]{picon.png}
+         \end{minipage} & {volunteer[0].title} \\
+         & {volunteer[0].description} \\
+\end{tabular}
+
+~
+
+~
+
+\begin{tabular}{@{}ll}
+         \begin{minipage}{0.04\linewidth}
+         \includegraphics[width=\linewidth]{picon.png}
+         \end{minipage} & {volunteer[1].title} \\
+         & {volunteer[1].description}
+\end{tabular}
+
+\switchcolumn
+
+\begin{tikzpicture}
+\clip (0,0) circle (1.5cm) node[anchor=center] {\includegraphics[width=3cm]{picon.png}}; 
+\end{tikzpicture}
+
+~
+
+{\color{maincolor} \textbf{Dev} $|$ Python $|$ Java $|$}
+
+\cvsection{SUMMARY}
+
+{summary}
+
+\cvsection{SKILLS} 
+
+
+\begin{tabular}{@{}ll}
+         \begin{minipage}{0.09\linewidth}
+         \includegraphics[width=\linewidth]{picon.png}
+         \end{minipage} & {\color{maincolor}{skills.0}} \\[8pt]
+         \begin{minipage}{0.09\linewidth}
+         \includegraphics[width=\linewidth]{picon.png}
+         \end{minipage} & {\color{maincolor}{skills.1}} \\[8pt]
+         \begin{minipage}{0.09\linewidth}
+         \includegraphics[width=\linewidth]{picon.png}
+         \end{minipage} & {\color{maincolor}{skills.2}} \\[8pt]
+         \begin{minipage}{0.09\linewidth}
+         \includegraphics[width=\linewidth]{picon.png}
+         \end{minipage} & {\color{maincolor}{skills.3}} \\[8pt]
+         \begin{minipage}{0.09\linewidth}
+         \includegraphics[width=\linewidth]{picon.png}
+         \end{minipage} & {\color{maincolor}{skills.4}} \\
+\end{tabular}
+
+\cvsection{LANGUAGES}
+
+\begin{tabular}{c}
+\includegraphics[width=0.7cm]{uk.png}
+\end{tabular}
+\begin{tabular}{p{\linewidth}}
+{\color{maincolor}{language.[0].name}} \\
+{language.[0].level} \\
+\end{tabular}
+
+~ \\[-10pt]
+
+\begin{tabular}{c}
+\includegraphics[width=0.7cm]{grmany.png}
+\end{tabular}
+\begin{tabular}{p{\linewidth}}
+{\color{maincolor}{language.[1].name}} \\
+{language.[1].level} \\
+\end{tabular}
+
+\cvsection{AWARDS}
+
+\begin{tabular}{@{}ll}
+\begin{minipage}{0.09\linewidth}
+         \includegraphics[width=\linewidth]{picon.png}
+         \end{minipage} & {\color{maincolor}{awards.[0].issuer}} \\[8pt]
+\begin{minipage}{0.09\linewidth}
+         \includegraphics[width=\linewidth]{picon.png}
+         \end{minipage} & {\color{maincolor}{awards.[1].issuer}} \\
+\end{tabular}
+
+\end{paracol}
+
+
+
+\end{document}

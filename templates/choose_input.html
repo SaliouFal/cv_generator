@@ -1,20 +1,425 @@
-<!doctype html><html lang="fr"><head>
-  <meta charset="utf-8">
-  <title>Démarrage</title>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Création de CV | Démarrage</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head><body class="p-5 text-center">
-  <h2 class="mb-4">Comment souhaitez-vous pré-remplir votre CV&nbsp;?</h2>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-light: #4895ef;
+      --secondary: #3f37c9;
+      --accent: #f72585;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      color: var(--dark);
+    }
+    
+    .container {
+      max-width: 1200px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+    }
+    
+    .header p {
+      font-size: 1.1rem;
+      color: var(--gray);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .option-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transition: var(--transition);
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .option-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(67, 97, 238, 0.15);
+    }
+    
+    .card-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .card-header h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .card-body {
+      padding: 2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .card-description {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+    
+    .btn-main {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      border: none;
+      border-radius: 50px;
+      padding: 0.8rem 1.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: var(--transition);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      width: 100%;
+      margin-top: auto;
+    }
+    
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+      color: white;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .form-control {
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e0e0e0;
+      transition: var(--transition);
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
+    }
+    
+    .file-input-container {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .file-input-container input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    
+    .file-input-label {
+      background-color: #f8f9fa;
+      border: 1px dashed #dee2e6;
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    
+    .file-input-label:hover {
+      border-color: var(--primary-light);
+      background-color: rgba(67, 97, 238, 0.05);
+    }
+    
+    .file-input-label i {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .file-input-text {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+    
+    .file-input-text strong {
+      color: var(--primary);
+    }
+    
+    .features {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 3rem;
+      padding: 2rem 0;
+    }
+    
+    .feature {
+      text-align: center;
+      max-width: 200px;
+    }
+    
+    .feature i {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    
+    .feature h4 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+    
+    .feature p {
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+    
+    .footer-note {
+      text-align: center;
+      color: var(--gray);
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e9ecef;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      .card-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .features {
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Créez votre CV en quelques minutes</h1>
+      <p>Sélectionnez la méthode qui vous convient pour commencer à créer votre CV professionnel</p>
+    </div>
 
-  <a href="{{ url_for('minidata') }}" class="btn btn-primary btn-lg me-3">
-    Remplir le formulaire
-  </a>
+    <div class="card-container">
+      <!-- Option 1: Remplir le formulaire -->
+      <div class="option-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-edit"></i>
+          </div>
+          <h3>Création manuelle</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">Commencez avec un formulaire vierge et saisissez vos informations étape par étape. Idéal pour créer un CV entièrement personnalisé.</p>
+          <a href="{{ url_for('minidata') }}" class="btn btn-main">
+            <i class="fas fa-pen me-2"></i>Remplir le formulaire
+          </a>
+        </div>
+      </div>
 
-  <form action="{{ url_for('import_cv') }}" method="post" enctype="multipart/form-data" class="d-inline-block">
-    <label class="btn btn-outline-secondary btn-lg">
-      Importer mon CV existant
-      <input type="file" name="cvfile" accept=".pdf,.doc,.docx" hidden onchange="this.form.submit()">
-    </label>
-  </form>
+      <!-- Option 2: Importer un CV -->
+      <div class="option-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-file-import"></i>
+          </div>
+          <h3>Importer un CV existant</h3>
+        </div>
+        <div class="card-body">
+          <form action="{{ url_for('import_cv') }}" method="post" enctype="multipart/form-data">
+          
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-file-pdf"></i>Fichier CV (PDF ou DOCX)
+              </label>
+              <div class="file-input-container">
+                <div class="file-input-label">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <p class="file-input-text">Glissez-déposez votre fichier ou <strong>parcourir</strong></p>
+                  <small>Formats acceptés: PDF, DOC, DOCX</small>
+                </div>
+                <input type="file" name="cvfile" accept=".pdf,.doc,.docx" required>
+              </div>
+            </div>
 
-  <p class="mt-4 text-muted">PDF ou DOCX &nbsp;•&nbsp; Nous analyserons vos données puis les adapterons au modèle choisi.</p>
-</body></html>
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-camera"></i>Photo (optionnelle)
+              </label>
+              <div class="file-input-container">
+                <div class="file-input-label">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <p class="file-input-text">Ajouter une photo professionnelle</p>
+                  <small>Formats: JPG, PNG (max 5MB)</small>
+                </div>
+                <input type="file" name="photo" accept="image/*">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-main">
+              <i class="fas fa-search me-2"></i>Analyser mon CV
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <i class="fas fa-shield-alt"></i>
+        <h4>Sécurisé</h4>
+        <p>Vos données sont protégées et ne sont jamais partagées</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-bolt"></i>
+        <h4>Rapide</h4>
+        <p>Créez un CV professionnel en moins de 10 minutes</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-mobile-alt"></i>
+        <h4>Responsive</h4>
+        <p>Votre CV sera parfait sur tous les appareils</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-sync-alt"></i>
+        <h4>Modifiable</h4>
+        <p>Modifiez votre CV à tout moment</p>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <p><i class="fas fa-info-circle me-2"></i>Nous analyserons votre fichier puis adapterons les données au modèle choisi</p>
+    </div>
+  </div>
+
+  <script>
+    // Animation pour les cartes au chargement
+    document.addEventListener('DOMContentLoaded', function() {
+      const cards = document.querySelectorAll('.option-card');
+      
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          card.style.display = 'flex';
+          
+          setTimeout(() => {
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          }, 100);
+        }, index * 150);
+      });
+      
+      // Animation pour le survol des zones de dépôt de fichiers
+      const fileInputs = document.querySelectorAll('.file-input-container');
+      fileInputs.forEach(container => {
+        const input = container.querySelector('input[type="file"]');
+        const label = container.querySelector('.file-input-label');
+        
+        input.addEventListener('change', function() {
+          if (this.files.length > 0) {
+            label.innerHTML = `
+              <i class="fas fa-check-circle"></i>
+              <p class="file-input-text">Fichier sélectionné</p>
+              <small>${this.files[0].name}</small>
+            `;
+            label.style.borderColor = '#28a745';
+            label.style.backgroundColor = 'rgba(40, 167, 69, 0.05)';
+          }
+        });
+        
+        container.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          label.style.borderColor = 'var(--primary)';
+          label.style.backgroundColor = 'rgba(67, 97, 238, 0.1)';
+        });
+        
+        container.addEventListener('dragleave', function() {
+          label.style.borderColor = '#dee2e6';
+          label.style.backgroundColor = '#f8f9fa';
+        });
+        
+        container.addEventListener('drop', function(e) {
+          e.preventDefault();
+          label.style.borderColor = '#dee2e6';
+          label.style.backgroundColor = '#f8f9fa';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

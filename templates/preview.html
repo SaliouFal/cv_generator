@@ -16,17 +16,17 @@
          type="application/pdf"
          width="100%" height="700px" />
 
-  <form action="{{ url_for('edit') }}" method="post" class="mt-4">
-      <label class="form-label fw-semibold">Instruction (Libre) :</label>
-      <textarea class="form-control" name="instruction" rows="3"
-                placeholder="Ex : ajoute une section Bénévolat, passe le nom en rouge…"></textarea>
+  <form id="edit-form" action="{{ url_for('edit_prepare') }}" method="post" class="mt-4">
+  <label class="form-label fw-semibold">Instruction&nbsp;:</label>
+  <textarea class="form-control" name="instruction" rows="3"
+            placeholder="Ex&nbsp;: augmente la taille du nom…" required></textarea>
 
-      <div class="mt-3 d-flex gap-2">
-        <button class="btn btn-primary">Appliquer</button>
-        <a href="{{ url_for('download') }}" class="btn btn-success">Télécharger</a>
-        <a href="{{ url_for('minidata') }}" class="btn btn-secondary">Revenir au formulaire</a>
-      </div>
-  </form>
+  <div class="mt-3 d-flex gap-2">
+    <button class="btn btn-primary">Appliquer</button>
+    <a href="{{ url_for('download') }}" class="btn btn-success">Télécharger</a>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Revenir au choix de modèle</a>
+  </div>
+</form>
 
 </div>
 </body>
