@@ -1,9 +1,4 @@
-
-
-
-
-######################################################################
-
+###################################################################################################################""""
 
 # ─────────────────────────────────────────────────────────────────────────────
 # app.py  –  version « split 30 s » (Heroku friendly)
@@ -130,80 +125,29 @@ def copy_template(meta):
 # ---------------------------------------------------------------------------
 # Compilation PDF : pdflatex → fallback xelatex
 # ---------------------------------------------------------------------------
-
-#####################################################################################################
-#####################################################################################################
-# --- ajouts en tête du fichier ---------------------------------------------
-import requests, urllib.parse, cloudinary, cloudinary.uploader, mimetypes
-
-cloudinary.config(
-
-    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
-    api_key    = os.getenv("CLOUDINARY_API_KEY"),
-    api_secret = os.getenv("CLOUDINARY_API_SECRET")
-)
-
-LATEX_ENDPOINT = "https://latexonline.cc/compile"
-
-
-# ---------------------------------------------------------------------------
-# compile_pdf :  latexonline  +  upload automatique des images locales
-# ---------------------------------------------------------------------------
-IMG_CMD   = re.compile(r"""\\includegraphics[^}]*\{([^}]+)\}""")
-BCKG_CMD  = re.compile(r"""\\includegraphics[^}]*\{([^}]+)\}""")  # même pattern
-
-def _push_to_cloud(path: Path) -> str:
-    """Envoie le fichier *path* sur Cloudinary, renvoie l’URL HTTPS."""
-    res = cloudinary.uploader.upload(
-        path.as_posix(),
-        resource_type="image",
-        folder="cvgen-assets",
-        overwrite=True,
-    )
-    return res["secure_url"]     # https://…
-
-def _rewrite_graphics(tex: str, build: Path) -> str:
-    """Remplace les fichiers locaux par leur URL Cloudinary."""
-    def repl(match):
-        fname = match.group(1)
-        p = (build / fname).resolve()
-        if not p.is_file():          # déjà une URL ou fichier absent
-            return match.group(0)
-        url = _push_to_cloud(p)
-        return match.group(0).replace(fname, url)
-    return IMG_CMD.sub(repl, tex)
-
 def compile_pdf(tex: str, meta: dict, ctx: dict) -> Path:
-    """Compile *tex* → PDF (1ᵉʳ essai : latexonline, fallback local)."""
-    build    = copy_template(meta)
+    """
+    Compile *tex* en PDF.
+
+    1. Tente d’abord **pdflatex**.
+    2. Si le PDF n’est pas produit ou fait < 1 Ko, retente avec **xelatex**.
+    3. Lève RuntimeError si les deux moteurs échouent.
+
+    Tolère les codes de sortie ≠ 0 lorsqu’un PDF valide est généré
+    (LaTeX émet souvent des warnings).
+    """
+    build = copy_template(meta)
     tex_path = build / "main.tex"
     tex_path.write_text(tex, encoding="utf-8")
 
-    # copie éventuelle de la photo utilisateur (pour le fallback local)
-    if (photo := ctx.get("photo")) and not photo.startswith("http"):
+    # ── copie éventuelle de la photo ────────────────────────────────────────
+    if (photo := ctx.get("photo")):
         up = app.config["UPLOAD_FOLDER"] / photo
         if up.is_file():
             shutil.copy(up, build / photo)
 
-    # ─── 1) tentative compilation distante ──────────────────────────────────
-    try:
-        tex_remote = _rewrite_graphics(tex, build)        # ⇦ URLs Cloudinary
-        encoded    = urllib.parse.quote_plus(tex_remote)
-        url        = f"{LATEX_ENDPOINT}?text={encoded}&command=xelatex&force=true"
-        r          = requests.get(url, timeout=70)
-
-        if r.ok and r.headers.get("Content-Type", "").startswith("application/pdf"):
-            pdf_path = build / "main.pdf"
-            pdf_path.write_bytes(r.content)
-            return pdf_path
-
-        app.logger.warning("latexonline %s – fallback local\n%s",
-                           r.status_code, r.text[:250])
-    except Exception as exc:
-        app.logger.warning("latexonline exception: %s – fallback local", exc)
-
-    # ─── 2) fallback local (pdflatex → xelatex inchangé) ─────────────────────
-    def _run(engine: str):
+    def _run(engine: str) -> tuple[Path, str, int]:
+        """Exécute le moteur LaTeX et renvoie (pdf, log, code)."""
         proc = subprocess.run(
             [engine, "-interaction=nonstopmode", tex_path.name],
             cwd=build,
@@ -213,74 +157,26 @@ def compile_pdf(tex: str, meta: dict, ctx: dict) -> Path:
         )
         return build / "main.pdf", proc.stdout, proc.returncode
 
-    for eng in ("xelatex","pdflatex"):
-        pdf, log, code = _run(eng)
-        if pdf.exists() and pdf.stat().st_size > 1024:
-            if code != 0:
-                app.logger.warning("%s terminé avec warnings (%s)", eng, code)
-            return pdf
-        app.logger.warning("%s KO – on essaie l’autre moteur…", eng)
+    # # 1️⃣  premier essai : pdflatex
+    # pdf, log, code = _run("pdflatex")
+    # if pdf.exists() and pdf.stat().st_size > 1024:
+    #     if code != 0:
+    #         app.logger.warning("pdflatex terminé avec code %s (warnings)", code)
+    #     return pdf
 
-    raise RuntimeError("Compilation locale et distante impossibles.")
+    # app.logger.warning("pdflatex a échoué – tentative xelatex…")
 
+    # 2️⃣  second essai : xelatex
+    pdf, log, code = _run("xelatex")
+    if pdf.exists() and pdf.stat().st_size > 1024:
+        if code != 0:
+            app.logger.warning("xelatex terminé avec code %s (warnings)", code)
+        return pdf
 
-
-########################################################################################################
-########################################################################################################
-
-
-# def compile_pdf(tex: str, meta: dict, ctx: dict) -> Path:
-#     """
-#     Compile *tex* en PDF.
-
-#     1. Tente d’abord **pdflatex**.
-#     2. Si le PDF n’est pas produit ou fait < 1 Ko, retente avec **xelatex**.
-#     3. Lève RuntimeError si les deux moteurs échouent.
-
-#     Tolère les codes de sortie ≠ 0 lorsqu’un PDF valide est généré
-#     (LaTeX émet souvent des warnings).
-#     """
-#     build = copy_template(meta)
-#     tex_path = build / "main.tex"
-#     tex_path.write_text(tex, encoding="utf-8")
-
-#     # ── copie éventuelle de la photo ────────────────────────────────────────
-#     if (photo := ctx.get("photo")):
-#         up = app.config["UPLOAD_FOLDER"] / photo
-#         if up.is_file():
-#             shutil.copy(up, build / photo)
-
-#     def _run(engine: str) -> tuple[Path, str, int]:
-#         """Exécute le moteur LaTeX et renvoie (pdf, log, code)."""
-#         proc = subprocess.run(
-#             [engine, "-interaction=nonstopmode", tex_path.name],
-#             cwd=build,
-#             stdout=subprocess.PIPE,
-#             stderr=subprocess.STDOUT,
-#             text=True,
-#         )
-#         return build / "main.pdf", proc.stdout, proc.returncode
-
-#     # # 1️⃣  premier essai : pdflatex
-#     # pdf, log, code = _run("pdflatex")
-#     # if pdf.exists() and pdf.stat().st_size > 1024:
-#     #     if code != 0:
-#     #         app.logger.warning("pdflatex terminé avec code %s (warnings)", code)
-#     #     return pdf
-
-#     # app.logger.warning("pdflatex a échoué – tentative xelatex…")
-
-#     # 2️⃣  second essai : xelatex
-#     pdf, log, code = _run("xelatex")
-#     if pdf.exists() and pdf.stat().st_size > 1024:
-#         if code != 0:
-#             app.logger.warning("xelatex terminé avec code %s (warnings)", code)
-#         return pdf
-
-#     # 3️⃣  échec total
-#     raise RuntimeError(
-#         "La compilation a échoué avec pdflatex puis xelatex.\n" + log[-1500:]
-#     )
+    # 3️⃣  échec total
+    raise RuntimeError(
+        "La compilation a échoué avec pdflatex puis xelatex.\n" + log[-1500:]
+    )
 
 
 def gpt_render(template_tex:str, data:dict)->str:
