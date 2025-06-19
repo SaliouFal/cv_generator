@@ -14,7 +14,7 @@ import openai
 
 # ───────────────────── Configuration ──────────────────────
 openai.api_key = os.getenv("OPENAI_API_KEY")
-OPENAI_MODEL   = os.getenv("OPENAI_MODEL", "o3")
+OPENAI_MODEL   = "o3"
 
 BASE_DIR = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -78,45 +78,6 @@ def copy_template(meta):
     dst = app.config["OUTPUT_FOLDER"]/uuid.uuid4().hex
     shutil.copytree(src, dst); return dst
 
-# def compile_pdf(tex: str, meta: dict, ctx: dict) -> Path:
-#     build     = copy_template(meta)
-#     tex_path  = build / "main.tex"
-#     tex_path.write_text(tex, encoding="utf-8")
-
-#     if (photo := ctx.get("photo")):
-#         print(photo)
-#         up = app.config["UPLOAD_FOLDER"] / photo
-#         if  up.is_file():
-#             shutil.copy(up, build / photo)
-    
-    
-#     #engine = "xelatex"
-#     engine="pdflatex"
-
-#     proc = subprocess.run(
-#         [engine, "-interaction=nonstopmode", tex_path.name],
-#         cwd=build,
-#         stdout=subprocess.PIPE,
-#         stderr=subprocess.STDOUT            # log complet
-#     )
-#     log = proc.stdout.decode("utf-8", errors="ignore")
-
-#     pdf = build / "main.pdf"
-
-#     # ➜ on ne teste plus *uniquement* le code de sortie ;
-#     #    on échoue seulement si le PDF n’existe pas.
-#     if not pdf.exists():
-#         raise RuntimeError(
-#             f"La compilation {engine} a échoué :\n" + log[-1500:]
-#         )
-
-#     # facultatif : journalise les overfull boxes plutôt que d’arrêter
-#     if proc.returncode != 0 or not pdf.exists() or pdf.stat().st_size < 1000:
-#         raise RuntimeError(
-#             f"La compilation {engine} a échoué :\n" + log[-1500:]
-#         )
-#     return pdf
-
 
 
 # ---------------------------------------------------------------------------
@@ -156,15 +117,6 @@ def compile_pdf(tex: str, meta: dict, ctx: dict) -> Path:
             text=True,
         )
         return build / "main.pdf", proc.stdout, proc.returncode
-
-    # # 1️⃣  premier essai : pdflatex
-    # pdf, log, code = _run("pdflatex")
-    # if pdf.exists() and pdf.stat().st_size > 1024:
-    #     if code != 0:
-    #         app.logger.warning("pdflatex terminé avec code %s (warnings)", code)
-    #     return pdf
-
-    # app.logger.warning("pdflatex a échoué – tentative xelatex…")
 
     # 2️⃣  second essai : xelatex
     pdf, log, code = _run("xelatex")
