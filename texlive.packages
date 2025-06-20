@@ -6,3 +6,5 @@ simple-resume-cv
 textpos
 background
 xkeyval
+pgf
+everypage
