@@ -485,70 +485,189 @@ def gpt_fill_plain(template_tex: str, plain_text: str, photo_name: str = "", rul
 # Route /import_cv  –  version sans JSON / schema + photo aware
 # ---------------------------------------------------------------------------
 
+# @app.route("/import_cv", methods=["POST"])
+# def import_cv():
+#     """Importe un CV PDF/DOCX (+ photo) → GPT → LaTeX → PDF (photo incluse)."""
+
+#     # 0. vérifie que le template est choisi ---------------------------------
+#     if "template_id" not in session:
+#         return redirect(url_for("index"))
+
+#     # 1. récup fichiers ------------------------------------------------------
+#     cv_file = request.files.get("cvfile")
+#     if not cv_file or not cv_file.filename:
+#         flash("Choisissez un fichier CV !", "warning")
+#         return redirect(url_for("choose_input"))
+
+#     photo_file = request.files.get("photo")
+
+#     ext = Path(cv_file.filename).suffix.lower()
+#     if ext not in (".pdf", ".doc", ".docx"):
+#         flash("Format non pris en charge (PDF ou DOCX)", "danger")
+#         return redirect(url_for("choose_input"))
+
+#     cv_tmp = app.config["UPLOAD_FOLDER"] / f"{uuid.uuid4().hex}{ext}"
+#     cv_tmp.parent.mkdir(parents=True, exist_ok=True)
+#     cv_file.save(cv_tmp)
+
+#     # 2. photo optionnelle ---------------------------------------------------
+#     photo_name = ""
+#     if photo_file and photo_file.filename:
+#         photo_name = f"{uuid.uuid4().hex}{Path(photo_file.filename).suffix}"
+#         dest = app.config["UPLOAD_FOLDER"] / photo_name
+#         dest.parent.mkdir(parents=True, exist_ok=True)
+#         photo_file.save(dest)
+#     session["photo_file"] = photo_name
+
+#     # 3. extraction texte ----------------------------------------------------
+#     if ext == ".pdf":
+#         plain = subprocess.check_output(["pdftotext", "-layout", str(cv_tmp), "-"]).decode("utf-8", errors="ignore")
+#     else:
+#         doc = docx.Document(str(cv_tmp))
+#         plain = "\n".join(p.text for p in doc.paragraphs)
+
+#     # 4. GPT → LaTeX ---------------------------------------------------------
+#     meta         = get_template_meta(session["template_id"])
+#     template_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
+#     final_tex    = gpt_fill_plain(template_tex, plain, photo_name)
+
+#     # 5. compilation ---------------------------------------------------------
+#     pdf_path = compile_pdf(final_tex, meta, {"photo": photo_name})
+
+#     # 6. session + redirect preview -----------------------------------------
+#     session.update({
+#         "cv_data":      {},
+#         "last_tex":     final_tex,
+#         "pdf_filename": pdf_path.relative_to(app.config["OUTPUT_FOLDER"]).as_posix(),
+#     })
+#     return redirect(url_for("preview"))
+###############################################################################################
+# Ajouter en haut du fichier
+import threading
+async_results = {}
+# Génère un SID unique pour les sessions
+def generate_session_sid():
+    return str(uuid.uuid4())
+# ... (le reste du code existant) ...
+def process_cv_async(cv_path, photo_tmp, template_id, session_sid):
+    with app.app_context():
+        try:
+            # Copie la photo définitive
+            photo_name = ""
+            if photo_tmp:
+                photo_name = f"{uuid.uuid4().hex}{Path(photo_tmp).suffix}"
+                dest = app.config["UPLOAD_FOLDER"] / photo_name
+                shutil.move(photo_tmp, dest)
+
+            # Extraction texte brut
+            ext = cv_path.suffix.lower()
+            if ext == ".pdf":
+                plain = subprocess.check_output(["pdftotext", "-layout", str(cv_path), "-"]).decode("utf-8", errors="ignore")
+            else:
+                doc = docx.Document(str(cv_path))
+                plain = "".join(p.text for p in doc.paragraphs)
+
+            # GPT → LaTeX
+            meta = get_template_meta(template_id)
+            template_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
+            final_tex = gpt_fill_plain(template_tex, plain, photo_name)
+
+            # Compilation
+            pdf_path = compile_pdf(final_tex, meta, {"photo": photo_name})
+
+            # Stocker les résultats avec session_sid
+            async_results[session_sid] = {
+                "status": "completed",
+                "photo_file": photo_name,
+                "last_tex": final_tex,
+                "pdf_filename": pdf_path.relative_to(app.config["OUTPUT_FOLDER"]).as_posix()
+            }
+            
+        except Exception as e:
+            app.logger.error(f"Erreur traitement CV: {str(e)}")
+            async_results[session_sid] = {
+                "status": "error",
+                "message": str(e)
+            }
+        
+        finally:
+            # Nettoyer les fichiers temporaires
+            cv_path.unlink(missing_ok=True)
+            if photo_tmp:
+                Path(photo_tmp).unlink(missing_ok=True)
+
+
 @app.route("/import_cv", methods=["POST"])
 def import_cv():
-    """Importe un CV PDF/DOCX (+ photo) → GPT → LaTeX → PDF (photo incluse)."""
-
-    # 0. vérifie que le template est choisi ---------------------------------
     if "template_id" not in session:
         return redirect(url_for("index"))
 
-    # 1. récup fichiers ------------------------------------------------------
     cv_file = request.files.get("cvfile")
     if not cv_file or not cv_file.filename:
         flash("Choisissez un fichier CV !", "warning")
         return redirect(url_for("choose_input"))
 
-    photo_file = request.files.get("photo")
-
+    # Générer un SID unique pour cette session
+    session_sid = generate_session_sid()
+    
+    # Sauvegarder les fichiers temporaires
     ext = Path(cv_file.filename).suffix.lower()
-    if ext not in (".pdf", ".doc", ".docx"):
-        flash("Format non pris en charge (PDF ou DOCX)", "danger")
-        return redirect(url_for("choose_input"))
-
-    cv_tmp = app.config["UPLOAD_FOLDER"] / f"{uuid.uuid4().hex}{ext}"
+    cv_tmp = app.config["UPLOAD_FOLDER"] / f"tmp_{session_sid}{ext}"
     cv_tmp.parent.mkdir(parents=True, exist_ok=True)
     cv_file.save(cv_tmp)
 
-    # 2. photo optionnelle ---------------------------------------------------
-    photo_name = ""
+    photo_tmp = ""
+    photo_file = request.files.get("photo")
     if photo_file and photo_file.filename:
-        photo_name = f"{uuid.uuid4().hex}{Path(photo_file.filename).suffix}"
-        dest = app.config["UPLOAD_FOLDER"] / photo_name
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        photo_file.save(dest)
-    session["photo_file"] = photo_name
+        photo_tmp = app.config["UPLOAD_FOLDER"] / f"tmp_{session_sid}{Path(photo_file.filename).suffix}"
+        photo_file.save(photo_tmp)
 
-    # 3. extraction texte ----------------------------------------------------
-    if ext == ".pdf":
-        plain = subprocess.check_output(["pdftotext", "-layout", str(cv_tmp), "-"]).decode("utf-8", errors="ignore")
-    else:
-        doc = docx.Document(str(cv_tmp))
-        plain = "\n".join(p.text for p in doc.paragraphs)
+    # Stocker le SID dans la session Flask
+    session["async_job_id"] = session_sid
+    
+    # Démarrer le traitement en arrière-plan
+    threading.Thread(
+        target=process_cv_async,
+        args=(cv_tmp, photo_tmp, session["template_id"], session_sid)
+    ).start()
 
-    # 4. GPT → LaTeX ---------------------------------------------------------
-    meta         = get_template_meta(session["template_id"])
-    template_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
-    final_tex    = gpt_fill_plain(template_tex, plain, photo_name)
-
-    # 5. compilation ---------------------------------------------------------
-    pdf_path = compile_pdf(final_tex, meta, {"photo": photo_name})
-
-    # 6. session + redirect preview -----------------------------------------
-    session.update({
-        "cv_data":      {},
-        "last_tex":     final_tex,
-        "pdf_filename": pdf_path.relative_to(app.config["OUTPUT_FOLDER"]).as_posix(),
-    })
-    return redirect(url_for("preview"))
+    return render_template("input1_loading.html")
 
 
 
 
 
 
-
-# ---------------------------------------------------------------------------
+@app.route("/check_import_status")
+def check_import_status():
+    if "async_job_id" not in session:
+        return jsonify({"status": "error", "message": "Session invalide"})
+    
+    job_id = session["async_job_id"]
+    result = async_results.get(job_id)
+    
+    if not result:
+        return jsonify({"status": "processing"})
+    
+    if result["status"] == "completed":
+        # Stocker les résultats dans la session Flask
+        session["photo_file"] = result["photo_file"]
+        session["last_tex"] = result["last_tex"]
+        session["pdf_filename"] = result["pdf_filename"]
+        
+        # Nettoyer le cache
+        async_results.pop(job_id, None)
+        session.pop("async_job_id", None)
+        
+        return jsonify({"status": "completed"})
+    
+    elif result["status"] == "error":
+        error = result["message"]
+        async_results.pop(job_id, None)
+        session.pop("async_job_id", None)
+        return jsonify({"status": "error", "message": error})
+    
+    return jsonify({"status": "processing"})# ---------------------------------------------------------------------------
 #  2-B.  « FORMULAIRE »  ── Option 2 (POST rapide + AJAX)
 # ---------------------------------------------------------------------------
 @app.route("/minidata", methods=["GET", "POST"])
@@ -965,10 +1084,6 @@ def edit_apply():
     return jsonify(ok=True)
 
 
-
-
-
-
 @app.route("/import_prepare", methods=["POST"])
 def import_prepare():
     if "template_id" not in session:
@@ -996,6 +1111,8 @@ def import_prepare():
     session["pending_photo"] = photo_tmp.as_posix() if photo_tmp else ""
 
     return render_template("loading.html")  # spinner immédiat
+
+
 
 # ---------------------------------------------------------------------------
 # Étape 2 : travail lourd en AJAX -------------------------------------------
@@ -1027,7 +1144,7 @@ def import_apply():
     meta         = get_template_meta(session["template_id"])
     template_tex = Path(meta["latex_path"]).read_text(encoding="utf-8")
     final_tex    = gpt_fill_plain(template_tex, plain, photo_name)
-
+    print(final_tex)
     # Compilation -------------------------------------------------------------
     pdf_path = compile_pdf(final_tex, meta, {"photo": photo_name})
 

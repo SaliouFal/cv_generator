@@ -1,25 +1,154 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>Analyse du CV…</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body{display:flex;align-items:center;justify-content:center;height:100vh;background:#f8f9fa}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traitement en cours</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1.2s ease-in-out infinite;
+            margin: 0 auto 2rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .progress-text {
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress {
+            height: 100%;
+            background: white;
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        .tips {
+            margin-top: 2rem;
+            font-style: italic;
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
-  <div class="text-center">
-     <div class="spinner-border text-primary" role="status" style="width:4rem;height:4rem">
-       <span class="visually-hidden">Loading…</span>
-     </div>
-     <p class="mt-4 fs-5">Analyse de votre CV…</p>
-  </div>
+    <div class="container">
+        <div class="spinner"></div>
+        <h1>Analyse de votre CV en cours</h1>
+        <p>Veuillez patienter pendant que nous traitons votre document...</p>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="progress-text" id="progress-text">0%</div>
+        
+        <div class="tips" id="tips">
+            Le traitement peut prendre jusqu'à 1 minute pour les longs CV
+        </div>
+    </div>
 
-  <script>
-    /* appelé pour minidata ET import */
-    fetch("{{ url_for('import_apply') }}", {method:"POST"})
-      .then(r => r.ok ? location.href="{{ url_for('preview') }}" : location.reload());
-  </script>
+    <script>
+        const progress = document.getElementById('progress');
+        const progressText = document.getElementById('progress-text');
+        const tips = document.getElementById('tips');
+        const tipMessages = [
+            "L'analyse utilise l'IA pour extraire vos informations",
+            "Votre CV est converti en format professionnel",
+            "Les données sensibles ne sont jamais stockées",
+            "Le résultat final sera disponible dans quelques instants"
+        ];
+        
+        let currentTip = 0;
+        let progressValue = 0;
+        
+        // Animer la barre de progression
+        const interval = setInterval(() => {
+            if (progressValue < 90) {
+                progressValue += 2;
+                progress.style.width = `${progressValue}%`;
+                progressText.textContent = `${progressValue}%`;
+                
+                // Changer d'astuce toutes les 10%
+                if (progressValue % 10 === 0) {
+                    tips.textContent = tipMessages[currentTip];
+                    currentTip = (currentTip + 1) % tipMessages.length;
+                }
+            }
+        }, 500);
+        
+        // Vérifier l'état du traitement
+        function checkStatus() {
+            fetch('/check_import_status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'completed') {
+                        clearInterval(interval);
+                        progress.style.width = '100%';
+                        progressText.textContent = '100%';
+                        tips.textContent = 'Traitement terminé ! Redirection...';
+                        setTimeout(() => {
+                            window.location.href = '/preview';
+                        }, 1500);
+                    } else if (data.status === 'error') {
+                        clearInterval(interval);
+                        tips.textContent = 'Erreur : ' + data.message;
+                        progress.style.background = '#ff6b6b';
+                    } else {
+                        setTimeout(checkStatus, 2000);
+                    }
+                });
+        }
+        
+        // Démarrer la vérification
+        setTimeout(checkStatus, 3000);
+    </script>
 </body>
 </html>
