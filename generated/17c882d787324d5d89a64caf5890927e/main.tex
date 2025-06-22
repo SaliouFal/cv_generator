@@ -15,11 +15,7 @@
 \usepackage{enumitem}
 \usetikzlibrary{calc, positioning}      
 \newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
-\makeatletter
-\@ifundefined{faBrain}{\newcommand{\faBrain}{\textbullet}}{}
-\@ifundefined{faMicrochip}{\newcommand{\faMicrochip}{\textbullet}}{}
-\@ifundefined{faHandshakeO}{\newcommand{\faHandshakeO}{\textbullet}}{}
-\makeatother
+
 % Définition des couleurs
 \definecolor{maincolor}{HTML}{f0fafc}
 \definecolor{seccolor}{HTML}{ffffff}
@@ -51,9 +47,8 @@
 \begin{paracol}{2}
 % Colonne gauche - Section personnelle
 \color{sidetext}
-% Décalage vertical de 10cm vers le haut
-\vspace*{-0.5cm}
 
+% Bloc photo et titre remonté en haut
 \noindent
 \begin{minipage}{\linewidth}
     \centering
@@ -100,13 +95,13 @@
     \end{tabular} \\
 \end{tabular}
 
-\vspace{2mm}
+\vspace{3mm}
 {\color{gray}\rule{\linewidth}{0.4pt}} \\
 
 % Langues
 {\color{black}{Langues}}
 
-\vspace{2mm}
+\vspace{3mm}
 
 \begin{tabular}{@{}c l}
     \faLanguage & 
@@ -122,14 +117,14 @@
     \end{tabular} \\
 \end{tabular}
 
-\vspace{2mm}
+\vspace{3mm}
 {\color{gray}\rule{\linewidth}{0.4pt}} \\
 
 % Compétences
-\vspace{2mm}
+\vspace{3mm}
 {\color{black}{Compétences Clés}}
 
-\vspace{2mm}
+\vspace{3mm}
 
 \begin{tabular}{@{}c l}
     \textcolor{sidetext}{\faCode} & Développement Web (HTML/CSS/JS) \\
@@ -149,13 +144,12 @@
     \textcolor{sidetext}{\faGroup} & Relations \\
 \end{tabular}
 
-\vspace{2mm}
+\vspace{3mm}
 {\color{gray}\rule{\linewidth}{0.4pt}} \\
 
 %Interet
-\vspace{2mm}
+\vspace{3mm}
 {\color{black}{Centres d’intérêt}}
-\vspace{2mm}
 
 \begin{tabular}{@{}c l}
    
@@ -163,7 +157,7 @@
        
     \end{tabular} \\
 \end{tabular}
-\vspace{2mm}
+\vspace{3mm}
 % Espace flexible pour étendre la colonne gauche
 \vfill
 ~

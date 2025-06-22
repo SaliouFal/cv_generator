@@ -2,8 +2,10 @@
 
 \usepackage{times}
 \usepackage{geometry}
-\geometry{a4paper,left=0.6cm,right=0.7cm,top=1.5cm,bottom=1cm,columnsep=0.8cm} % Top margin reduced
+\geometry{a4paper,left=0.6cm,right=0.7cm,top=2cm,bottom=1cm,columnsep=0.8cm}
 \usepackage{fontawesome}
+\usepackage{fontawesome5}          % déjà là
+\usepackage{fontawesome5-regular}  % ← ajouter cette ligne
 \usepackage[hidelinks]{hyperref}
 \usepackage{multicol}
 \usepackage{tikz}
@@ -15,11 +17,7 @@
 \usepackage{enumitem}
 \usetikzlibrary{calc, positioning}      
 \newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
-\makeatletter
-\@ifundefined{faBrain}{\newcommand{\faBrain}{\textbullet}}{}
-\@ifundefined{faMicrochip}{\newcommand{\faMicrochip}{\textbullet}}{}
-\@ifundefined{faHandshakeO}{\newcommand{\faHandshakeO}{\textbullet}}{}
-\makeatother
+
 % Définition des couleurs
 \definecolor{maincolor}{HTML}{f0fafc}
 \definecolor{seccolor}{HTML}{ffffff}
@@ -51,65 +49,59 @@
 \begin{paracol}{2}
 % Colonne gauche - Section personnelle
 \color{sidetext}
-% Décalage vertical de 10cm vers le haut
-\vspace*{-0.5cm}
-
-\noindent
-\begin{minipage}{\linewidth}
-    \centering
+\begin{center}
     \begin{tikzpicture}
         \clip (0,0) circle (1.5cm) node[anchor=center] {\includegraphics[width=3cm]{example-image}}; 
     \end{tikzpicture}
 
-    \vspace{3mm} % Espace réduit
+    \vspace{5mm}
     
     {\color{black}\LARGE \textbf{Jean Dupont}}
     
-    \vspace{1mm} % Espace réduit
+    \vspace{3mm}
     
     {\large{Ingénieur Logiciel Senior}}
-    
-    \vspace{3mm} % Espace réduit
-    {\color{gray}\rule{\linewidth}{0.4pt}} \\
-\end{minipage}
+\end{center}
 
-% Coordonnées juste sous le bloc photo/titre
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
+
+% Coordonnées
 \begin{tabular}{@{}c l}
-    \faPhone & 
+    \faPhone{} & 
     \begin{tabular}[t]{@{}l@{}}
         {\color{gray}Téléphone} \\
         06 12 34 56 78
     \end{tabular} \\
     \\
-    \faLinkedin & 
+    \faLinkedin{} & 
     \begin{tabular}[t]{@{}l@{}}
         {\color{gray}LinkedIn} \\
-        \href{https://linkedin.com/in/jeandupont}{in/jeandupont}
+        \href{https://linkedin.com/in/jeandupont}{linkedin.com/in/jeandupont}
     \end{tabular} \\
     \\
-    \faMapMarker & 
+    \faMapMarker{} & 
     \begin{tabular}[t]{@{}l@{}}
         {\color{gray}Adresse} \\
         123 Rue de Paris, 75001 Paris
     \end{tabular} \\
     \\
-    \faEnvelope & 
+    \faGlobe{} & 
     \begin{tabular}[t]{@{}l@{}}
-        {\color{gray}Email} \\
-        \href{mailto:jean.dupont@email.com}{jean.dupont@email.com}
+        {\color{gray}Site Web} \\
+        \href{https://jeandupont.dev}{jeandupont.dev}
     \end{tabular} \\
 \end{tabular}
 
-\vspace{2mm}
+\vspace{3mm}
 {\color{gray}\rule{\linewidth}{0.4pt}} \\
 
 % Langues
 {\color{black}{Langues}}
 
-\vspace{2mm}
+\vspace{3mm}
 
 \begin{tabular}{@{}c l}
-    \faLanguage & 
+    {\Large\faLanguage{}} & 
     \begin{tabular}[t]{@{}l@{}}
         Français \\
         {\color{gray}{Langue maternelle}} \\
@@ -122,14 +114,14 @@
     \end{tabular} \\
 \end{tabular}
 
-\vspace{2mm}
+\vspace{5mm}
 {\color{gray}\rule{\linewidth}{0.4pt}} \\
 
 % Compétences
-\vspace{2mm}
+\vspace{5mm}
 {\color{black}{Compétences Clés}}
 
-\vspace{2mm}
+\vspace{5mm}
 
 \begin{tabular}{@{}c l}
     \textcolor{sidetext}{\faCode} & Développement Web (HTML/CSS/JS) \\
@@ -141,29 +133,8 @@
     \textcolor{sidetext}{\faGit} & Git \& Méthodes Agile \\
     \\
     \textcolor{sidetext}{\faUsers} & Gestion d'équipe \\
-    \\
-    \textcolor{sidetext}{\faComments} & Négociation commerciale \\
-    \\
-    \textcolor{sidetext}{\faCalendar} & Organisation \\
-    \\
-    \textcolor{sidetext}{\faGroup} & Relations \\
 \end{tabular}
 
-\vspace{2mm}
-{\color{gray}\rule{\linewidth}{0.4pt}} \\
-
-%Interet
-\vspace{2mm}
-{\color{black}{Centres d’intérêt}}
-\vspace{2mm}
-
-\begin{tabular}{@{}c l}
-   
-    \begin{tabular}[t]{@{}l@{}}
-       
-    \end{tabular} \\
-\end{tabular}
-\vspace{2mm}
 % Espace flexible pour étendre la colonne gauche
 \vfill
 ~
@@ -244,6 +215,7 @@
         2009 - 2012
     \end{tabular} \\
 \end{tabular}
+
 
 
 
