@@ -1,0 +1,6 @@
+flask
+openai==0.28
+jinja2
+gunicorn
+python-docx
+requests>=2.31
