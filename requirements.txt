@@ -3,4 +3,4 @@ openai==0.28
 jinja2
 gunicorn
 python-docx
-cloudinary
+requests>=2.31
