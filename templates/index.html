@@ -3,20 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modèles de CV | Choisissez votre design</title>
+  <title>Modèles de CV Professionnels | Choisissez Votre Design</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #4361ee;
       --primary-light: #4895ef;
+      --primary-dark: #3a56d4;
       --secondary: #3f37c9;
       --accent: #f72585;
       --light: #f8f9fa;
-      --dark: #212529;
+      --dark: #1e293b;
       --gray: #6c757d;
+      --light-gray: #f1f5f9;
       --transition: all 0.3s ease;
+      --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.15);
     }
     
     * {
@@ -27,32 +32,39 @@
     
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+      background: var(--light-gray);
       color: var(--dark);
       min-height: 100vh;
       line-height: 1.6;
     }
     
+    h1, h2, h3, h4, h5 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+    }
+    
     /* Hero Section */
     .hero {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: white;
       padding: 6rem 0 8rem;
       text-align: center;
       position: relative;
       overflow: hidden;
+      clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
     }
     
     .hero::before {
       content: "";
       position: absolute;
-      bottom: 0;
+      top: 0;
       left: 0;
       right: 0;
-      height: 100px;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M1200 120L0 16.48 0 0 1200 0 1200 120z" fill="%23f8fafc"></path></svg>');
+      bottom: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,224L48,218.7C96,213,192,203,288,197.3C384,192,480,192,576,202.7C672,213,768,235,864,234.7C960,235,1056,213,1152,197.3C1248,181,1344,171,1392,165.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
       background-size: cover;
       background-position: center bottom;
+      opacity: 0.2;
     }
     
     .hero-content {
@@ -64,10 +76,11 @@
     }
     
     .hero h1 {
-      font-size: 3rem;
+      font-size: 3.5rem;
       font-weight: 800;
       margin-bottom: 1.5rem;
       text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      letter-spacing: -0.5px;
     }
     
     .hero p {
@@ -75,6 +88,8 @@
       margin-bottom: 2rem;
       opacity: 0.9;
       font-weight: 300;
+      max-width: 600px;
+      margin: 0 auto 2rem;
     }
     
     .btn-hero {
@@ -87,37 +102,98 @@
       transition: var(--transition);
       text-decoration: none;
       display: inline-block;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .btn-hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: var(--light);
+      transition: var(--transition);
+      z-index: -1;
     }
     
     .btn-hero:hover {
       transform: translateY(-5px);
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-      color: var(--secondary);
+      color: var(--primary);
+    }
+    
+    .btn-hero:hover::after {
+      width: 100%;
     }
     
     /* Templates Section */
     .section-templates {
-      padding: 5rem 0;
+      padding: 6rem 0;
+      position: relative;
     }
     
     .section-header {
       text-align: center;
       margin-bottom: 4rem;
+      position: relative;
     }
     
     .section-header h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
+      font-size: 2.8rem;
       margin-bottom: 1rem;
       color: var(--primary);
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-header h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 2px;
     }
     
     .section-header p {
       color: var(--gray);
       max-width: 600px;
-      margin: 0 auto;
+      margin: 2rem auto 0;
       font-size: 1.1rem;
+    }
+    
+    /* Filter Section */
+    .filter-section {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .filter-btn {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 50px;
+      padding: 0.5rem 1.5rem;
+      font-weight: 500;
+      transition: var(--transition);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
     }
     
     /* Template Grid */
@@ -131,33 +207,38 @@
       background: white;
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-md);
       transition: var(--transition);
       display: flex;
       flex-direction: column;
       height: 100%;
+      position: relative;
+      border: 1px solid #e2e8f0;
     }
     
     .template-card:hover {
       transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(67, 97, 238, 0.15);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-light);
     }
     
     .template-img {
-      height: 350px;
+      height: 380px;
       overflow: hidden;
       position: relative;
+      background: #f8fafc;
     }
     
     .template-img img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       transition: transform 0.5s ease;
+      padding: 1.5rem;
     }
     
     .template-card:hover .template-img img {
-      transform: scale(1.03);
+      transform: scale(1.05);
     }
     
     .template-badge {
@@ -171,6 +252,7 @@
       font-size: 0.8rem;
       font-weight: 600;
       z-index: 10;
+      box-shadow: var(--shadow-sm);
     }
     
     .template-info {
@@ -178,11 +260,12 @@
       flex-grow: 1;
       display: flex;
       flex-direction: column;
+      border-top: 1px solid #f1f5f9;
     }
     
     .template-name {
-      font-size: 1.3rem;
-      font-weight: 600;
+      font-size: 1.4rem;
+      font-weight: 700;
       margin-bottom: 0.5rem;
       color: var(--dark);
     }
@@ -191,6 +274,7 @@
       color: var(--gray);
       flex-grow: 1;
       margin-bottom: 1.5rem;
+      font-size: 0.95rem;
     }
     
     .template-features {
@@ -207,18 +291,36 @@
       padding: 0.25rem 0.75rem;
       font-size: 0.8rem;
       font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
     }
     
     .template-cta {
       display: block;
       text-align: center;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: white;
       padding: 0.8rem;
       border-radius: 12px;
       font-weight: 600;
       text-decoration: none;
       transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .template-cta::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary) 100%);
+      transition: var(--transition);
+      z-index: -1;
     }
     
     .template-cta:hover {
@@ -227,35 +329,123 @@
       color: white;
     }
     
+    .template-cta:hover::after {
+      width: 100%;
+    }
+    
+    /* Preview Modal */
+    .preview-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+    
+    .preview-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow: auto;
+      position: relative;
+      transform: translateY(30px);
+      transition: transform 0.3s ease;
+    }
+    
+    .preview-modal.active .modal-content {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid #f1f5f9;
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 10;
+    }
+    
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray);
+      transition: var(--transition);
+    }
+    
+    .close-modal:hover {
+      color: var(--dark);
+    }
+    
+    .modal-body {
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .modal-preview {
+      max-width: 100%;
+      max-height: 70vh;
+      box-shadow: var(--shadow-md);
+      border: 1px solid #e2e8f0;
+    }
+    
     /* Features Section */
     .features-section {
       background: white;
       padding: 5rem 0;
       margin-top: 2rem;
+      background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
     }
     
     .feature-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
+      gap: 2.5rem;
     }
     
     .feature-card {
-      background: #f8fafc;
+      background: white;
       border-radius: 16px;
-      padding: 2rem;
+      padding: 2.5rem 2rem;
       text-align: center;
       transition: var(--transition);
+      box-shadow: var(--shadow-md);
+      border: 1px solid #f1f5f9;
     }
     
     .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-light);
     }
     
     .feature-icon {
-      width: 70px;
-      height: 70px;
+      width: 80px;
+      height: 80px;
       background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
       border-radius: 50%;
       display: flex;
@@ -263,16 +453,86 @@
       justify-content: center;
       margin: 0 auto 1.5rem;
       color: white;
-      font-size: 1.8rem;
+      font-size: 2rem;
+      box-shadow: var(--shadow-md);
     }
     
     .feature-card h3 {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       margin-bottom: 1rem;
       color: var(--dark);
     }
     
     .feature-card p {
+      color: var(--gray);
+      font-size: 0.95rem;
+    }
+    
+    /* Testimonials */
+    .testimonials {
+      padding: 5rem 0;
+      background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+    }
+    
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .testimonial-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      border: 1px solid #f1f5f9;
+    }
+    
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+      font-size: 5rem;
+      font-family: 'Playfair Display', serif;
+      color: var(--primary-light);
+      opacity: 0.2;
+      line-height: 1;
+    }
+    
+    .testimonial-text {
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .author-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    
+    .author-info h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+    }
+    
+    .author-info p {
+      font-size: 0.9rem;
       color: var(--gray);
     }
     
@@ -280,31 +540,37 @@
     .footer {
       background: var(--dark);
       color: white;
-      padding: 3rem 0;
+      padding: 5rem 0 2rem;
       text-align: center;
+      clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
     }
     
     .footer-content {
-      max-width: 800px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 0 1.5rem;
     }
     
     .footer h3 {
-      font-size: 1.5rem;
+      font-size: 2rem;
       margin-bottom: 1.5rem;
     }
     
     .footer p {
       opacity: 0.8;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
     
     .footer-links {
       display: flex;
       justify-content: center;
       gap: 2rem;
-      margin-top: 2rem;
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
     }
     
     .footer-links a {
@@ -317,13 +583,35 @@
       color: white;
     }
     
-    @media (max-width: 768px) {
+    .copyright {
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+    
+    @media (max-width: 992px) {
       .hero {
         padding: 4rem 0 6rem;
+        clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
       }
       
       .hero h1 {
-        font-size: 2.2rem;
+        font-size: 2.8rem;
+      }
+      
+      .section-header h2 {
+        font-size: 2.3rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .hero {
+        padding: 3rem 0 5rem;
+      }
+      
+      .hero h1 {
+        font-size: 2.3rem;
       }
       
       .hero p {
@@ -337,6 +625,10 @@
       .template-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
+      }
+      
+      .feature-grid, .testimonial-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -355,16 +647,25 @@
   <section id="templates" class="section-templates">
     <div class="container">
       <div class="section-header">
-        <h2>Modèles de CV professionnels</h2>
+        <h2>Modèles de CV Professionnels</h2>
         <p>Sélectionnez le design qui correspond à votre personnalité et à votre secteur d'activité</p>
+      </div>
+
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <button class="filter-btn active" data-filter="all">Tous les modèles</button>
+        <button class="filter-btn" data-filter="moderne">Moderne</button>
+        <button class="filter-btn" data-filter="classique">Classique</button>
+        <button class="filter-btn" data-filter="creatif">Créatif</button>
+        <button class="filter-btn" data-filter="minimaliste">Minimaliste</button>
       </div>
 
       <!-- Template Grid -->
       <div class="template-grid">
         {% for t in templates %}
-        <div class="template-card">
+        <div class="template-card" data-category="{{ t.category }}">
           <div class="template-img">
-            <img src="{{ url_for('static', filename=t.image) }}" alt="{{ t.name }}">
+            <img src="{{ url_for('static', filename=t.image) }}" alt="{{ t.name }}" class="template-preview" data-template="{{ t.id }}">
             {% if t.premium %}
             <div class="template-badge">POPULAIRE</div>
             {% endif %}
@@ -374,9 +675,9 @@
             <p class="template-description">{{ t.description }}</p>
             
             <div class="template-features">
-              <span class="feature-badge">Optimisé IA</span>
-              <span class="feature-badge">Responsive</span>
-              <span class="feature-badge">Personnalisable</span>
+              <span class="feature-badge"><i class="fas fa-star"></i> Optimisé IA</span>
+              <span class="feature-badge"><i class="fas fa-mobile-alt"></i> Responsive</span>
+              <span class="feature-badge"><i class="fas fa-paint-brush"></i> Personnalisable</span>
             </div>
             
             <a href="{{ url_for('select_template', template_id=t.id) }}" class="template-cta">
@@ -394,7 +695,7 @@
     <div class="container">
       <div class="section-header">
         <h2>Pourquoi nos CV font la différence</h2>
-        <p>Des modèles conçus pour maximiser vos chances de succès</p>
+        <p>Des fonctionnalités conçues pour maximiser vos chances de succès</p>
       </div>
       
       <div class="feature-grid">
@@ -433,25 +734,94 @@
     </div>
   </section>
 
+  <!-- Testimonials Section -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <h2>Témoignages</h2>
+        <p>Ce que nos utilisateurs disent de nos modèles de CV</p>
+      </div>
+      
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-text">
+            "Grâce au modèle moderne de CV, j'ai décroché 3 entretiens en une semaine ! La mise en page est impeccable et vraiment professionnelle."
+          </div>
+          <div class="testimonial-author">
+            <div class="author-avatar">M</div>
+            <div class="author-info">
+              <h4>Marie Dubois</h4>
+              <p>Responsable Marketing</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="testimonial-card">
+          <div class="testimonial-text">
+            "Le générateur IA a vraiment optimisé le contenu de mon CV. Les recruteurs ont complimenté la clarté et la pertinence de mon parcours professionnel."
+          </div>
+          <div class="testimonial-author">
+            <div class="author-avatar">T</div>
+            <div class="author-info">
+              <h4>Thomas Martin</h4>
+              <p>Développeur Full-Stack</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="testimonial-card">
+          <div class="testimonial-text">
+            "J'ai essayé plusieurs plateformes, mais les modèles créatifs de CVPro sont de loin les plus élégants et professionnels. Un vrai plus pour mon image !"
+          </div>
+          <div class="testimonial-author">
+            <div class="author-avatar">S</div>
+            <div class="author-info">
+              <h4>Sophie Lambert</h4>
+              <p>Designer UX/UI</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preview Modal -->
+  <div class="preview-modal" id="previewModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Aperçu du Modèle</h3>
+        <button class="close-modal" id="closeModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img src="" alt="Preview" class="modal-preview" id="modalPreview">
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-content">
       <h3>Prêt à décrocher votre prochain emploi ?</h3>
       <p>Créez votre CV professionnel en quelques minutes et démarquez-vous auprès des recruteurs.</p>
-      <p>© 2023 MonSuperCV. Tous droits réservés.</p>
       
       <div class="footer-links">
-        <a href="#">Conditions d'utilisation</a>
-        <a href="#">Politique de confidentialité</a>
-        <a href="#">Contact</a>
-        <a href="#">Aide</a>
+        <a href="#"><i class="fas fa-file-alt me-1"></i> Conditions d'utilisation</a>
+        <a href="#"><i class="fas fa-lock me-1"></i> Politique de confidentialité</a>
+        <a href="#"><i class="fas fa-envelope me-1"></i> Contact</a>
+        <a href="#"><i class="fas fa-question-circle me-1"></i> Aide</a>
+      </div>
+      
+      <div class="copyright">
+        © 2023 CVPro. Tous droits réservés.
       </div>
     </div>
   </footer>
 
   <script>
-    // Animation for template cards
     document.addEventListener('DOMContentLoaded', function() {
+      // Animation for template cards
       const cards = document.querySelectorAll('.template-card');
       
       cards.forEach((card, index) => {
@@ -474,6 +844,64 @@
             behavior: 'smooth'
           });
         });
+      });
+      
+      // Template filtering
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const templateCards = document.querySelectorAll('.template-card');
+      
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          // Remove active class from all buttons
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          
+          // Add active class to clicked button
+          button.classList.add('active');
+          
+          const filter = button.getAttribute('data-filter');
+          
+          templateCards.forEach(card => {
+            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+              card.style.display = 'flex';
+              setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+              }, 100);
+            } else {
+              card.style.opacity = '0';
+              card.style.transform = 'translateY(20px)';
+              setTimeout(() => {
+                card.style.display = 'none';
+              }, 300);
+            }
+          });
+        });
+      });
+      
+      // Preview modal
+      const previewModal = document.getElementById('previewModal');
+      const modalPreview = document.getElementById('modalPreview');
+      const closeModal = document.getElementById('closeModal');
+      const previewImages = document.querySelectorAll('.template-preview');
+      
+      previewImages.forEach(img => {
+        img.addEventListener('click', () => {
+          modalPreview.src = img.src;
+          previewModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+      
+      closeModal.addEventListener('click', () => {
+        previewModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+      
+      previewModal.addEventListener('click', (e) => {
+        if (e.target === previewModal) {
+          previewModal.classList.remove('active');
+          document.body.style.overflow = 'auto';
+        }
       });
     });
   </script>

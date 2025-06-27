@@ -10,9 +10,42 @@
 </div>
 
 <script>
-  fetch("/generate", {method:"POST"})
-    .then(r => r.json())
-    .then(d => location.href = "/preview")
-    .catch(_ => alert("Erreur lors de la génération, réessayez."));
+  // Utilisez la session Flask pour récupérer job_id
+  const jobId = "{{ job_id }}";
+  
+  function checkStatus() {
+    fetch(`/check_status?job_id=${jobId}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === "completed") {
+          location.href = "/preview";
+        } else if (data.status === "error") {
+          alert(`Erreur: ${data.message || "Problème lors de la génération"}`);
+        } else {
+          setTimeout(checkStatus, 2000);
+        }
+      })
+      .catch(e => {
+        console.error("Erreur fetch:", e);
+        setTimeout(checkStatus, 2000);
+      });
+  }
+
+  // Démarrer immédiatement si jobId existe
+  if (jobId) {
+    checkStatus();
+  } else {
+    // Démarrer une nouvelle génération
+    fetch("/generate", { method: "POST" })
+      .then(r => r.json())
+      .then(data => {
+        if (data.job_id) {
+          // Recharger la page avec le nouveau job_id
+          location.href = `/loading?job_id=${data.job_id}`;
+        }
+      })
+      .catch(e => alert("Erreur initiale: " + e));
+  }
 </script>
+
 </body></html>

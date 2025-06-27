@@ -14,6 +14,7 @@
 \usepackage{tabularx}
 \usepackage{xcolor}
 \usepackage{enumitem}
+\usepackage{paracol}
 
 \newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
 
@@ -25,32 +26,22 @@
 \definecolor{gray}{HTML}{8c94a9}
 \definecolor{sidetext}{HTML}{59cee5}
 \definecolor{Green}{HTML}{2caf00}
-\usepackage[contents={}]{background}
-\AddEverypageHook{\begin{tikzpicture}[remember picture,overlay]%
-  \node[inner sep=0pt,outer sep=0pt] at (current page.north west) [anchor=north west]{%
-  \fcolorbox{maincolor}{maincolor}{%
-\begin{minipage}[t][\paperheight][t]{0.67\paperwidth}
-        \color{white}
-        \hspace{0.08cm}
-\end{minipage}}
-\fcolorbox{seccolor}{seccolor}{
-\begin{minipage}[t][\paperheight][t]{0.3\paperwidth}
-        \color{black}
-        \hspace{1cm}
-\end{minipage}
-}
-  };%
-\end{tikzpicture}
-}
+\definecolor{lightgray}{HTML}{D3D3D3}
 
-\usepackage{enumitem}
-\setlist[itemize]{itemsep=-2pt,topsep=0pt,leftmargin=1.08cm}
-\renewcommand{\labelitemi}{\textcolor{sidetext}{\footnotesize$\bullet$}}
+% Solution robuste pour la bande bleue sur toute la hauteur
+\usepackage{eso-pic}
+\AddToShipoutPictureBG{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[seccolor] 
+        (0.7\paperwidth,0) rectangle 
+        (\paperwidth,\paperheight); % Bande bleue à droite
+    \fill[maincolor] 
+        (0,0) rectangle 
+        (0.7\paperwidth,\paperheight); % Fond blanc à gauche
+  \end{tikzpicture}%
+}
 
 \setlength{\parindent}{0pt}
-\usepackage{paracol}
-
-
 
 \newcommand{\cvsection}[1]{
 \setlength{\arrayrulewidth}{2pt}
@@ -72,12 +63,13 @@
 \columnratio{0.7}
 \begin{paracol}{2}
 
+% Colonne gauche (contenu principal)
 \begin{minipage}{0.7\linewidth}
-{\LARGE name} 
+{\LARGE \textbf{name}} 
 
 ~
 
-{\Large headline}
+{\Large \textbf{headline}}
 
 \end{minipage} \hfill
 \begin{minipage}{0.18\linewidth}
@@ -100,127 +92,134 @@
 
 \cvsection{EXPERIENCE}
 
-\textbf{{experience.0.title}} \hfill {experiences.0.start.date}-{experiences.0.end.date}
+% Expérience 1
+\colorbox{maincolor!10}{%
+  \begin{minipage}{\linewidth}
+    \begin{tabular}{@{}l r}
+        \textbf{{experiences.0.title}} &  
+        \footnotesize{{experiences.0.start.date}-{experiences.0.end.date}} \\
+        \textit{{experiences.0.company}} & \\
+    \end{tabular}
+    \begin{itemize}
+        \item {experiences.0.description.0}
+        \item {experiences.0.description.1}
+        \item {experiences.0.description.2}
+    \end{itemize}
+  \end{minipage}%
+}
 
-\textbf{{experience.0.company}}
+\vspace{5mm}
 
-{experience.0.description.0}
-
-{experience.0.description.1}
-
-{experience.0.description.2}
-
-~
-
-\textbf{{experience.1.title}} \hfill {experiences.1.start.date}-{experiences.1.end.date}
-
-\textbf{{experience.1.company}}
-
-{experience.1.description.0}
-
-{experience.1.description.1}
-
-{experience.1.description.2}
+% Expérience 2
+\colorbox{maincolor!10}{%
+  \begin{minipage}{\linewidth}
+    \begin{tabular}{@{}l r}
+        \textbf{{experiences.1.title}} &  
+        \footnotesize{{experiences.1.start.date}-{experiences.1.end.date}} \\
+        \textit{{experiences.1.company}} & \\
+    \end{tabular}
+    \begin{itemize}
+        \item {experiences.1.description.0}
+        \item {experiences.1.description.1}
+        \item {experiences.1.description.2}
+    \end{itemize}
+  \end{minipage}%
+}
 
 \cvsection{EDUCATION \& LEARNING}
 
-{education.0.degree} \hfill {education.0.date}
+% Formation 1
+\begin{tabular}{@{}c l}
+    \textcolor{sidetext}{\faGraduationCap} & 
+    \begin{tabular}[t]{@{}l@{}}
+        \textbf{{degrees.0.title}} \\
+        {\color{lightgray}{degrees.0.school}} \\
+        {degrees.0.subject} \\
+        {degrees.0.year}
+    \end{tabular} \\
+\end{tabular}
 
-{education.0.description}
+\vspace{5mm}
 
-~
+% Formation 2
+\begin{tabular}{@{}c l}
+    \textcolor{sidetext}{\faGraduationCap} & 
+    \begin{tabular}[t]{@{}l@{}}
+        \textbf{{degrees.1.title}} \\
+        {\color{lightgray}{degrees.1.school}} \\
+        {degrees.1.subject} \\
+        {degrees.1.year}
+    \end{tabular} \\
+\end{tabular}
 
-{education.1.degree} \hfill {education.1.date}
-
-{education.1.description}
-
+% Section droite (colonne bleue)
 \switchcolumn
 \color{white}
 
+% Décalage du contenu vers la droite
+%\begin{adjustbox}{margin=0 0 0 0.5cm,minipage=\linewidth}
+\begin{adjustbox}{margin=0.8 0.8 0.8 0.1cm,minipage=\linewidth}
 \cvsection{CONTACT} 
 
-\begin{tabular}{@{}cl}
-\faEnvelope & \href{mailto:email}{{email}} \\[6pt]
-\faPhone & \href{tel:phone}{phone} \\[6pt]
-\faMapMarker & {address} \\[6pt]
-\faLinkedin & \href{linkedin}{linkedin}  \\
+\begin{tabular}{@{}c l}
+    \faPhone & 
+    \begin{tabular}[t]{@{}l@{}}
+        {\color{lightgray}Téléphone} \\
+        \href{tel:phone}{phone}
+    \end{tabular} \\
+    \\
+    \faEnvelope & 
+    \begin{tabular}[t]{@{}l@{}}
+        {\color{lightgray}Email} \\
+        \href{mailto:email}{email}
+    \end{tabular} \\
+    \\
+    \faMapMarker & 
+    \begin{tabular}[t]{@{}l@{}}
+        {\color{lightgray}Adresse} \\
+        {address}
+    \end{tabular} \\
+    \\
+    \faLinkedin & 
+    \begin{tabular}[t]{@{}l@{}}
+        {\color{lightgray}LinkedIn} \\
+        \href{linkedin}{linkedin}
+    \end{tabular} \\
 \end{tabular}
 
 \cvsection{SKILLS} 
 
-{skills.0}
-
-\begin{adjustbox}{max width=\linewidth}
-\begin{tikzpicture}
-  \draw [fill=white, rounded corners=6pt] (0,0) rectangle (10,.4);
-  \draw [fill=Green, rounded corners=6pt] (0,0) rectangle (8,.4);
-\end{tikzpicture}
-\end{adjustbox}
-
-{skills.1}
-
-\begin{adjustbox}{max width=\linewidth}
-\begin{tikzpicture}
-  \draw [fill=white, rounded corners=6pt] (0,0) rectangle (10,.4);
-  \draw [fill=Green, rounded corners=6pt] (0,0) rectangle (8,.4);
-\end{tikzpicture}
-\end{adjustbox}
-
-{skills.2}
-
-\begin{adjustbox}{max width=\linewidth}
-\begin{tikzpicture}
-  \draw [fill=white, rounded corners=6pt] (0,0) rectangle (10,.4);
-  \draw [fill=Green, rounded corners=6pt] (0,0) rectangle (8,.4);
-\end{tikzpicture}
-\end{adjustbox}
-
-{skills.3}
-
-\begin{adjustbox}{max width=\linewidth}
-\begin{tikzpicture}
-  \draw [fill=white, rounded corners=6pt] (0,0) rectangle (10,.4);
-  \draw [fill=Green, rounded corners=6pt] (0,0) rectangle (8,.4);
-\end{tikzpicture}
-\end{adjustbox}
-
-{skills.4}
-
-\begin{adjustbox}{max width=\linewidth}
-\begin{tikzpicture}
-  \draw [fill=white, rounded corners=6pt] (0,0) rectangle (10,.4);
-  \draw [fill=Green, rounded corners=6pt] (0,0) rectangle (8,.4);
-\end{tikzpicture}
-\end{adjustbox}
-
-{skills.5}
-
-\begin{adjustbox}{max width=\linewidth}
-\begin{tikzpicture}
-  \draw [fill=white, rounded corners=6pt] (0,0) rectangle (10,.4);
-  \draw [fill=Green, rounded corners=6pt] (0,0) rectangle (8,.4);
-\end{tikzpicture}
-\end{adjustbox}
+\begin{tabular}{@{}c l}
+    \textcolor{sidetext}{} & {skills.0} \\
+    \\
+    \textcolor{sidetext}{} & {skills.1} \\
+    \\
+    \textcolor{sidetext}{} & {skills.2} \\
+    \\
+    \textcolor{sidetext}{} & {skills.3} \\
+    \\
+  
+\end{tabular}
 
 \cvsection{LANGUAGES}
 
-\begin{tabular}{p{\linewidth}}
-{language.0.name} \\[6pt]
-{language.1.name} \\[6pt]
-{language.2.name} \\[6pt]
-{language.3.name} \\
+\begin{tabular}{@{}c l}
+    
+    \begin{tabular}[t]{@{}l@{}}
+        {languages.0.name} \\
+        {\color{lightgray}{languages.0.level}} \\
+        \\
+        {languages.1.name} \\
+        {\color{lightgray}{languages.1.level}} \\
+        \\
+        {languages.2.name} \\
+        {\color{lightgray}{languages.2.level}} \\
+    \end{tabular} \\
 \end{tabular}
+\end{adjustbox}
 
-\cvsection{AWARDS}
-
-\begin{tabular}{p{\linewidth}}
-{awards.0.title} \\[6pt]
-{awards.0.date} \\[6pt]
-{awards.0.issuer} \\
-\end{tabular}
+% Certification section removed
 
 \end{paracol}
-
-
 
 \end{document}
