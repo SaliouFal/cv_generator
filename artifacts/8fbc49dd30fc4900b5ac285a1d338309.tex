@@ -1,0 +1,207 @@
+\documentclass{article}
+
+\usepackage{times}
+\usepackage{geometry}
+\geometry{a4paper,left=0.6cm,right=0.7cm,top=1.5cm,bottom=1cm,columnsep=0.8cm}
+
+\usepackage{fontawesome}          % icônes de base seulement
+\usepackage[hidelinks]{hyperref}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{hyphsubst}
+\usepackage{moresize}
+\usepackage{hyphenat}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usetikzlibrary{calc, positioning}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+
+% icônes manquantes -> puce
+\makeatletter
+\@for\sym:=faBrain,faMicrochip,faHandshakeO,faTools,faNetworkWired,%
+             faDatabase,faServer,faGit,faUsers,faComments,faCalendar,faGroup\do{%
+  \@ifundefined{\sym}{\expandafter\newcommand\csname\sym\endcsname{\textbullet}}{}}
+\makeatother
+
+% couleurs
+\definecolor{maincolor}{HTML}{f0fafc}
+\definecolor{seccolor}{HTML}{ffffff}
+\definecolor{gray}{HTML}{8c94a9}
+\definecolor{sidetext}{HTML}{59cee5}
+
+% bande latérale bleue
+\usepackage{eso-pic}
+\AddToShipoutPictureBG{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[maincolor] (current page.north west) rectangle
+                     ([xshift=0.3\paperwidth] current page.south west);
+  \end{tikzpicture}%
+}
+
+% listes
+\setlist[itemize]{itemsep=-2pt,topsep=0pt,leftmargin=1.08cm}
+\renewcommand{\labelitemi}{\textcolor{sidetext}{\footnotesize$\bullet$}}
+
+\setlength{\parindent}{0pt}
+\usepackage{paracol}
+\columnratio{0.3}
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{paracol}{2}
+% ────────────────────────────────────────
+% Colonne gauche
+% ────────────────────────────────────────
+\color{sidetext}
+\vspace*{-0.5cm}
+
+\noindent
+\begin{minipage}{\linewidth}
+  \centering
+  \begin{tikzpicture}
+    \clip (0,0) circle (1.5cm) node[anchor=center]
+      {\includegraphics[width=3cm]{bafd70233f94412d968e2a3b065a53b1.png}};
+  \end{tikzpicture}
+
+  \vspace{3mm}
+  {\color{black}\LARGE \textbf{Papé Saliou FALL}}
+
+  \vspace{1mm}
+  {\large Ingénieur Data Scientist \& Développeur IA}
+
+  \vspace{3mm}
+  {\color{gray}\rule{\linewidth}{0.4pt}} \\
+\end{minipage}
+
+% ── Coordonnées
+\begin{tabular}{@{}c l}
+  \faPhone &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Téléphone} \\ 0753481453
+  \end{tabular} \\
+  \\
+  \faLinkedin &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}LinkedIn} \\
+    \href{https://www.linkedin.com/in/pape-saliou-fall-43154a211/}{Mon LinkedIn}
+  \end{tabular} \\
+  \\
+  \faMapMarker &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Adresse} \\ 95300 Pontoise \\ 
+  \end{tabular} \\
+  \\
+  \faEnvelope &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Email} \\
+    \href{mailto:papesalioufall2@gmail.com}{papesalioufall2@gmail.com}
+  \end{tabular} \\
+\end{tabular}
+
+\vspace{2mm}
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
+
+% ── Langues --------------------------------------------------------
+{\color{black}{Langues}}
+
+\vspace{2mm}
+\begin{itemize}[leftmargin=*]
+\item Français - \textcolor{gray}{Natif}
+\item Anglais - \textcolor{gray}{B2}\end{itemize}          % ← le placeholder va contenir \begin{itemize}…\end{itemize}
+
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
+
+% ── Compétences ----------------------------------------------------
+\vspace{2mm}
+{\color{black}{Compétences Clés}}
+
+\vspace{2mm}
+\begin{itemize}[leftmargin=*]
+\item Python
+\item SQL
+\item PowerBI
+\item Git
+\item TensorFlow
+\item Keras
+\item Flask\end{itemize}              % ← idem, une vraie liste
+\vspace{2mm}
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
+
+% ── Centres d'intérêt
+\vspace{2mm}
+{\color{black}{Centres d’intérêt}}
+
+\vspace{2mm}
+\begin{itemize}[leftmargin=*]
+\item Football
+\item Natation
+\item Lecture
+\end{itemize}     % ← simple itemize ou tabular
+
+\vfill
+~
+
+% ────────────────────────────────────────
+\switchcolumn
+% Colonne droite
+% ────────────────────────────────────────
+\color{black}
+
+% ── Profil
+\textcolor{black}{\Large \textbf{Profil Professionnel}} \\[2pt]
+Data Scientist passionné par la transformation de données complexes en solutions concrètes, je combine expertise technique et vision produit pour créer de la valeur. Autonome et proactif, j’ai mené des projets d’IA, de machine learning et de visualisation de données au sein de secteurs variés. Mon sens du travail en équipe me permet de fédérer les parties prenantes autour d’objectifs communs. Je recherche aujourd’hui un environnement innovant où relever des défis ambitieux et accélérer l’impact business de la donnée. \\[8pt]
+
+% ── Expérience
+\textcolor{black}{\Large \textbf{Expérience Professionnelle}} \\[2pt]
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \textbf{Data Scientist \& Développeur IA} \\ Prepaya \\ Jan. 2024 – Présent
+    \begin{itemize}
+      \item Développé une plateforme IA full-stack (Python/JavaScript) pour l’analyse de données et de séries temporelles, accélérant la prise de décision. \item Implémenté des modèles de Machine Learning et Deep Learning (Scikit-learn, TensorFlow, Keras) afin d’automatiser les prédictions métier. \item Déployé les services via API OpenAI et PostgreSQL sur Heroku, garantissant une mise en production continue et sécurisée.
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \textbf{Apprenti Risk Analyst \& Data Scientist} \\ AXA XL (Groupe AXA) \\ Déc. 2022 – Déc. 2023
+    \begin{itemize}
+      \item Automatisé la collecte des données financières, fiabilisant les rapports et réduisant les tâches manuelles du département finance. \item Créé des tableaux de bord Power BI pour le suivi de la facturation, offrant une visibilité temps réel aux équipes finance et management. \item Développé des applications prédictives sur les sinistres (Python, R) afin d’estimer la probabilité d’occurrence et optimiser la gestion des risques.
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \textbf{Apprenti Data Scientist} \\ Prepaya \\ Sept. 2021 – Août 2022
+    \begin{itemize}
+      \item Appliqué des techniques NLP et Deep Learning pour générer automatiquement des formulaires clients, améliorant la productivité. \item Réalisé une analyse de sentiments sur les commentaires utilisateurs afin d’identifier les axes d’amélioration du service. \item Automatisé le scraping et le pré-traitement de données (BeautifulSoup, Selenium) pour enrichir les jeux de données internes.
+    \end{itemize}
+  \end{minipage}}   % ← blocs \colorbox{maincolor}{\begin{minipage}…}
+
+\vspace{8mm}
+
+% ── Formation
+\textcolor{black}{\Large \textbf{Formation}} \\[2pt]
+
+    \begin{tabularx}{\linewidth}{@{}c X@{}}
+    \textcolor{sidetext}{\faGraduationCap} &
+    \textbf{Master 2 Data Science} \\
+    & Sorbonne Université \\
+    & \begin{itemize}[leftmargin=*]
+  \item Formation axée sur l’analyse de données, le Machine Learning et le Deep Learning. \item Approfondissement des séries temporelles, modèles latents et apprentissage statistique. \item Projets pratiques en bases de données et calcul parallèle appliqués à des jeux de données volumineux.
+\end{itemize} \\
+    & \textit{Sept. 2021 – Mars 2022}
+    \end{tabularx}
+           % ← lignes tabular par diplôme
+
+\end{paracol}
+\end{document}
+

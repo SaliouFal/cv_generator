@@ -2,8 +2,9 @@
 
 \usepackage{times}
 \usepackage{geometry}
-\geometry{a4paper,left=0.6cm,right=0.7cm,top=1.5cm,bottom=1cm,columnsep=0.8cm} % Top margin reduced
-\usepackage{fontawesome}
+\geometry{a4paper,left=0.6cm,right=0.7cm,top=1.5cm,bottom=1cm,columnsep=0.8cm}
+
+\usepackage{fontawesome}          % icônes de base seulement
 \usepackage[hidelinks]{hyperref}
 \usepackage{multicol}
 \usepackage{tikz}
@@ -13,30 +14,32 @@
 \usepackage{tabularx}
 \usepackage{xcolor}
 \usepackage{enumitem}
-\usetikzlibrary{calc, positioning}      
+\usetikzlibrary{calc, positioning}
 \newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+
+% icônes manquantes -> puce
 \makeatletter
-\@ifundefined{faBrain}{\newcommand{\faBrain}{\textbullet}}{}
-\@ifundefined{faMicrochip}{\newcommand{\faMicrochip}{\textbullet}}{}
-\@ifundefined{faHandshakeO}{\newcommand{\faHandshakeO}{\textbullet}}{}
+\@for\sym:=faBrain,faMicrochip,faHandshakeO,faTools,faNetworkWired,%
+             faDatabase,faServer,faGit,faUsers,faComments,faCalendar,faGroup\do{%
+  \@ifundefined{\sym}{\expandafter\newcommand\csname\sym\endcsname{\textbullet}}{}}
 \makeatother
-% Définition des couleurs
+
+% couleurs
 \definecolor{maincolor}{HTML}{f0fafc}
 \definecolor{seccolor}{HTML}{ffffff}
 \definecolor{gray}{HTML}{8c94a9}
 \definecolor{sidetext}{HTML}{59cee5}
 
-% Solution robuste pour la bande bleue sur toute la hauteur
+% bande latérale bleue
 \usepackage{eso-pic}
 \AddToShipoutPictureBG{%
   \begin{tikzpicture}[remember picture,overlay]
-    \fill[maincolor] 
-        (current page.north west) rectangle 
-        ([xshift=0.3\paperwidth] current page.south west);
+    \fill[maincolor] (current page.north west) rectangle
+                     ([xshift=0.3\paperwidth] current page.south west);
   \end{tikzpicture}%
 }
 
-% Configuration des listes
+% listes
 \setlist[itemize]{itemsep=-2pt,topsep=0pt,leftmargin=1.08cm}
 \renewcommand{\labelitemi}{\textcolor{sidetext}{\footnotesize$\bullet$}}
 
@@ -45,208 +48,108 @@
 \columnratio{0.3}
 
 \begin{document}
-
 \pagestyle{empty}
 
 \begin{paracol}{2}
-% Colonne gauche - Section personnelle
+% ────────────────────────────────────────
+% Colonne gauche
+% ────────────────────────────────────────
 \color{sidetext}
-% Décalage vertical de 10cm vers le haut
 \vspace*{-0.5cm}
 
 \noindent
 \begin{minipage}{\linewidth}
-    \centering
-    \begin{tikzpicture}
-        \clip (0,0) circle (1.5cm) node[anchor=center] {\includegraphics[width=3cm]{example-image}}; 
-    \end{tikzpicture}
+  \centering
+  \begin{tikzpicture}
+    \clip (0,0) circle (1.5cm) node[anchor=center]
+      {\includegraphics[width=3cm]{%%PHOTO_FILE%%}};
+  \end{tikzpicture}
 
-    \vspace{3mm} % Espace réduit
-    
-    {\color{black}\LARGE \textbf{Jean Dupont}}
-    
-    \vspace{1mm} % Espace réduit
-    
-    {\large{Ingénieur Logiciel Senior}}
-    
-    \vspace{3mm} % Espace réduit
-    {\color{gray}\rule{\linewidth}{0.4pt}} \\
+  \vspace{3mm}
+  {\color{black}\LARGE \textbf{%%FULL_NAME%%}}
+
+  \vspace{1mm}
+  {\large %%HEADLINE%%}
+
+  \vspace{3mm}
+  {\color{gray}\rule{\linewidth}{0.4pt}} \\
 \end{minipage}
 
-% Coordonnées juste sous le bloc photo/titre
+% ── Coordonnées
 \begin{tabular}{@{}c l}
-    \faPhone & 
-    \begin{tabular}[t]{@{}l@{}}
-        {\color{gray}Téléphone} \\
-        06 12 34 56 78
-    \end{tabular} \\
-    \\
-    \faLinkedin & 
-    \begin{tabular}[t]{@{}l@{}}
-        {\color{gray}LinkedIn} \\
-        \href{https://linkedin.com/in/jeandupont}{in/jeandupont}
-    \end{tabular} \\
-    \\
-    \faMapMarker & 
-    \begin{tabular}[t]{@{}l@{}}
-        {\color{gray}Adresse} \\
-        123 Rue de Paris, 75001 Paris
-    \end{tabular} \\
-    \\
-    \faEnvelope & 
-    \begin{tabular}[t]{@{}l@{}}
-        {\color{gray}Email} \\
-        \href{mailto:jean.dupont@email.com}{jean.dupont@email.com}
-    \end{tabular} \\
+  \faPhone &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Téléphone} \\ %%PHONE%%
+  \end{tabular} \\
+  \\
+  \faLinkedin &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}LinkedIn} \\
+    \href{%%LINKEDIN_URL%%}{Mon LinkedIn}
+  \end{tabular} \\
+  \\
+  \faMapMarker &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Adresse} \\ %%ADDRESS_LINE1%% \\ %%ADDRESS_LINE2%%
+  \end{tabular} \\
+  \\
+  \faEnvelope &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Email} \\
+    \href{mailto:%%EMAIL%%}{%%EMAIL%%}
+  \end{tabular} \\
 \end{tabular}
 
 \vspace{2mm}
 {\color{gray}\rule{\linewidth}{0.4pt}} \\
 
-% Langues
+% ── Langues --------------------------------------------------------
 {\color{black}{Langues}}
 
 \vspace{2mm}
+%%LANGUAGE_ITEMS%%          % ← le placeholder va contenir \begin{itemize}…\end{itemize}
 
-\begin{tabular}{@{}c l}
-    \faLanguage & 
-    \begin{tabular}[t]{@{}l@{}}
-        Français \\
-        {\color{gray}{Langue maternelle}} \\
-        \\
-        Anglais \\
-        {\color{gray}{Courant}} \\
-        \\
-        Espagnol \\
-        {\color{gray}{Intermédiaire}}
-    \end{tabular} \\
-\end{tabular}
-
-\vspace{2mm}
 {\color{gray}\rule{\linewidth}{0.4pt}} \\
 
-% Compétences
+% ── Compétences ----------------------------------------------------
 \vspace{2mm}
 {\color{black}{Compétences Clés}}
 
 \vspace{2mm}
-
-\begin{tabular}{@{}c l}
-    \textcolor{sidetext}{\faCode} & Développement Web (HTML/CSS/JS) \\
-    \\
-    \textcolor{sidetext}{\faDatabase} & Bases de données (SQL, NoSQL) \\
-    \\
-    \textcolor{sidetext}{\faServer} & Architecture Cloud (AWS, Azure) \\
-    \\
-    \textcolor{sidetext}{\faGit} & Git \& Méthodes Agile \\
-    \\
-    \textcolor{sidetext}{\faUsers} & Gestion d'équipe \\
-    \\
-    \textcolor{sidetext}{\faComments} & Négociation commerciale \\
-    \\
-    \textcolor{sidetext}{\faCalendar} & Organisation \\
-    \\
-    \textcolor{sidetext}{\faGroup} & Relations \\
-\end{tabular}
-
+%%SKILL_ITEMS%%              % ← idem, une vraie liste
 \vspace{2mm}
 {\color{gray}\rule{\linewidth}{0.4pt}} \\
 
-%Interet
+% ── Centres d'intérêt
 \vspace{2mm}
 {\color{black}{Centres d’intérêt}}
-\vspace{2mm}
 
-\begin{tabular}{@{}c l}
-   
-    \begin{tabular}[t]{@{}l@{}}
-       
-    \end{tabular} \\
-\end{tabular}
 \vspace{2mm}
-% Espace flexible pour étendre la colonne gauche
+%%HOBBY_ITEMS%%     % ← simple itemize ou tabular
+
 \vfill
 ~
 
+% ────────────────────────────────────────
 \switchcolumn
-% Colonne droite - Contenu professionnel
+% Colonne droite
+% ────────────────────────────────────────
 \color{black}
 
-% Résumé professionnel
-\textcolor{black}{\Large \textbf{Profil Professionnel}} \\
+% ── Profil
+\textcolor{black}{\Large \textbf{Profil Professionnel}} \\[2pt]
+%%SUMMARY%% \\[8pt]
 
-\textcolor{black}{Ingénieur logiciel avec 10 ans d'expérience dans le développement d'applications web et mobiles. Expertise en architecture de systèmes distribués et en gestion de projets complexes. Passionné par les technologies émergentes et les méthodes de développement agile.}\\[8pt]
-
-% Expérience professionnelle
-\textcolor{black}{\Large \textbf{Expérience Professionnelle}} \\
-
-% Expérience 1
-\colorbox{maincolor}{%
-  \begin{minipage}{\linewidth}
-    \begin{tabular}{@{}l l r}
-        \textcolor{sidetext}{\faBriefcase} & 
-        \textbf{Senior Tech Lead} &  
-        \footnotesize{2020 - Présent} \\
-        & \textit{Innovatech Solutions} & \\
-    \end{tabular}
-    \begin{itemize}
-        \item Direction d'une équipe de 10 développeurs sur des projets cloud
-        \item Conception d'architecture microservices pour applications critiques
-        \item Mise en place de pipelines CI/CD et d'infrastructure IaC
-    \end{itemize}
-  \end{minipage}%
-}
-
-\vspace{5mm}
-
-% Expérience 2
-\colorbox{maincolor}{%
-  \begin{minipage}{\linewidth}
-    \begin{tabular}{@{}l l r}
-        \textcolor{sidetext}{\faBriefcase} & 
-        \textbf{Développeur Full Stack} &  
-        \footnotesize{2015 - 2020} \\
-        & \textit{WebCréation} & \\
-    \end{tabular}
-    \begin{itemize}
-        \item Développement d'applications web avec React et Node.js
-        \item Optimisation des performances et expérience utilisateur
-        \item Intégration de solutions de paiement et d'API tierces
-    \end{itemize}
-  \end{minipage}%
-}
+% ── Expérience
+\textcolor{black}{\Large \textbf{Expérience Professionnelle}} \\[2pt]
+%%EXPERIENCE_BLOCKS%%   % ← blocs \colorbox{maincolor}{\begin{minipage}…}
 
 \vspace{8mm}
 
-% Formation
-\textcolor{black}{\Large \textbf{Formation}} \\
-
-% Diplôme 1
-\begin{tabular}{@{}c l}
-    \textcolor{sidetext}{\faGraduationCap} & 
-    \begin{tabular}[t]{@{}l@{}}
-        \textbf{Master en Informatique} \\
-        Université Paris-Saclay \\
-        Spécialisation: Architecture Logicielle \\
-        2012 - 2015
-    \end{tabular} \\
-\end{tabular}
-
-\vspace{5mm}
-
-% Diplôme 2
-\begin{tabular}{@{}c l}
-    \textcolor{sidetext}{\faGraduationCap} & 
-    \begin{tabular}[t]{@{}l@{}}
-        \textbf{Licence en Informatique} \\
-        Université Paris Descartes \\
-        Mention Très Bien \\
-        2009 - 2012
-    \end{tabular} \\
-\end{tabular}
-
-
+% ── Formation
+\textcolor{black}{\Large \textbf{Formation}} \\[2pt]
+%%DEGREE_BLOCKS%%       % ← lignes tabular par diplôme
 
 \end{paracol}
-
 \end{document}
+

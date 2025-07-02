@@ -3,22 +3,11 @@
 \usepackage{times}
 \usepackage{geometry}
 \geometry{a4paper,left=0.6cm,right=0.7cm,top=1cm,bottom=1cm,columnsep=0.8cm}
+
 \usepackage{fontawesome}
 \usepackage[hidelinks]{hyperref}
-\usepackage{multicol}
-\usepackage{tikz}
-\usepackage{hyphsubst}
-\usepackage{moresize}
-\usepackage{hyphenat}
-\usepackage{adjustbox}
-\usepackage{tabularx}
-\usepackage{xcolor}
-\usepackage{enumitem}
-\usepackage{paracol}
-
+\usepackage{multicol,paracol,tikz,hyphsubst,moresize,hyphenat,adjustbox,tabularx,xcolor,enumitem}
 \newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
-
-\usepackage{enumitem}
 \setlist[itemize]{itemsep=1pt,leftmargin=*,topsep=-10pt}
 
 \definecolor{maincolor}{HTML}{ffffff}
@@ -28,198 +17,78 @@
 \definecolor{Green}{HTML}{2caf00}
 \definecolor{lightgray}{HTML}{D3D3D3}
 
-% Solution robuste pour la bande bleue sur toute la hauteur
+% --- bande latérale bleue
 \usepackage{eso-pic}
 \AddToShipoutPictureBG{%
   \begin{tikzpicture}[remember picture,overlay]
-    \fill[seccolor] 
-        (0.7\paperwidth,0) rectangle 
-        (\paperwidth,\paperheight); % Bande bleue à droite
-    \fill[maincolor] 
-        (0,0) rectangle 
-        (0.7\paperwidth,\paperheight); % Fond blanc à gauche
+    \fill[seccolor] (0.7\paperwidth,0) rectangle (\paperwidth,\paperheight);
+    \fill[maincolor] (0,0) rectangle (0.7\paperwidth,\paperheight);
   \end{tikzpicture}%
 }
 
 \setlength{\parindent}{0pt}
-
-\newcommand{\cvsection}[1]{
-\setlength{\arrayrulewidth}{2pt}
-\begin{tabular}{@{}ll}
-& \\
-& \\
-\textbf{\Large #1} & \\[3pt]
-\hline
-& \\
-\end{tabular}
+\newcommand{\cvsection}[1]{%
+  \par\bigskip                % espace avant le titre
+  {\bfseries\Large #1}\par
+  \noindent\rule{\linewidth}{0.8pt}\par
+  \medskip                    % espace après la ligne
 }
 
 \newcommand*{\ClipSep}{0.4cm}
 
-\begin{document}
+% ------------------------------------------------------------------
+\begin{document}\pagestyle{empty}
+\columnratio{0.7}\begin{paracol}{2}
 
-\pagestyle{empty}
-
-\columnratio{0.7}
-\begin{paracol}{2}
-
-% Colonne gauche (contenu principal)
+% --------- colonne gauche -----------------------------------------
 \begin{minipage}{0.7\linewidth}
-{\LARGE \textbf{name}} 
+{\LARGE\textbf{%%FULL_NAME%%}}
 
-~
-
-{\Large \textbf{headline}}
-
-\end{minipage} \hfill
+\bigskip
+{\large\textbf{%%HEADLINE%%}}
+\end{minipage}\hfill
 \begin{minipage}{0.18\linewidth}
 \begin{tikzpicture}
-\node [inner sep=0pt] at (0,0) {\includegraphics[width=\linewidth]{photo.jpg}};
-\draw [white, rounded corners=\ClipSep, line width=\ClipSep] 
-    (current bounding box.north west) -- 
-    (current bounding box.north east) --
-    (current bounding box.south east) --
-    (current bounding box.south west) -- cycle
-    ;
+\node[inner sep=0pt]{ \includegraphics[width=\linewidth]{%%PHOTO_FILE%%} };
+\draw[white,rounded corners=\ClipSep,line width=\ClipSep]
+      (current bounding box.north west) --
+      (current bounding box.north east) --
+      (current bounding box.south east) --
+      (current bounding box.south west) -- cycle;
 \end{tikzpicture}
 \end{minipage}
 
-\rule{1.2\linewidth}{0.4pt}
+\cvsection{Profil}
+%%SUMMARY%%
 
-\cvsection{PROFESSIONAL SUMMARY}
+\cvsection{EXPÉRIENCE}
+%%EXPERIENCE_BLOCKS%%
 
-{summary}
+\cvsection{FORMATION}
+%%DEGREE_BLOCKS%%
 
-\cvsection{EXPERIENCE}
+% --------- colonne droite (bleue) ---------------------------------
+\switchcolumn\color{white}\hspace*{0.4cm}\begin{minipage}{0.88\linewidth}
 
-% Expérience 1
-\colorbox{maincolor!10}{%
-  \begin{minipage}{\linewidth}
-    \begin{tabular}{@{}l r}
-        \textbf{{experiences.0.title}} &  
-        \footnotesize{{experiences.0.start.date}-{experiences.0.end.date}} \\
-        \textit{{experiences.0.company}} & \\
-    \end{tabular}
-    \begin{itemize}
-        \item {experiences.0.description.0}
-        \item {experiences.0.description.1}
-        \item {experiences.0.description.2}
-    \end{itemize}
-  \end{minipage}%
-}
-
-\vspace{5mm}
-
-% Expérience 2
-\colorbox{maincolor!10}{%
-  \begin{minipage}{\linewidth}
-    \begin{tabular}{@{}l r}
-        \textbf{{experiences.1.title}} &  
-        \footnotesize{{experiences.1.start.date}-{experiences.1.end.date}} \\
-        \textit{{experiences.1.company}} & \\
-    \end{tabular}
-    \begin{itemize}
-        \item {experiences.1.description.0}
-        \item {experiences.1.description.1}
-        \item {experiences.1.description.2}
-    \end{itemize}
-  \end{minipage}%
-}
-
-\cvsection{EDUCATION \& LEARNING}
-
-% Formation 1
+\cvsection{CONTACT}
 \begin{tabular}{@{}c l}
-    \textcolor{sidetext}{\faGraduationCap} & 
-    \begin{tabular}[t]{@{}l@{}}
-        \textbf{{degrees.0.title}} \\
-        {\color{lightgray}{degrees.0.school}} \\
-        {degrees.0.subject} \\
-        {degrees.0.year}
-    \end{tabular} \\
+  \faPhone & \href{tel:%%PHONE%%}{%%PHONE%%} \\[2pt]
+  \faEnvelope & \href{mailto:%%EMAIL%%}{%%EMAIL%%} \\[2pt]
+  \faMapMarker & %%ADDRESS_LINE1%%\\%%ADDRESS_LINE2%% \\[2pt]
+  \faLinkedin & \href{%%LINKEDIN_URL%%}{%%LINKEDIN_HANDLE%%}
 \end{tabular}
 
-\vspace{5mm}
+\cvsection{COMPÉTENCES}
 
-% Formation 2
-\begin{tabular}{@{}c l}
-    \textcolor{sidetext}{\faGraduationCap} & 
-    \begin{tabular}[t]{@{}l@{}}
-        \textbf{{degrees.1.title}} \\
-        {\color{lightgray}{degrees.1.school}} \\
-        {degrees.1.subject} \\
-        {degrees.1.year}
-    \end{tabular} \\
-\end{tabular}
+%%SKILL_ITEMS%%
+\par\bigskip 
 
-% Section droite (colonne bleue)
-\switchcolumn
-\color{white}
+\cvsection{LANGUES}
+%%LANGUAGE_ITEMS%%
+\par\bigskip 
+\cvsection{INTÉRÊTS}
+%%HOBBY_ITEMS%%
 
-% Décalage du contenu vers la droite
-%\begin{adjustbox}{margin=0 0 0 0.5cm,minipage=\linewidth}
-\begin{adjustbox}{margin=0.8 0.8 0.8 0.1cm,minipage=\linewidth}
-\cvsection{CONTACT} 
-
-\begin{tabular}{@{}c l}
-    \faPhone & 
-    \begin{tabular}[t]{@{}l@{}}
-        {\color{lightgray}Téléphone} \\
-        \href{tel:phone}{phone}
-    \end{tabular} \\
-    \\
-    \faEnvelope & 
-    \begin{tabular}[t]{@{}l@{}}
-        {\color{lightgray}Email} \\
-        \href{mailto:email}{email}
-    \end{tabular} \\
-    \\
-    \faMapMarker & 
-    \begin{tabular}[t]{@{}l@{}}
-        {\color{lightgray}Adresse} \\
-        {address}
-    \end{tabular} \\
-    \\
-    \faLinkedin & 
-    \begin{tabular}[t]{@{}l@{}}
-        {\color{lightgray}LinkedIn} \\
-        \href{linkedin}{linkedin}
-    \end{tabular} \\
-\end{tabular}
-
-\cvsection{SKILLS} 
-
-\begin{tabular}{@{}c l}
-    \textcolor{sidetext}{} & {skills.0} \\
-    \\
-    \textcolor{sidetext}{} & {skills.1} \\
-    \\
-    \textcolor{sidetext}{} & {skills.2} \\
-    \\
-    \textcolor{sidetext}{} & {skills.3} \\
-    \\
-  
-\end{tabular}
-
-\cvsection{LANGUAGES}
-
-\begin{tabular}{@{}c l}
-    
-    \begin{tabular}[t]{@{}l@{}}
-        {languages.0.name} \\
-        {\color{lightgray}{languages.0.level}} \\
-        \\
-        {languages.1.name} \\
-        {\color{lightgray}{languages.1.level}} \\
-        \\
-        {languages.2.name} \\
-        {\color{lightgray}{languages.2.level}} \\
-    \end{tabular} \\
-\end{tabular}
-\end{adjustbox}
-
-% Certification section removed
-
+\end{minipage}
 \end{paracol}
-
 \end{document}

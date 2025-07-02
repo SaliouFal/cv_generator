@@ -29,12 +29,15 @@
   <!-- Formulaire ------------------------------------------------------>
   <form method="post" enctype="multipart/form-data" class="section-card">
 
-    <!-- ----------------------- IDENTITÉ ------------------------------>
+    <!-- …haut du fichier inchangé … -->
+
+    <!-- ----------------------- IDENTITÉ ------------------------------>    
     <div class="row g-3">
       <div class="col-md-6">
         <label class="icon-label"><i class="fa-solid fa-briefcase"></i> Poste visé</label>
         <input name="target_role" class="form-control" required>
       </div>
+
       <div class="col-md-3">
         <label class="icon-label"><i class="fa-solid fa-user"></i> Prénom</label>
         <input name="first_name" class="form-control" required>
@@ -43,6 +46,7 @@
         <label class="icon-label"><i class="fa-solid fa-user"></i> Nom</label>
         <input name="last_name" class="form-control" required>
       </div>
+
       <div class="col-md-6">
         <label class="icon-label"><i class="fa-solid fa-envelope"></i> E-mail</label>
         <input type="email" name="email" class="form-control" required>
@@ -55,73 +59,85 @@
         <label class="icon-label"><i class="fa-brands fa-linkedin"></i> LinkedIn</label>
         <input type="url" name="linkedin" class="form-control" placeholder="profil…">
       </div>
-      <div class="col-md-6">
+
+      <!-- NOUVELLE « cage » : adresse postale complète -->
+      <div class="col-md-8">                                                    <!-- ⬅️ -->
+        <label class="icon-label"><i class="fa-solid fa-location-dot"></i> Adresse postale</label> <!-- ⬅️ -->
+        <input name="address" class="form-control"                                   
+               placeholder="123 rue Exemple, 75000 Paris">                           <!-- ⬅️ -->
+      </div>                                                                       <!-- ⬅️ -->
+
+      <div class="col-md-4">
         <label class="icon-label"><i class="fa-solid fa-image"></i> Photo</label>
         <input type="file" name="photo" class="form-control">
       </div>
     </div>
 
-    <!-- ----------------------- COMPÉTENCES --------------------------->
+<!-- ----------------------- COMPÉTENCES --------------------------->
+
     <hr class="my-4">
     <h4><i class="fa-solid fa-lightbulb"></i> Compétences (max 10)</h4>
 
     <div id="skill-wrapper" class="row g-3"></div>
-    <button id="btn-add-skill" type="button" class="btn btn-outline-primary btn-sm" onclick="addSkill()">
+
+    <!-- ajout d’un petit espacement -->
+    <button id="btn-add-skill" type="button"
+            class="btn btn-outline-primary btn-sm mt-2"                       
+            onclick="addSkill()">
       <i class="fa-solid fa-plus"></i> Ajouter une compétence
     </button>
 
-    <!-- ----------------------- EXPÉRIENCES --------------------------->
+<!-- ----------------------- EXPÉRIENCES --------------------------->
+
     <hr class="my-4">
     <h4><i class="fa-solid fa-suitcase"></i> Expériences (max 3)</h4>
     <p class="text-muted mb-2">Intitulé, entreprise, dates et quelques lignes de description.</p>
 
     <div id="jobs-wrapper"></div>
-    <button id="btn-add-job" type="button" class="btn btn-outline-primary btn-sm" onclick="addJob()">
+    <button id="btn-add-job" type="button"
+            class="btn btn-outline-primary btn-sm mt-2"                        
+            onclick="addJob()">
       <i class="fa-solid fa-plus"></i> Ajouter une expérience
     </button>
 
-    <!-- ----------------------- ÉDUCATION ----------------------------->
+<!-- ----------------------- ÉDUCATION ----------------------------->
+
     <hr class="my-4">
     <h4><i class="fa-solid fa-graduation-cap"></i> Éducation (max 3)</h4>
 
     <div id="edu-wrapper"></div>
-    <button id="btn-add-edu" type="button" class="btn btn-outline-primary btn-sm" onclick="addEdu()">
+    <button id="btn-add-edu" type="button"
+            class="btn btn-outline-primary btn-sm mt-2"                        
+            onclick="addEdu()">
       <i class="fa-solid fa-plus"></i> Ajouter une formation
     </button>
 
-    <!-- ----------------------- CERTIFICATIONS ------------------------>
-    <!-- <hr class="my-4">
-    <h4><i class="fa-solid fa-certificate"></i> Certifications</h4>
-
-    <div id="cert-wrapper"></div>
-    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addCert()">
-      <i class="fa-solid fa-plus"></i> Ajouter une certification
-    </button>
-     -->
-
+<!-- ----------------------- CENTRES D’INTÉRÊT --------------------->
 
     <hr class="my-4">
     <h4><i class="fa-solid fa-heart"></i> Centres d’intérêt (max&nbsp;5)</h4>
 
     <div id="interest-wrapper" class="row g-3"></div>
     <button id="btn-add-interest" type="button"
-            class="btn btn-outline-primary btn-sm"
+            class="btn btn-outline-primary btn-sm mt-2"                        
             onclick="addInterest()">
       <i class="fa-solid fa-plus"></i> Ajouter un centre d’intérêt
     </button>
 
+<!-- ----------------------- LANGUES ------------------------------->
 
-        <!-- ----------------------- LANGUES ------------------------------>
-  <hr class="my-4">
-  <h4><i class="fa-solid fa-language"></i> Langues (max&nbsp;5)</h4>
+    <hr class="my-4">
+    <h4><i class="fa-solid fa-language"></i> Langues (max&nbsp;5)</h4>
 
-  <div id="lang-wrapper" class="row g-3"></div>
-  <button id="btn-add-lang" type="button"
-          class="btn btn-outline-primary btn-sm"
-          onclick="addLang()">
-    <i class="fa-solid fa-plus"></i> Ajouter une langue
-  </button>
-    
+    <div id="lang-wrapper" class="row g-3"></div>
+    <button id="btn-add-lang" type="button"
+            class="btn btn-outline-primary btn-sm mt-2"                        
+            onclick="addLang()">
+      <i class="fa-solid fa-plus"></i> Ajouter une langue
+    </button>
+
+<!-- …fin du fichier inchangé … -->
+
 
     <!-- ----------------------- SUBMIT -------------------------------->
     <div class="text-end mt-4">

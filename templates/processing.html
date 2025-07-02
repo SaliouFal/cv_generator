@@ -1,0 +1,67 @@
+<!-- templates/processing.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Traitement en cours</title>
+    <style>
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .modern-spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(67, 97, 238, 0.2);
+            border-radius: 50%;
+            border-top: 8px solid #4361ee;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-text {
+            font-size: 1.2rem;
+            color: #4361ee;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="spinner-container">
+        <div class="modern-spinner"></div>
+        <div class="status-text">Analyse de votre CV en cours...</div>
+    </div>
+
+    <script>
+        const taskId = "{{ task_id }}";
+        
+        function checkTaskStatus() {
+            fetch(`/check_task/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "completed" && data.redirect) {
+                        window.location.href = data.redirect;
+                    } else if (data.status === "error") {
+                        alert(`Erreur: ${data.message}`);
+                        window.location.href = "/";
+                    } else {
+                        setTimeout(checkTaskStatus, 2000);
+                    }
+                });
+        }
+        
+        // Démarrer la vérification
+        setTimeout(checkTaskStatus, 2000);
+    </script>
+</body>
+</html>

@@ -263,6 +263,74 @@
         gap: 1.5rem;
       }
     }
+
+
+
+  .spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    display: none;
+  }
+
+  /* Modifier le bouton d'import */
+  #import-button i {
+    transition: opacity 0.3s ease;
+  }
+
+  /* Styles pour le spinner-overlay */
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  display: none;
+}
+
+.modern-spinner {
+  width: 70px;
+  height: 70px;
+  border: 6px solid rgba(67, 97, 238, 0.2);
+  border-radius: 50%;
+  border-top: 6px solid #4361ee;
+  animation: spin 1.2s linear infinite;
+  margin-bottom: 20px;
+}
+
+.spinner-text {
+  font-size: 1.2rem;
+  color: #4361ee;
+  font-weight: 500;
+  text-align: center;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Transition pour l'icône du bouton */
+.btn-main i {
+  transition: opacity 0.3s ease;
+}
+
+
+
+
   </style>
 </head>
 <body>
@@ -298,7 +366,7 @@
           <h3>Importer un CV existant</h3>
         </div>
         <div class="card-body">
-          <form action="{{ url_for('import_cv') }}" method="post" enctype="multipart/form-data">
+          <form id="import-cv-form" action="{{ url_for('import_cv') }}" method="post" enctype="multipart/form-data">
           
             <div class="form-group">
               <label class="form-label">
@@ -328,9 +396,12 @@
               </div>
             </div>
 
-            <button type="submit" class="btn btn-main">
-              <i class="fas fa-search me-2"></i>Analyser mon CV
-            </button>
+          
+
+          <button type="submit" class="btn btn-main" id="import-button">
+            <i class="fas fa-search me-2" id="search-icon"></i>
+            <span id="button-text">Analyser mon CV</span>
+          </button>
           </form>
 
         </div>
@@ -365,61 +436,134 @@
     </div>
   </div>
 
+  <div class="spinner-overlay" id="spinner-overlay">
+    <div class="modern-spinner"></div>
+    <div class="spinner-text">Traitement de votre CV en cours...</div>
+  </div>
+
   <script>
-    // Animation pour les cartes au chargement
-    document.addEventListener('DOMContentLoaded', function() {
-      const cards = document.querySelectorAll('.option-card');
-      
-      cards.forEach((card, index) => {
+  // Animation pour les cartes au chargement
+  document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.option-card');
+    
+    cards.forEach((card, index) => {
+      setTimeout(() => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.display = 'flex';
+        
         setTimeout(() => {
-          card.style.opacity = '0';
-          card.style.transform = 'translateY(20px)';
-          card.style.display = 'flex';
-          
-          setTimeout(() => {
-            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-          }, 100);
-        }, index * 150);
+          card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 100);
+      }, index * 150);
+    });
+    
+    // Animation pour le survol des zones de dépôt de fichiers
+    const fileInputs = document.querySelectorAll('.file-input-container');
+    fileInputs.forEach(container => {
+      const input = container.querySelector('input[type="file"]');
+      const label = container.querySelector('.file-input-label');
+      
+      input.addEventListener('change', function() {
+        if (this.files.length > 0) {
+          label.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            <p class="file-input-text">Fichier sélectionné</p>
+            <small>${this.files[0].name}</small>
+          `;
+          label.style.borderColor = '#28a745';
+          label.style.backgroundColor = 'rgba(40, 167, 69, 0.05)';
+        }
       });
       
-      // Animation pour le survol des zones de dépôt de fichiers
-      const fileInputs = document.querySelectorAll('.file-input-container');
-      fileInputs.forEach(container => {
-        const input = container.querySelector('input[type="file"]');
-        const label = container.querySelector('.file-input-label');
-        
-        input.addEventListener('change', function() {
-          if (this.files.length > 0) {
-            label.innerHTML = `
-              <i class="fas fa-check-circle"></i>
-              <p class="file-input-text">Fichier sélectionné</p>
-              <small>${this.files[0].name}</small>
-            `;
-            label.style.borderColor = '#28a745';
-            label.style.backgroundColor = 'rgba(40, 167, 69, 0.05)';
-          }
-        });
-        
-        container.addEventListener('dragover', function(e) {
-          e.preventDefault();
-          label.style.borderColor = 'var(--primary)';
-          label.style.backgroundColor = 'rgba(67, 97, 238, 0.1)';
-        });
-        
-        container.addEventListener('dragleave', function() {
-          label.style.borderColor = '#dee2e6';
-          label.style.backgroundColor = '#f8f9fa';
-        });
-        
-        container.addEventListener('drop', function(e) {
-          e.preventDefault();
-          label.style.borderColor = '#dee2e6';
-          label.style.backgroundColor = '#f8f9fa';
-        });
+      container.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        label.style.borderColor = 'var(--primary)';
+        label.style.backgroundColor = 'rgba(67, 97, 238, 0.1)';
+      });
+      
+      container.addEventListener('dragleave', function() {
+        label.style.borderColor = '#dee2e6';
+        label.style.backgroundColor = '#f8f9fa';
+      });
+      
+      container.addEventListener('drop', function(e) {
+        e.preventDefault();
+        label.style.borderColor = '#dee2e6';
+        label.style.backgroundColor = '#f8f9fa';
       });
     });
-  </script>
+
+    // AJOUT: Gestion du spinner pour l'import de CV
+    const importForm = document.getElementById('import-cv-form');
+    const spinnerOverlay = document.getElementById('spinner-overlay');
+    
+    if (importForm) {
+    importForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      spinnerOverlay.style.display = 'flex';
+      
+      const submitBtn = importForm.querySelector('button[type="submit"]');
+      const icon = submitBtn.querySelector('i');
+      const buttonText = submitBtn.querySelector('#button-text');
+      
+      if (icon) icon.style.opacity = '0';
+      if (buttonText) buttonText.textContent = 'Traitement en cours...';
+      
+      importForm.querySelectorAll('input, button').forEach(el => {
+        el.disabled = true;
+      });
+
+      // Créer un nouvel objet FormData et ajouter manuellement les fichiers
+      const formData = new FormData();
+      
+      // Ajouter le fichier CV
+      const cvFileInput = importForm.querySelector('input[name="cvfile"]');
+      if (cvFileInput.files[0]) {
+        formData.append('cvfile', cvFileInput.files[0]);
+      }
+      
+      // Ajouter la photo si elle existe
+      const photoInput = importForm.querySelector('input[name="photo"]');
+      if (photoInput.files[0]) {
+        formData.append('photo', photoInput.files[0]);
+      }
+      
+      try {
+        const response = await fetch("{{ url_for('import_cv') }}", {
+          method: 'POST',
+          body: formData,
+          // Important: Ne pas définir Content-Type, le navigateur le fera automatiquement
+        });
+
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else if (response.ok) {
+          const result = await response.json();
+          if (result.redirect) {
+            window.location.href = result.redirect;
+          } else if (result.error) {
+            throw new Error(result.error);
+          }
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Erreur serveur');
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert("Erreur: " + error.message);
+        spinnerOverlay.style.display = 'none';
+        importForm.querySelectorAll('input, button').forEach(el => {
+          el.disabled = false;
+        });
+        if (icon) icon.style.opacity = '1';
+        if (buttonText) buttonText.textContent = 'Analyser mon CV';
+      }
+    });
+  }
+  });
+</script>
 </body>
 </html>

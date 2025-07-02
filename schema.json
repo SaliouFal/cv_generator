@@ -1,0 +1,51 @@
+{
+  "full_name": "",
+  "headline": "",
+
+  "contacts": {
+    "phone": "",
+    "email": "",
+    "linkedin": "",
+    "address": ""
+  },
+
+  "summary": "",
+
+  "skills": [
+    {
+      "label": "",
+      "icon": ""
+    }
+  ],
+
+  "languages": [
+    {
+      "name": "",
+      "level": ""
+    }
+  ],
+
+  "experiences": [
+    {
+      "title": "",
+      "company": "",
+      "dates": "",
+      "bullets": []
+    }
+  ],
+
+  "degrees": [
+    {
+      "degree": "",
+      "school": "",
+      "dates": "",
+      "description": []
+    }
+  ],
+  
+  "hobbies": [
+    ""
+  ],
+
+  "photo": ""
+}

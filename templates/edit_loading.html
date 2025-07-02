@@ -10,9 +10,13 @@
 </div>
 
 <script>
-fetch("{{ url_for('edit_apply') }}", {method:"POST"})
+const endpoint = "{{ target | default(url_for('json_edit_apply')) }}";
+
+fetch(endpoint, {method: "POST"})
   .then(r => r.json())
   .then(() => window.location = "{{ url_for('preview') }}")
   .catch(() => location.reload());
 </script>
-</body></html>
+</body>
+
+</html>

@@ -10,23 +10,34 @@
 
   <h1 class="mb-4">Pré-visualisation</h1>
 
-  <!-- ♦ le ?t=… empêche le cache après chaque recompilation -->
+  <!-- anti-cache avec ?t={{ ts }} -->
   <embed id="cvpdf"
          src="{{ url_for('file', filename=pdf_filename) }}?t={{ ts }}"
          type="application/pdf"
          width="100%" height="700px" />
 
-  <form id="edit-form" action="{{ url_for('edit_prepare') }}" method="post" class="mt-4">
-  <label class="form-label fw-semibold">Instruction&nbsp;:</label>
-  <textarea class="form-control" name="instruction" rows="3"
-            placeholder="Ex&nbsp;: augmente la taille du nom…" required></textarea>
+  <!-- bloc facultatif : on montre les données actuelles -->
+  <details class="my-4">
+    <summary class="h5">Voir / éditer le JSON brut</summary>
+    <pre class="bg-light p-3 border rounded">{{ cv_json }}</pre>
+  </details>
 
-  <div class="mt-3 d-flex gap-2">
-    <button class="btn btn-primary">Appliquer</button>
-    <a href="{{ url_for('download') }}" class="btn btn-success">Télécharger</a>
-    <a href="{{ url_for('index') }}" class="btn btn-secondary">Revenir au choix de modèle</a>
-  </div>
-</form>
+  <!-- Formulaire d’instruction JSON -->
+  <form id="json-edit-form"
+        action="{{ url_for('json_edit_prepare') }}"
+        method="post" class="mt-4">
+
+    <label class="form-label fw-semibold">Instruction&nbsp;:</label>
+    <textarea class="form-control" name="instruction" rows="3"
+              placeholder="Ex : ajoute une langue Espagnol niveau Intermédiaire"
+              required></textarea>
+
+    <div class="mt-3 d-flex gap-2">
+      <button class="btn btn-primary">Appliquer</button>
+      <a href="{{ url_for('download') }}" class="btn btn-success">Télécharger</a>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">Revenir au choix de modèle</a>
+    </div>
+  </form>
 
 </div>
 </body>
