@@ -1,121 +1,106 @@
+%  FICHIER  :   template_fira_two_cols.tex
+%  A copier à côté des autres .tex et à déclarer dans config.json
+% ------------------------------------------------------------------
 \documentclass[11pt,a4paper]{article}
 
+% ─── pack de base ─────────────────────────────────────────────────
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[british]{babel}
 \usepackage[left=0mm,right=0mm,top=0mm,bottom=0mm]{geometry}
 \usepackage[stretch=25,shrink=25,tracking=true,letterspace=30]{microtype}
-\usepackage{graphicx}
-\usepackage{xcolor}
-\usepackage{marvosym}
-\usepackage{enumitem}
-\setlist{parsep=0pt,topsep=0pt,partopsep=1pt,itemsep=1pt,leftmargin=6mm}
+\usepackage{graphicx,xcolor,marvosym,enumitem,paracol,hyperref}
 \usepackage{FiraSans}
 \renewcommand{\familydefault}{\sfdefault}
+\usepackage{array} 
+\usepackage{tabularx}
+\usepackage{ragged2e}
+ \usepackage{fontawesome}
+% ─── couleurs & listes ────────────────────────────────────────────
 \definecolor{cvblue}{HTML}{304263}
+\setlist{parsep=0pt,topsep=0pt,partopsep=1pt,itemsep=1pt,leftmargin=6mm}
+\hypersetup{colorlinks=true,urlcolor=white,linkcolor=white}
 
-{% raw %}
-% --- Macros perso ------------------------------------------------------------
-\newcommand{\dates}[1]{\hfill\mbox{\textbf{#1}}}
+% ─── macros maison (identiques au modèle original) ────────────────
+\newcommand{\dates}[1]{\hfill\textbf{#1}}
 \newcommand{\is}{\par\vskip.5ex plus .4ex}
 \newcommand{\smaller}[1]{{\small$\diamond$\ #1}}
 \newcommand{\headleft}[1]{\vspace*{3ex}\textsc{\textbf{#1}}\par%
-    \vspace*{-1.5ex}\hrulefill\par\vspace*{0.7ex}}
+  \vspace*{-1.5ex}\hrulefill\par\vspace*{0.7ex}}
 \newcommand{\headright}[1]{\vspace*{2.5ex}\textsc{\Large\color{cvblue}#1}\par%
-     \vspace*{-2ex}{\color{cvblue}\hrulefill}\par}
+  \vspace*{-2ex}{\color{cvblue}\hrulefill}\par}
 
-\usepackage[colorlinks=true,urlcolor=white,linkcolor=white]{hyperref}
-{% endraw %}
-
-% -----------------------------------------------------------------------------
-
-
+% ─── défaut de secours si sidetext absent dans d’autres modèles ───
+\providecolor{sidetext}{rgb}{0,0,0}
+\definecolor{maincolor}{HTML}{ffffff}
+% ─────────────────────────── DOCUMENT ─────────────────────────────
 \begin{document}
+\thispagestyle{empty}
 \setlength{\topskip}{0pt}\setlength{\parindent}{0pt}\setlength{\parskip}{0pt}
-\setlength{\fboxsep}{0pt}\pagestyle{empty}\raggedbottom
+\raggedbottom
 
-% ============================================================================
-%                               COLONNE GAUCHE
-% ============================================================================
 \begin{minipage}[t]{0.33\textwidth}
-\colorbox{cvblue}{\begin{minipage}[t][5mm][t]{\textwidth}\null\hfill\null\end{minipage}}
-\vspace{-.2ex}
-\colorbox{cvblue!90}{\color{white}
-\kern0.09\textwidth
-\begin{minipage}[t][293mm][t]{0.82\textwidth}\raggedright
-\vspace*{2.5ex}
+  % Bande bleue d’en-tête
+  \colorbox{cvblue}{\begin{minipage}[t][5mm][t]{\textwidth}\null\end{minipage}}
+  \vspace{-.2ex}
+  \colorbox{cvblue!90}{%
+    \color{white}\kern0.09\textwidth
+    \begin{minipage}[t][293mm][t]{0.82\textwidth}\raggedright
+      \vspace*{2.5ex}
+      % -------- Identité ------------------------------------------
+      \Large %%FULL_NAME%%\normalsize
 
-% ---- Identité ---------------------------------------------------------------
-\Large {{ first_name }} \textbf{\textsc{{ last_name }}} \normalsize
+      % Photo (s’affiche seulement si %%PHOTO_FILE%% ≠ vide)
+      \ifx\relax%%PHOTO_FILE%%\relax\else
+        \vspace{2ex}\null\hfill
+        \includegraphics[width=0.65\textwidth]{%%PHOTO_FILE%%}
+        \hfill\null
+      \fi
 
-{% if photo %}
-\null\hfill\includegraphics[width=0.65\textwidth]{ {{ photo }} }\hfill\null
-{% endif %}
+      % -------- Profil -------------------------------------------
+      \headleft{Profil}
+      %%SUMMARY%%
 
-\vspace*{0.5ex}
+      % -------- Contact ------------------------------------------
+      \headleft{Contact}\small
+      \MVAt\  \texttt{%%EMAIL%%}\par
+      \Mobilefone\ %%PHONE%%\par
+      \Letter\ %%ADDRESS_LINE1%%\par
+      %%ADDRESS_LINE2%%\par
+      \faLinkedin\  \href{%%LINKEDIN_URL%%}{%%LINKEDIN_HANDLE%%}
+      \normalsize
 
-% ---- Résumé -----------------------------------------------------------------
-\headleft{Profile Summary}
-{{ profile_summary }}
+      % -------- Langues (si dispo) -------------------------------
+      \ifx\relax%%LANGUAGE_ITEMS%%\relax\else
+        \headleft{Langues}
+        %%LANGUAGE_ITEMS%%
+      \fi
 
-% ---- Contact ----------------------------------------------------------------
-\headleft{Contact details}\small
-\MVAt\ {\small {{ email }}} \\[0.4ex]
-\Mobilefone\ {{ phone }} \\[0.5ex]
-\Letter\ {{ address }}
-\MVAt\ {\small {{ pLinkedIn }}} \\[0.4ex]
-\normalsize
+      % -------- Compétences --------------------------------------
+      \headleft{Compétences}
+      %%SKILL_ITEMS%%
 
-% ---- Infos perso ------------------------------------------------------------
-\headleft{Personal information}
-Citizenship: \textbf{{ citizenship }} \\[0.5ex]
-Family: \textbf{{ family }} \\[0.5ex]
-Languages: \textbf{{ languages }}
+      % -------- Centres d’intérêt --------------------------------
+      \headleft{Intérêts}
+      %%HOBBY_ITEMS%%
 
-% ---- Compétences ------------------------------------------------------------
-\headleft{Skills}
-\begin{itemize}
-{% for skill in skills.splitlines() if skill.strip() %}
-  \item {{ skill }}
-{% endfor %}
-\end{itemize}
-
-\end{minipage}\kern 0.09\textwidth
-}
+    \end{minipage}\kern0.09\textwidth
+  }
 \end{minipage}
-% ============================================================================
-%                               COLONNE DROITE
-% ============================================================================
+% ================================================================
 \hskip2.5em
+% ======================= COLONNE DROITE =========================
 \begin{minipage}[t]{0.56\textwidth}
-\setlength{\parskip}{0.8ex}
-\vspace{2ex}
+  \setlength{\parskip}{0.8ex}
+  \vspace{2ex}
 
-% ------------------------ EXPÉRIENCE ----------------------------------------
-% ------------------------ EXPÉRIENCE ----------------------------------------
-\headright{Experience}
-{% for job in jobs %}
-\textsc{{ job.title }} at \textit{{ job.company }}{% if job.location %} ({{ job.location }}){% endif %}  \dates{{ job.dates }} \\
-{% for bullet in job.bullets %}
-\smaller{{ bullet }}\is
-{% endfor %}
-{% endfor %}
+  % ---------- EXPERIENCE ----------------------------------------
+  \headright{Expérience}
+  %%EXPERIENCE_BLOCKS%%        % ← déjà formaté par build_placeholders()
 
-% ------------------------ ÉDUCATION ----------------------------------------
-\headright{Education}
-{% for deg in degrees %}
-\textsc{{ deg.degree }}. \textit{{ deg.institution }}. \dates{{ deg.dates }} \\
-{% endfor %}
-
-% ------------------------ CERTIFICATIONS ------------------------------------
-\headright{Certifications}
-{% for cert in certifications %}
-\smaller{\textsc{{ cert.title }}}, \textit{{ cert.issuer }}. \dates{{ cert.date }} \\
-{% endfor %}
-
-% ------------------------ HOBBIES -------------------------------------------
-\headright{Hobbies}
-\textit{{ hobbies }}
+  % ---------- EDUCATION -----------------------------------------
+  \headright{Formation}
+  %%DEGREE_BLOCKS%%
 
 \end{minipage}
 

@@ -1,137 +1,97 @@
 \documentclass[a4paper]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%  PACKAGES  %%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{a4paper,left=1.5cm,right=1cm,top=1cm,bottom=1cm}
+
 \usepackage{graphicx}
 \usepackage[absolute,overlay]{textpos}
-\usepackage{background}
-\usepackage{times}
-\usepackage{lmodern}
-\usepackage{geometry}
-\geometry{a4paper,left=1.5cm,right=1cm,top=1cm,bottom=1cm,columnsep=0.8cm}
+\usepackage{eso-pic}               % image de fond
 \usepackage{fontawesome5}
 \usepackage[hidelinks]{hyperref}
-\usepackage{fontspec}
-\setmainfont{Arial}
-\usepackage{eso-pic}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=6mm}
+\usepackage{times}                % même police que votre exemple
+\usepackage{array} 
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\let\origcolorbox\colorbox    % sauvegarde
+\renewcommand{\colorbox}[2]{#2}% neutralise le fond
+%%%%%%%%%%%%%%%%%%%%%%%%%  COULEURS  %%%%%%%%%%%%%%%%%%%%%%%%%
+%\definecolor{texcolor}{HTML}{e2e8f0}
+\providecolor{sidetext}{rgb}{0,0,0}
+\definecolor{maincolor}{HTML}{ffffff}
 
-\definecolor{texcolor}{HTML}{e2e8f0}
-%Ne touchez pas cette image c'est mon background tu laisse le nom comme ça.
-
-\AddToShipoutPictureBG*{ 
-  \includegraphics[width=\paperwidth,height=\paperheight]{background.jpg}
+%%%%%%%%%%%%%%%%%%%%%  IMAGE DE FOND  %%%%%%%%%%%%%%%%%%%%%%%%
+% — Ne changez pas le nom : « background.jpg » doit être présent
+\AddToShipoutPictureBG*{%
+  \includegraphics[width=\paperwidth,height=\paperheight]{background.jpg}%
 }
 
-\newcommand{\cvsection}[1]{
-\begin{tabular}{@{}p{0.26\linewidth}}
-\\
-\textbf{\Large #1}  \\[10pt]
-\end{tabular}
-}
-
-\newcommand{\cicon}{\tikz[baseline]{\draw[fill=white] (0,0.1) circle [radius=0.25cm];}~ }
+%%%%%%%%%%%%%%%%%%%%%%  MACROS UTILES  %%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\fullrule}{\hspace{-1.5cm}\rule{\paperwidth}{0.4pt}}
+\newcommand{\cvsection}[1]{%
+  \vspace{6pt}\textbf{\Large #1}\par\vspace{2pt}}
+\newcommand{\cicon}[1]{%
+  \tikz[baseline]{\draw[fill=white] (0,0.1) circle[radius=0.1cm];}~#1}
 
 \setlength{\parindent}{0pt}
-
+%\color{texcolor}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-
-
-%% Change le nom photo.jpg par le nom de la photo que tu as reçu.
-\begin{textblock*}{4cm}(0.2cm,0.3cm) % largeur x (x, y) depuis le coin haut gauche
-  \includegraphics[width=2.5cm,clip,keepaspectratio]{photo.jpg}
+\color{white}
+% ---------- Photo ------------------------------------------------
+\begin{textblock*}{4cm}(0.2cm,0.3cm)
+  \includegraphics[width=2.5cm,clip,keepaspectratio]{%%PHOTO_FILE%%}
 \end{textblock*}
 
-
-
-
-\color{texcolor}
-
+% ---------- En-tête ---------------------------------------------
 \begin{center}
-{\fontsize{44pt}{24pt}\selectfont \textbf{name}}
+  {\fontsize{44pt}{24pt}\selectfont\bfseries %%FULL_NAME%%}
 
-~
+  \bigskip
+  {\Large %%HEADLINE%%}
 
-{\Large Titre}
+  \bigskip\bigskip
+  \faMapMarker~%%ADDRESS_LINE1%%\ %%ADDRESS_LINE2%%
+  \quad\faEnvelope~\href{mailto:%%EMAIL%%}{%%EMAIL%%}
 
-~
+  \bigskip
+  % Badge LinkedIn (retirez-le si inutile)
+  \faPhone~ %%PHONE%%
+  \quad \faLinkedin\ \href{%%LINKEDIN_URL%%}{%%LINKEDIN_HANDLE%%}
+ 
 
-~
-
-\faMapMarker ~ {address}  ~ ~ \faEnvelope  ~ \href{mailto:email}{{email}}
-
-~
-
-\begin{tikzpicture}
-  \node[draw, fill=white, rounded corners=9pt, inner xsep=8pt, inner ysep=4pt, align=center] 
-    {\color{black}\faGlobe~\href{website}{website}};
-\end{tikzpicture}
-~ ~ 
-\begin{tikzpicture}
-  \node[draw, fill=white, rounded corners=9pt, inner xsep=8pt, inner ysep=4pt, align=center] 
-    {\color{black}\faFigma~\href{website}{website}};
-\end{tikzpicture}
-~ ~ 
-\begin{tikzpicture}
-  \node[draw, fill=white, rounded corners=9pt, inner xsep=8pt, inner ysep=4pt, align=center] 
-    {\color{black}\faGithub~\href{GitHub}{website}};
-\end{tikzpicture}
+  \vspace{-0.3cm}
+  \fullrule
 \end{center}
 
-\vspace{-0.3cm}
+% ---------- Profil ----------------------------------------------
+\cvsection{Profil}
+%%SUMMARY%%
 
-\hspace{-1.5cm}\rule{\paperwidth}{0.4pt}
+\medskip\fullrule
 
+% ---------- Expérience ------------------------------------------
+\cvsection{Expérience}
+\hspace*{1.3cm}%
+%%EXPERIENCE_BLOCKS%%
 
-\begin{tabular}{@{}p{0.26\linewidth}p{0.7\linewidth}}
-\\
-\textbf{\Large Profil} 
-%% Profil %%
+\medskip\fullrule
 
-\end{tabular}
+% ---------- Éducation -------------------------------------------
+\cvsection{Éducation}
+\hspace*{1.3cm}%
+%%DEGREE_BLOCKS%%
 
-~
+\medskip\fullrule
 
-\rule{\linewidth}{0.05pt}
-
-
-\begin{tabular}{@{}p{0.26\linewidth}p{0.7\linewidth}}
-\\
-\textbf{\Large Education} & 
-{education[0].degree} \hfill {\small{education[0].start}-{education[0].end}} \\
-& {education[0].institution} \\
-
-{education[1].degree} \hfill {\small{education[1].start}-{education[1].end}} \\
-& {education[1].institution} \\
-
-\end{tabular}
-
-~
-
-\rule{\linewidth}{0.05pt}
-
-\begin{tabular}{@{}p{0.26\linewidth}p{0.7\linewidth}}
-\\
-\textbf{\Large Experience} & 
-\textbf{{experience[0].title}} \hfill {\small{experience[0].start}-{experience[0].end}} \\[6pt]
-& \textbf{{experience[0].company}} \\[6pt]
-& {experience[0].description[0]} \\[6pt]
-& {experience[0].description[1]} \\[6pt]
-& {experience[0].description[2]} \\
-\end{tabular}
-
-~
-
-\rule{\linewidth}{0.05pt}
-
-\begin{tabular}{@{}p{0.26\linewidth}p{0.18\linewidth}p{0.18\linewidth}p{0.18\linewidth}}
-\\
-\textbf{\Large Skills} & 
-\cicon {skills[1]} & \cicon {skills[2]} & \cicon {skills[3]} \\[6pt]
-& 
-\cicon {skills[4]} & \cicon {skills[5]} & \cicon {skills[6]} \\[6pt]
-& 
-\cicon {skills[7]} & \cicon {skills[8]} & \cicon {skills[9]} \\[6pt]
-& 
-\cicon {skills[10]} & \cicon {skills[11]} & \cicon {skills[12]} \\
-\end{tabular}
-
-
+% ---------- Compétences -----------------------------------------
+\cvsection{Compétences}
+\hspace*{1.3cm}%
+%%SKILL_CIRCLES%%   % grille 3 lignes × 4 colonnes
 
 \end{document}
