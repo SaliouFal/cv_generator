@@ -1,0 +1,223 @@
+\documentclass{article}
+
+\usepackage{times}
+\usepackage{geometry}
+\geometry{a4paper,left=0.6cm,right=0.7cm,top=1.5cm,bottom=1cm,columnsep=0.8cm}
+
+\usepackage{fontawesome}          % icônes de base seulement
+\usepackage[hidelinks]{hyperref}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{hyphsubst}
+\usepackage{moresize}
+\usepackage{hyphenat}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usetikzlibrary{calc, positioning}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+
+% icônes manquantes -> puce
+\makeatletter
+\@for\sym:=faBrain,faMicrochip,faHandshakeO,faTools,faNetworkWired,%
+             faDatabase,faServer,faGit,faUsers,faComments,faCalendar,faGroup\do{%
+  \@ifundefined{\sym}{\expandafter\newcommand\csname\sym\endcsname{\textbullet}}{}}
+\makeatother
+
+% couleurs
+\definecolor{maincolor}{HTML}{f0fafc}
+\definecolor{seccolor}{HTML}{ffffff}
+\definecolor{gray}{HTML}{8c94a9}
+\definecolor{sidetext}{HTML}{59cee5}
+
+% bande latérale bleue
+\usepackage{eso-pic}
+\AddToShipoutPictureBG{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[maincolor] (current page.north west) rectangle
+                     ([xshift=0.3\paperwidth] current page.south west);
+  \end{tikzpicture}%
+}
+
+% listes
+\setlist[itemize]{itemsep=-2pt,topsep=0pt,leftmargin=1.08cm}
+\renewcommand{\labelitemi}{\textcolor{sidetext}{\footnotesize$\bullet$}}
+
+\setlength{\parindent}{0pt}
+\usepackage{paracol}
+\columnratio{0.3}
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{paracol}{2}
+% ────────────────────────────────────────
+% Colonne gauche
+% ────────────────────────────────────────
+\color{sidetext}
+\vspace*{-0.5cm}
+
+\noindent
+\begin{minipage}{\linewidth}
+  \centering
+  \begin{tikzpicture}
+    \clip (0,0) circle (1.5cm) node[anchor=center]
+      {\includegraphics[width=3cm]{bd7a7845af014373a64ce0584a98d64c.png}};
+  \end{tikzpicture}
+
+  \vspace{3mm}
+  {\color{black}\LARGE \textbf{MOUROUVIN Judikael}}
+
+  \vspace{1mm}
+  {\large Alternant en marketing digital et support informatique}
+
+  \vspace{3mm}
+  {\color{gray}\rule{\linewidth}{0.4pt}} \\
+\end{minipage}
+
+% ── Coordonnées
+\begin{tabular}{@{}c l}
+  \faPhone &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Téléphone} \\ +590 0690 91 14 48
+  \end{tabular} \\
+  \\
+  \faLinkedin &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}LinkedIn} \\
+    \href{}{Mon LinkedIn}
+  \end{tabular} \\
+  \\
+  \faMapMarker &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Adresse} \\ Route de COCOYER \\ 97190 GOSIER
+  \end{tabular} \\
+  \\
+  \faEnvelope &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Email} \\
+    \href{mailto:jkmou971@gmail.com}{jkmou971@gmail.com}
+  \end{tabular} \\
+\end{tabular}
+
+\vspace{2mm}
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
+
+% ── Langues --------------------------------------------------------
+{\color{black}{Langues}}
+
+\vspace{2mm}
+\begin{itemize}[leftmargin=*]
+\item Anglais - \textcolor{gray}{}
+\item Espagnol - \textcolor{gray}{}\end{itemize}          % ← le placeholder va contenir \begin{itemize}…\end{itemize}
+
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
+
+% ── Compétences ----------------------------------------------------
+\vspace{2mm}
+{\color{black}{Compétences Clés}}
+
+\vspace{2mm}
+\begin{itemize}[leftmargin=*]
+\item Administration
+\item Réseaux
+\item Support
+\item Maintenance
+\item Marketing
+\item Configuration
+\item Assistance\end{itemize}              % ← idem, une vraie liste
+\vspace{2mm}
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
+
+% ── Centres d'intérêt
+\vspace{2mm}
+{\color{black}{Centres d’intérêt}}
+
+\vspace{2mm}
+\begin{itemize}[leftmargin=*]
+\item Lectur
+\item Sports
+\item Musique
+\item Voyage
+\end{itemize}     % ← simple itemize ou tabular
+
+\vfill
+~
+
+% ────────────────────────────────────────
+\switchcolumn
+% Colonne droite
+% ────────────────────────────────────────
+\color{black}
+
+% ── Profil
+\textcolor{black}{\Large \textbf{Profil Professionnel}} \\[2pt]
+Passionné par l’informatique et le marketing digital, j’ai développé de solides compétences en configuration de postes, maintenance et diagnostic d’incidents. Mon année d’alternance à la DSI de la Mairie du Gosier m’a permis de gérer des projets numériques et d’accompagner les utilisateurs. Désormais, je souhaite poursuivre à plein temps pour mettre mon sens du service et mon efficacité au service de nouveaux défis. Rigoureux et curieux, je m’investis pour fournir des solutions fiables et pérennes. \\[8pt]
+
+% ── Expérience
+\textcolor{black}{\Large \textbf{Expérience Professionnelle}} \\[2pt]
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \textbf{Alternant en Marketing Digital}              2023-2024  \\ Mairie du Gosier – DSI 
+    \begin{itemize}
+      \item Piloté des projets numériques municipaux, garantissant leur réalisation dans les délais. \item Analysé les besoins des agents et déployé des solutions adaptées pour améliorer la satisfaction utilisateur. \item Assuré le support technique et animé des formations, renforçant l’autonomie des équipes.
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \textbf{Animateur de la zone informatique}              2022-2023  \\ Pôle Emploi – Gosier 
+    \begin{itemize}
+      \item Accompagné les usagers sur les outils numériques, améliorant leur autonomie au quotidien. \item Configuré et entretenu les postes de travail afin de garantir la continuité du service. \item Diagnostiqué et résolu incidents matériels et logiciels dans des délais courts.
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \textbf{Stagiaire Informaticien}              2020-2021  \\ Numerika – Baie Mahault 
+    \begin{itemize}
+      \item Installé et configuré postes et périphériques pour les utilisateurs internes. \item Effectué la maintenance préventive et corrective des équipements, prolongeant leur durée de vie. \item Assuré un support de premier niveau, accélérant la résolution des demandes.
+    \end{itemize}
+  \end{minipage}}   % ← blocs \colorbox{maincolor}{\begin{minipage}…}
+
+\vspace{8mm}
+
+% ── Formation
+\textcolor{black}{\Large \textbf{Formation}} \\[2pt]
+
+    \begin{tabularx}{\linewidth}{@{}c >{\RaggedRight\arraybackslash}X@{}}
+    \textcolor{sidetext}{\faGraduationCap} &
+    \textbf{Bachelor Marketing Digital} \\
+    & CFA IUTS \\
+    & \textit{2023-2024} \\
+    \end{tabularx}
+    \begin{itemize}[leftmargin=*]
+  \item Acquisition des fondamentaux du référencement, des médias sociaux et de la stratégie de contenu.
+  \item Mise en œuvre de campagnes numériques et analyse des performances.
+  \item Gestion de projets marketing en environnement collaboratif.
+\end{itemize}
+\vspace{3mm}
+
+    \begin{tabularx}{\linewidth}{@{}c >{\RaggedRight\arraybackslash}X@{}}
+    \textcolor{sidetext}{\faGraduationCap} &
+    \textbf{BTS Système Numérique option Informatique et Réseaux} \\
+    & Lycée de Chevalier Saint Georges, Abymes \\
+    & \textit{2019-2021} \\
+    \end{tabularx}
+    \begin{itemize}[leftmargin=*]
+  \item Étude des architectures réseau, protocoles et sécurité informatique.
+  \item Installation, configuration et maintenance de systèmes et serveurs.
+  \item Réalisation de projets techniques en équipe, de la conception à la mise en service.
+\end{itemize}       % ← lignes tabular par diplôme
+
+\end{paracol}
+\end{document}
+
