@@ -58,13 +58,16 @@
 \color{sidetext}
 \vspace*{-0.5cm}
 
+
 \noindent
 \begin{minipage}{\linewidth}
   \centering
+  \ifx\relax%%PHOTO_FILE%%\relax\else
   \begin{tikzpicture}
     \clip (0,0) circle (1.5cm) node[anchor=center]
       {\includegraphics[width=3cm]{%%PHOTO_FILE%%}};
   \end{tikzpicture}
+  \fi
 
   \vspace{3mm}
   {\color{black}\LARGE \textbf{%%FULL_NAME%%}}
@@ -86,7 +89,7 @@
   \faLinkedin &
   \begin{tabular}[t]{@{}l@{}}
     {\color{gray}LinkedIn} \\
-    \href{%%LINKEDIN_URL%%}{Mon LinkedIn}
+    \href{%%LINKEDIN_URL%%}{%%LINKEDIN_HANDLE%%}
   \end{tabular} \\
   \\
   \faMapMarker &

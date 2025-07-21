@@ -74,13 +74,14 @@
 % Colonne droite (30 %)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \switchcolumn
+
 \centering
+\ifx\relax%%PHOTO_FILE%%\relax\else
 \begin{tikzpicture}
   \clip (0,0) circle (1.5cm) node[anchor=center]
         {\includegraphics[width=3cm]{%%PHOTO_FILE%%}};
 \end{tikzpicture}
-
-
+\fi
 \cvsection{SUMMARY}
 %%SUMMARY%%
 

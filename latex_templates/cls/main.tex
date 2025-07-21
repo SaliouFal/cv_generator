@@ -48,6 +48,8 @@
 \bigskip
 {\large\textbf{%%HEADLINE%%}}
 \end{minipage}\hfill
+
+\ifx\relax%%PHOTO_FILE%%\relax\else
 \begin{minipage}{0.18\linewidth}
 \begin{tikzpicture}
 \node[inner sep=0pt]{ \includegraphics[width=\linewidth]{%%PHOTO_FILE%%} };
@@ -58,6 +60,7 @@
       (current bounding box.south west) -- cycle;
 \end{tikzpicture}
 \end{minipage}
+\fi
 
 \cvsection{Profil}
 %%SUMMARY%%

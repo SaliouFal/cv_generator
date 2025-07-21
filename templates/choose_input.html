@@ -367,7 +367,7 @@
         </div>
         <div class="card-body">
           <form id="import-cv-form" action="{{ url_for('import_cv') }}" method="post" enctype="multipart/form-data">
-          
+
             <div class="form-group">
               <label class="form-label">
                 <i class="fas fa-file-pdf"></i>Fichier CV (PDF ou DOCX)
@@ -384,7 +384,7 @@
 
             <div class="form-group">
               <label class="form-label">
-                <i class="fas fa-camera"></i>Photo
+                <i class="fas fa-camera"></i>Photo (optionnelle)
               </label>
               <div class="file-input-container">
                 <div class="file-input-label">
@@ -495,6 +495,7 @@
         label.style.backgroundColor = '#f8f9fa';
       });
     });
+    
 
     // AJOUT: Gestion du spinner pour l'import de CV
     const importForm = document.getElementById('import-cv-form');
@@ -518,7 +519,7 @@
 
       // Créer un nouvel objet FormData et ajouter manuellement les fichiers
       const formData = new FormData();
-      
+     
       // Ajouter le fichier CV
       const cvFileInput = importForm.querySelector('input[name="cvfile"]');
       if (cvFileInput.files[0]) {

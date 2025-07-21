@@ -4,7 +4,34 @@
   <meta charset="utf-8">
   <title>Aperçu du CV</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    /* ───── Spinner plein-écran ───── */
+    #spinner-overlay {
+      position: fixed;
+      inset: 0;                          /* top:0 right:0 bottom:0 left:0 */
+      background: rgba(255,255,255,.8);
+      display: none;                     /* caché par défaut */
+      align-items: center;
+      justify-content: center;
+      z-index: 1050;                     /* > modal bootstrap (1040) */
+    }
+
+    /* l’aperçu prend toute la largeur et 75 % de la hauteur‑écran */
+  #cvpdf{
+    width:100%;
+    height:75vh;         /* vue verticale : 75 % de la hauteur */
+    border:none;
+  }
+  /* un peu plus bas sur les très petits écrans */
+  @media (max-width:768px){
+    #cvpdf{height:60vh;}
+  }
+  </style>
+
+
 </head>
+
 <body class="p-5">
 <div class="container">
 
@@ -15,14 +42,32 @@
          src="{{ url_for('file', filename=pdf_filename) }}?t={{ ts }}"
          type="application/pdf"
          width="100%" height="700px" />
+  
+  
+  <!-- Aide : comment utiliser le champ « Instruction » ---------------------- -->
+<div class="alert alert-light border shadow-sm small" id="howto-instructions">
+  <p class="mb-1">
+    <strong>💡&nbsp;Astuce&nbsp;:</strong> vous pouvez demander à l’IA
+    d’<em>ajouter</em>, de <em>supprimer</em> ou de <em>réécrire</em> n’importe
+    quel élément de votre CV. Tapez votre demande dans la zone
+    <b>Instruction</b>, puis cliquez sur <b>Appliquer</b>.
+  </p>
 
-  <!-- bloc facultatif : on montre les données actuelles -->
-  <!-- <details class="my-4">
-    <summary class="h5">Voir / éditer le JSON brut</summary>
-    <pre class="bg-light p-3 border rounded">{{ cv_json }}</pre>
-  </details> -->
+  <p class="mb-0">Exemples&nbsp;:</p>
+  <ul class="mb-1 ps-4">
+    <li>« Résume toutes les descriptions d’expérience à 2&nbsp;phrases »</li>
+    <li>« Réduis le profil professionnel à 3&nbsp;lignes percutantes »</li>
+    <li>« Supprime la licence Professionnelle si le CV fait deux pages »</li>
+    <li>« Ajoute la compétence “Docker” dans la liste Skills »</li>
+    <li>« Corrige les fautes de français dans tout le CV »</li>
+  </ul>
 
-  <!-- Formulaire d’instruction JSON -->
+  <small class="text-muted">
+    L’IA applique uniquement votre demande&nbsp;; rien d’autre n’est modifié.
+  </small>
+</div>
+
+  <!-- ­­­­­­­­­­­­­­­­­­ Formulaire d’instruction JSON ­­­­­­­­­­­­­­­­­ -->
   <form id="json-edit-form"
         action="{{ url_for('json_edit_prepare') }}"
         method="post" class="mt-4">
@@ -32,13 +77,98 @@
               placeholder="Ex : ajoute une langue Espagnol niveau Intermédiaire"
               required></textarea>
 
+    <!-- Boutons ----------------------------------------------------------- -->
     <div class="mt-3 d-flex gap-2">
       <button class="btn btn-primary">Appliquer</button>
+
+      <button id="btn-diagnostic" class="btn btn-outline-secondary">
+        📊 Diagnostiquer mon CV
+      </button>
+
       <a href="{{ url_for('download') }}" class="btn btn-success">Télécharger</a>
       <a href="{{ url_for('index') }}" class="btn btn-secondary">Revenir au choix de modèle</a>
     </div>
   </form>
 
+  <!-- Zone diagnostic (cachée) ------------------------------------------- -->
+  <div id="diagnostic-zone" class="d-none">
+    <h3 class="mt-4">Diagnostic de votre CV</h3>
+    <p id="global-score" class="fw-bold"></p>
+
+    <div class="table-responsive">
+      <table id="diag-table" class="table table-sm align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Zone</th><th>Problème</th><th>Pourquoi</th><th>Suggestion</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h5>Priorités de correction</h5>
+    <ol id="priority-list"></ol>
+  </div>
+
 </div>
+
+<!--  Spinner overlay ----------------------------------------------------- -->
+<div id="spinner-overlay">
+  <div class="spinner-border text-primary" role="status" style="width:4rem;height:4rem;">
+    <span class="visually-hidden">Chargement…</span>
+  </div>
+</div>
+
+<!-- ­­­­­­­­­­­­­­­­­­ JS ­­­­­­­­­­­­­­­­­ -->
+<script>
+document.getElementById('btn-diagnostic').addEventListener('click', async (evt) => {
+  evt.preventDefault();                       // évite le submit du formulaire
+
+  const zone   = document.getElementById('diagnostic-zone');
+  const tbody  = document.querySelector('#diag-table tbody');
+  const score  = document.getElementById('global-score');
+  const plist  = document.getElementById('priority-list');
+  const btn    = evt.currentTarget;
+  const spin   = document.getElementById('spinner-overlay');
+
+  // UI : désactive le bouton + affiche spinner
+  btn.disabled = true;
+  btn.innerText = 'Analyse en cours…';
+  spin.style.display = 'flex';
+
+  try {
+    const r   = await fetch('{{ url_for("cv_diagnostic") }}');
+    if (!r.ok) throw new Error(await r.text());
+    const data = await r.json();
+
+    /* -------- Affichage résultats -------- */
+    score.textContent = `Note globale : ${data.score}/20`;
+
+    tbody.innerHTML = '';
+    data.issues.forEach(row => {
+      tbody.insertAdjacentHTML('beforeend',
+        `<tr><td>${row.zone}</td><td>${row.problem}</td>
+             <td>${row.why}</td><td>${row.suggestion}</td></tr>`);
+    });
+
+    plist.innerHTML = '';
+    data.priorities.forEach(p =>
+      plist.insertAdjacentHTML('beforeend', `<li>${p}</li>`));
+
+    zone.classList.remove('d-none');
+    zone.scrollIntoView({behavior:'smooth'});
+  }
+  catch (err) {
+    console.error(err);
+    alert('Erreur diagnostic : ' + err.message);
+  }
+  finally {
+    // remets l’UI en état
+    spin.style.display = 'none';
+    btn.disabled = false;
+    btn.innerHTML = '📊 Diagnostiquer mon CV';
+  }
+});
+</script>
 </body>
 </html>
