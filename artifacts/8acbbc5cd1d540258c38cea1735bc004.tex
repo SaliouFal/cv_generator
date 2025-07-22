@@ -1,0 +1,156 @@
+\documentclass[a4paper]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{a4paper,left=1.5cm,right=1cm,top=1cm,bottom=1cm}
+
+\usepackage{graphicx}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{eso-pic}               % image de fond
+\usepackage{fontawesome5}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=6mm}
+\usepackage{times}                % même police que votre exemple
+\usepackage{array} 
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\let\origcolorbox\colorbox    % sauvegarde
+\renewcommand{\colorbox}[2]{#2}% neutralise le fond
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\definecolor{texcolor}{HTML}{e2e8f0}
+\providecolor{sidetext}{rgb}{1,1,1}
+\definecolor{maincolor}{HTML}{ffffff}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% — Ne changez pas le nom : « background.jpg » doit être présent
+\AddToShipoutPictureBG*{%
+  \includegraphics[width=\paperwidth,height=\paperheight]{background.jpg}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\fullrule}{\hspace{-1.5cm}\rule{\paperwidth}{0.4pt}}
+\newcommand{\cvsection}[1]{%
+  \vspace{6pt}\textbf{\Large #1}\par\vspace{2pt}}
+\newcommand{\cicon}[1]{%
+  \tikz[baseline]{\draw[fill=white] (0,0.1) circle[radius=0.1cm];}~#1}
+
+\setlength{\parindent}{0pt}
+%\color{texcolor}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\color{white}
+% ---------- Photo ------------------------------------------------
+\ifx\relax\relax\else
+\begin{textblock*}{4cm}(0.2cm,0.3cm)
+  \includegraphics[width=2.5cm,clip,keepaspectratio]{}
+\end{textblock*}
+ \fi
+% ---------- En-tête ---------------------------------------------
+\begin{center}
+  {\fontsize{44pt}{24pt}\selectfont\bfseries Judikael Mourouvin}
+
+  \bigskip
+  {\Large Alternant marketing digital \& systèmes d'information}
+
+  \bigskip\bigskip
+  \faMapMarker~Route de Cocoyer\ 97190 Le Gosier
+  \quad\faEnvelope~\href{mailto:jkmou971@gmail.com}{jkmou971@gmail.com}
+
+  \bigskip
+  % Badge LinkedIn (retirez-le si inutile)
+  \faPhone~ +590 0690 91 14 48
+  \quad \faLinkedin\ \href{}{}
+ 
+
+  \vspace{-0.3cm}
+  
+\end{center}
+%\medskip\fullrule
+% ---------- Profil ----------------------------------------------
+\cvsection{Profil}
+
+Technicien informatique et apprenti en marketing digital, j’ai développé une expertise en maintenance, support utilisateur et gestion de projets numériques au sein de collectivités. Orienté résultats, je forme les utilisateurs et optimise la performance des systèmes. Je souhaite désormais mettre ces compétences au service de nouveaux défis à temps plein.
+
+\medskip\fullrule
+
+% ---------- Expérience ------------------------------------------
+\cvsection{Expérience}
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Alternant en marketing digital}\hfill 09/2023 - 08/2024\\
+    Mairie du Gosier – DSI\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Pilotage de projets numériques municipaux (site web, intranet, campagnes e-mailing) \item Analyse des besoins utilisateurs et déploiement de solutions adaptées, augmentant la satisfaction \item Formation et assistance des équipes, renforçant la maturité digitale
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Animateur de la zone informatique}\hfill 10/2022 - 07/2023\\
+    Pôle emploi – Le Gosier\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Support technique quotidien auprès des conseillers et demandeurs d’emploi \item Configuration et maintenance du parc informatique (40 postes), améliorant la disponibilité \item Diagnostic et résolution d’incidents, réduisant les interruptions de service
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Stagiaire informaticien}\hfill 09/2020 - 06/2021\\
+    NUMERIKA – Baie-Mahault\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Installation et maintenance d’équipements (PC, imprimantes, routeurs) \item Traitement des tickets de support et rédaction de procédures simplifiées
+    \end{itemize}
+  \end{minipage}}
+
+\medskip\fullrule
+
+% ---------- Éducation -------------------------------------------
+\cvsection{Éducation}
+\hspace*{1.3cm}%
+
+\begin{tabularx}{\linewidth}{@{}c  >{\RaggedRight\arraybackslash}X
+                             >{\raggedleft\arraybackslash}p{0.25\linewidth}@{}}
+\textcolor{sidetext}{\faGraduationCap} &
+Bachelor Marketing digital &
+09/2023 - 08/2024 \\
+& CFA IUTS & \\   % ligne de l’établissement
+\end{tabularx}
+\begin{itemize}[leftmargin=*]
+  \item SEO / SEA, réseaux sociaux, analytics
+  \item Conception et suivi de campagnes centrées utilisateur
+\end{itemize}
+\vspace{3mm}
+
+\begin{tabularx}{\linewidth}{@{}c  >{\RaggedRight\arraybackslash}X
+                             >{\raggedleft\arraybackslash}p{0.25\linewidth}@{}}
+\textcolor{sidetext}{\faGraduationCap} &
+BTS Systèmes numériques, option informatique \& réseaux &
+09/2019 - 06/2021 \\
+& Lycée Chevalier de Saint-Georges – Les Abymes & \\   % ligne de l’établissement
+\end{tabularx}
+\begin{itemize}[leftmargin=*]
+  \item Architecture réseaux et systèmes
+  \item Maintenance et sécurisation du parc informatique
+\end{itemize}
+
+\medskip\fullrule
+
+% ---------- Compétences -----------------------------------------
+\cvsection{Compétences}
+
+\begin{tabular}{@{}p{0.25\linewidth}p{0.18\linewidth}p{0.18\linewidth}p{0.18\linewidth}}\cicon Administration & \cicon Maintenance & \cicon Réseaux & \cicon Assistance \\
+\cicon Diagnostic & \cicon Configuration & \cicon Marketing digital & \cicon Support \\
+\cicon Analyse & ~ & ~ & ~ \\\end{tabular}   % grille 3 lignes × 4 colonnes
+
+\end{document}
