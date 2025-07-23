@@ -1,10 +1,12 @@
 \documentclass{article}
-
+\usepackage[T1]{fontenc}
 % ─────────────────────────── PACKAGES ────────────────────────────
 \usepackage{times}
 \usepackage{geometry}
 \geometry{a4paper,left=0.6cm,right=0.7cm,top=1cm,bottom=1cm,columnsep=0.8cm}
-
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{newtxtext}
 \usepackage{fontawesome}
 \usepackage[hidelinks]{hyperref}
 \usepackage{paracol}
@@ -14,19 +16,18 @@
 \usepackage{xcolor}
 \usepackage{enumitem}
 
-
+% ────────── Couleurs ──────────
 \definecolor{maincolor}{HTML}{ffffff}
 \definecolor{seccolor}{HTML}{0b1f3b}
 \definecolor{gray}{HTML}{8c94a9}
 \definecolor{sidetext}{HTML}{59cee5}
 \definecolor{Green}{HTML}{2caf00}
 \definecolor{lightgray}{HTML}{D3D3D3}
-%\definecolor{maincolor}{HTML}{2AAEE7}
 
+% ────────── Paramètres liste/colonnes ──────────
 \newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
 \setlist[itemize]{itemsep=-2pt,topsep=0pt,leftmargin=*}
 \renewcommand{\labelitemi}{\textcolor{black}{\footnotesize$\bullet$}}
-%
 \setlength{\parindent}{0pt}
 
 % titre de section
@@ -36,23 +37,26 @@
   \textbf{\Large #1}\\[3pt]\hline
   \end{tabular}\medskip}
 
+% Séparateur colonnes
 \newcommand*{\ClipSep}{0.4cm}
+\setlength{\columnseprule}{0.4pt}
+\setlength{\columnsep}{0.8cm}
+\def\columnseprulecolor{\color{lightgray}}
 
-\setlength{\columnseprule}{0.4pt}        % épaisseur du trait
-\setlength{\columnsep}{0.8cm}            % (facultatif : rappel de l’écart)
-\def\columnseprulecolor{\color{lightgray}}% couleur du trait
 % ─────────────────────────── DOCUMENT ────────────────────────────
 \begin{document}\pagestyle{empty}
-\columnratio{0.7}\begin{paracol}{2}
+% On réduit la colonne droite : 80 % / 20 %
+\columnratio{0.75}
+\begin{paracol}{2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Colonne gauche (70 %)
+% Colonne gauche (80 %)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 {\LARGE\textbf{%%FULL_NAME%%}}
 
 \bigskip
-{\color{sidetext}\Large\textbf{%%HEADLINE%%}}
+{\color{sidetext}\large\textbf{%%HEADLINE%%}}
 
 \medskip
 \begin{tabular}{@{}cp{0.4\linewidth}cp{0.4\linewidth}}
@@ -61,17 +65,15 @@
   \color{sidetext}\faPhone & \href{tel:%%PHONE%%}{%%PHONE%%} &
   \color{sidetext}\faLinkedin & \href{%%LINKEDIN_URL%%}{%%LINKEDIN_HANDLE%%}
 \end{tabular}
-
-\cvsection{EXPERIENCE}
-%%EXPERIENCE_BLOCKS%%      %← généré dynamiquement (blocs colorbox)
-
-\cvsection{EDUCATION}
-%%DEGREE_BLOCKS%%          %← idem
-
-
+\vspace{0.3cm}
+\cvsection{Expérience}
+%%EXPERIENCE_BLOCKS%%
+\vspace{0.3cm}
+\cvsection{Formation}
+%%DEGREE_BLOCKS%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Colonne droite (30 %)
+% Colonne droite (20 %)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \switchcolumn
 
@@ -82,16 +84,17 @@
         {\includegraphics[width=3cm]{%%PHOTO_FILE%%}};
 \end{tikzpicture}
 \fi
-\cvsection{SUMMARY}
+\vspace{1cm}
+\cvsection{Profil}
 %%SUMMARY%%
-
-\cvsection{SKILLS}
+\vspace{1cm}
+\cvsection{Compétences}
 %%SKILL_ITEMS%%
-
-\cvsection{LANGUAGES}
+\vspace{1cm}
+\cvsection{Langues}
 %%LANGUAGE_ITEMS%%
-
-\cvsection{INTERESTS}
+\vspace{1cm}
+\cvsection{Intérêts}
 %%HOBBY_ITEMS%%
 
 \end{paracol}

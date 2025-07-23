@@ -1,16 +1,25 @@
+% CV template – photo & profil moved to right column
 \documentclass{article}
-
+% Encoding & core font
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
 \usepackage{times}
+\usepackage{newtxtext} % Times‑compatible extended glyph set
+
+% Layout
 \usepackage{geometry}
 \geometry{a4paper,left=0.6cm,right=0.7cm,top=1cm,bottom=1cm,columnsep=0.8cm}
 
+% Core packages
 \usepackage{fontawesome}
 \usepackage[hidelinks]{hyperref}
-\usepackage{multicol,paracol,tikz,hyphsubst,moresize,hyphenat,adjustbox,tabularx,xcolor,enumitem}
+\usepackage{multicol,paracol,tikz,adjustbox,tabularx,xcolor,enumitem}
 \usepackage{ragged2e}
 \newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
 \setlist[itemize]{itemsep=1pt,leftmargin=*,topsep=-10pt}
 
+% Colors
 \definecolor{maincolor}{HTML}{ffffff}
 \definecolor{seccolor}{HTML}{0b1f3b}
 \definecolor{gray}{HTML}{8c94a9}
@@ -18,52 +27,32 @@
 \definecolor{Green}{HTML}{2caf00}
 \definecolor{lightgray}{HTML}{D3D3D3}
 
-% --- bande latérale bleue
+% --- Side blue band ---------------------------------------------------
 \usepackage{eso-pic}
-\AddToShipoutPictureBG{%
+\AddToShipoutPictureBG{%% background split in 70/30
   \begin{tikzpicture}[remember picture,overlay]
     \fill[seccolor] (0.7\paperwidth,0) rectangle (\paperwidth,\paperheight);
     \fill[maincolor] (0,0) rectangle (0.7\paperwidth,\paperheight);
-  \end{tikzpicture}%
-}
+  \end{tikzpicture}}
 
+% ----------------------------------------------------------------------
 \setlength{\parindent}{0pt}
 \newcommand{\cvsection}[1]{%
-  \par\bigskip                % espace avant le titre
+  \par\bigskip
   {\bfseries\Large #1}\par
-  \noindent\rule{\linewidth}{0.8pt}\par
-  \medskip                    % espace après la ligne
-}
+  \noindent\rule{\linewidth}{0.8pt}\par\medskip}
 
-\newcommand*{\ClipSep}{0.4cm}
-
-% ------------------------------------------------------------------
+% Document -------------------------------------------------------------
 \begin{document}\pagestyle{empty}
 \columnratio{0.7}\begin{paracol}{2}
 
-% --------- colonne gauche -----------------------------------------
-\begin{minipage}{0.88\linewidth}
+% ===================== LEFT COLUMN (70 %) =============================
 {\LARGE\textbf{%%FULL_NAME%%}}
 
 \bigskip
 {\large\textbf{%%HEADLINE%%}}
-\end{minipage}\hfill
 
-\ifx\relax%%PHOTO_FILE%%\relax\else
-\begin{minipage}{0.18\linewidth}
-\begin{tikzpicture}
-\node[inner sep=0pt]{ \includegraphics[width=\linewidth]{%%PHOTO_FILE%%} };
-\draw[white,rounded corners=\ClipSep,line width=\ClipSep]
-      (current bounding box.north west) --
-      (current bounding box.north east) --
-      (current bounding box.south east) --
-      (current bounding box.south west) -- cycle;
-\end{tikzpicture}
-\end{minipage}
-\fi
 \vspace{0.8cm}
-\cvsection{Profil}
-%%SUMMARY%%
 
 \cvsection{EXPÉRIENCE}
 %%EXPERIENCE_BLOCKS%%
@@ -71,9 +60,23 @@
 \cvsection{FORMATION}
 %%DEGREE_BLOCKS%%
 
-% --------- colonne droite (bleue) ---------------------------------
+% ===================== RIGHT COLUMN (30 %) ============================
 \switchcolumn\color{white}\hspace*{0.4cm}\begin{minipage}{0.88\linewidth}
 
+% ---- Photo -----------------------------------------------------------
+\centering
+\ifx\relax%%PHOTO_FILE%%\relax\else
+  \begin{tikzpicture}
+    \clip (0,0) circle (1.8cm) node[anchor=center]
+          {\includegraphics[width=3.6cm]{%%PHOTO_FILE%%}};
+  \end{tikzpicture}
+\fi
+
+% ---- Profile (Résumé) ------------------------------------------------
+\cvsection{PROFIL}
+%%SUMMARY%%
+
+% ---- Contact ---------------------------------------------------------
 \cvsection{CONTACT}
 \begin{tabular}{@{}c l}
   \faPhone & \href{tel:%%PHONE%%}{%%PHONE%%} \\[2pt]
@@ -82,14 +85,15 @@
   \faLinkedin & \href{%%LINKEDIN_URL%%}{%%LINKEDIN_HANDLE%%}
 \end{tabular}
 
+% ---- Skills ----------------------------------------------------------
 \cvsection{COMPÉTENCES}
-
 %%SKILL_ITEMS%%
-\par\bigskip 
 
+% ---- Languages -------------------------------------------------------
 \cvsection{LANGUES}
 %%LANGUAGE_ITEMS%%
-\par\bigskip 
+
+% ---- Interests -------------------------------------------------------
 \cvsection{INTÉRÊTS}
 %%HOBBY_ITEMS%%
 

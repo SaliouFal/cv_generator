@@ -4,10 +4,12 @@
 \usepackage[T1]{fontenc}
 \usepackage{geometry}
 \geometry{a4paper,left=1.5cm,right=1cm,top=1cm,bottom=1cm}
-
+\usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage[absolute,overlay]{textpos}
-\usepackage{eso-pic}               % image de fond
+% \usepackage{eso-pic}               % image de fond – supprimé car plus utilisé
+\usepackage{textcomp}
+\usepackage{newtxtext}
 \usepackage{fontawesome5}
 \usepackage[hidelinks]{hyperref}
 \usepackage{tikz}
@@ -15,23 +17,30 @@
 \usepackage{enumitem}
 \setlist{nosep,leftmargin=6mm}
 \usepackage{times}                % même police que votre exemple
-\usepackage{array} 
+\usepackage{array}
 \usepackage{tabularx}
 \usepackage{ragged2e}
 \let\origcolorbox\colorbox    % sauvegarde
 \renewcommand{\colorbox}[2]{#2}% neutralise le fond
+
 %%%%%%%%%%%%%%%%%%%%%%%%%  COULEURS  %%%%%%%%%%%%%%%%%%%%%%%%%
-%\definecolor{texcolor}{HTML}{e2e8f0}
+% Définition d’un gris très clair (~95 % blanc)
+\definecolor{verylightgray}{HTML}{F5F5F5}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%  PAGE & TEXTE  %%%%%%%%%%%%%%%%%%%%%
+\pagecolor{verylightgray}   % fond gris très clair
+% le texte est noir par défaut ; aucune redéfinition nécessaire
+
+%%%%%%%%%%%%%%%%%%%%%%%%%  COULEURS  %%%%%%%%%%%%%%%%%%%%%%%%%
+%\pagecolor{lightgray}     % fond gris clair
+\color{black}             % texte en noir
+
+% Vous pouvez ajuster la nuance si besoin : par ex. \pagecolor{gray!15}
+
 \providecolor{sidetext}{rgb}{1,1,1}
 \definecolor{maincolor}{HTML}{ffffff}
 
-%%%%%%%%%%%%%%%%%%%%%  IMAGE DE FOND  %%%%%%%%%%%%%%%%%%%%%%%%
-% — Ne changez pas le nom : « background.jpg » doit être présent
-\AddToShipoutPictureBG*{%
-  \includegraphics[width=\paperwidth,height=\paperheight]{background.jpg}%
-}
-
-%%%%%%%%%%%%%%%%%%%%%%  MACROS UTILES  %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%  MACROS UTILES  %%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\fullrule}{\hspace{-1.5cm}\rule{\paperwidth}{0.4pt}}
 \newcommand{\cvsection}[1]{%
   \vspace{6pt}\textbf{\Large #1}\par\vspace{2pt}}
@@ -39,10 +48,9 @@
   \tikz[baseline]{\draw[fill=white] (0,0.1) circle[radius=0.1cm];}~#1}
 
 \setlength{\parindent}{0pt}
-%\color{texcolor}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-\color{white}
+
 % ---------- Photo ------------------------------------------------
 \ifx\relax%%PHOTO_FILE%%\relax\else
 \begin{textblock*}{4cm}(0.2cm,0.3cm)
@@ -73,21 +81,21 @@
  \vspace{0.6cm}
 % ---------- Profil ----------------------------------------------
 \cvsection{Profil}
-
+\vspace{0.3cm}
 %%SUMMARY%%
 
 \medskip\fullrule
 
 % ---------- Expérience ------------------------------------------
 \cvsection{Expérience}
-\vspace{0.5cm}
+\vspace{0.3cm}
 %%EXPERIENCE_BLOCKS%%
 
 \medskip\fullrule
 
 % ---------- Éducation -------------------------------------------
 \cvsection{Éducation}
-\vspace{0.5cm}
+\vspace{0.3cm}
 
 %%DEGREE_BLOCKS%%
 
@@ -95,7 +103,7 @@
 
 % ---------- Compétences -----------------------------------------
 \cvsection{Compétences}
-\vspace{0.5cm}
+\vspace{0.3cm}
 
 %%SKILL_CIRCLES%%   % grille 3 lignes × 4 colonnes
 
