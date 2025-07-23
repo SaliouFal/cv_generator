@@ -1,0 +1,272 @@
+\documentclass[a4paper]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{a4paper,left=1.5cm,right=1cm,top=1cm,bottom=1cm}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[absolute,overlay]{textpos}
+% \usepackage{eso-pic}               % image de fond – supprimé car plus utilisé
+\usepackage{textcomp}
+\usepackage{newtxtext}
+\usepackage{fontawesome5}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=6mm}
+\usepackage{times}                % même police que votre exemple
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\let\origcolorbox\colorbox    % sauvegarde
+\renewcommand{\colorbox}[2]{#2}% neutralise le fond
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Définition d’un gris très clair (~95 % blanc)
+\definecolor{verylightgray}{HTML}{F5F5F5}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagecolor{verylightgray}   % fond gris très clair
+% le texte est noir par défaut ; aucune redéfinition nécessaire
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\pagecolor{lightgray}     % fond gris clair
+\color{black}             % texte en noir
+
+% Vous pouvez ajuster la nuance si besoin : par ex. \pagecolor{gray!15}
+
+\providecolor{sidetext}{rgb}{1,1,1}
+\definecolor{maincolor}{HTML}{ffffff}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\fullrule}{\hspace{-1.5cm}\rule{\paperwidth}{0.4pt}}
+\newcommand{\cvsection}[1]{%
+  \vspace{6pt}\textbf{\Large #1}\par\vspace{2pt}}
+\newcommand{\cicon}[1]{%
+  \tikz[baseline]{\draw[fill=white] (0,0.1) circle[radius=0.1cm];}~#1}
+
+\setlength{\parindent}{0pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+% ---------- Photo ------------------------------------------------
+\ifx\relax\relax\else
+\begin{textblock*}{4cm}(0.2cm,0.3cm)
+  \includegraphics[width=2.5cm,clip,keepaspectratio]{}
+\end{textblock*}
+ \fi
+% ---------- En-tête ---------------------------------------------
+\begin{center}
+  {\fontsize{44pt}{24pt}\selectfont\bfseries Saoane Leon}
+
+  \bigskip
+  {\Large Responsable RSE | Gestion de projets à impact}
+
+  \bigskip\bigskip
+  \faMapMarker~4 rue Franklin, Lyon, France\ 
+  \quad\faEnvelope~\href{mailto:ssssssss@see.fr}{ssssssss@see.fr}
+
+  \bigskip
+  % Badge LinkedIn (retirez-le si inutile)
+  \faPhone~ +33 6 00 00 00 00
+  \quad \faLinkedin\ \href{Salomé Bruneau de la Salle}{Salomé Bruneau de la Salle}
+ 
+
+  %\vspace{-0.3cm}
+  
+\end{center}
+%\medskip\fullrule
+ \vspace{0.6cm}
+% ---------- Profil ----------------------------------------------
+\cvsection{Profil}
+\vspace{0.3cm}
+Professionnelle de la RSE forte d’une expérience complète en gestion de projets, de la cartographie des risques au reporting d’impact. Habituée à mobiliser des équipes pluridisciplinaires et à définir des indicateurs de performance mesurables. A accompagné des organisations internationales et des start-up dans l’évaluation et la valorisation de leur impact social. Bilingue anglais, elle évolue aisément dans des environnements multiculturels et recherche un poste de Responsable RSE pour amplifier les initiatives durables.
+
+\medskip\fullrule
+
+% ---------- Expérience ------------------------------------------
+\cvsection{Expérience}
+\vspace{0.3cm}
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Responsable RSE}\hfill 01/2032 - 12/2035\\
+    La Rosée\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Sensibilisé les collaborateurs aux enjeux RSE et proposé des axes d’amélioration concrets \item Défini et suivi des KPI pour mesurer la performance environnementale et sociale
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Chargée de projet RSE}\hfill 01/2030 - 12/2032\\
+    La Rosée\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Actualisé la cartographie des risques et lancé des audits internes réguliers \item Formé les équipes aux normes en vigueur et assuré un reporting réglementaire précis
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Consultante junior}\hfill 01/2028 - 12/2030\\
+    Kimso\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Accompagné associations et fondations dans la structuration de projets à impact social \item Évalué l’impact et recommandé des plans d’action pour maximiser la valeur sociétale
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Stagiaire consultante}\hfill 05/2028 - 10/2028\\
+    Kimso\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Réalisé une étude d’impact social pour un client clé et identifié des leviers d’amélioration
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Assistant Social Brand Manager (stage)}\hfill 07/2026 - 12/2026\\
+    L’Oréal\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Intégré des initiatives sociales dans la stratégie de marque et assuré leur promotion
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Assistante cheffe de projet RSE (stage)}\hfill 01/2026 - 06/2026\\
+    Sézane\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Coordonné la traçabilité des matières premières et lancé des initiatives solidaires
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Assistante cheffe de projet (stage)}\hfill 05/2025 - 07/2025\\
+    V\&P White (Groupe MAGELLAN)\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Déployé des solutions digitales de gestion des risques et outils RSE adaptés aux clients
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Assistante cheffe de projet – Expérience Consommateur (stage)}\hfill 05/2024 - 07/2024\\
+    IPSOS\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Géré des études clients de la conception des questionnaires à la présentation des résultats
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Assistante cheffe de projet (stage)}\hfill 06/2023 - 06/2023\\
+    Balicina\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Contribué au lancement de l’enseigne à Bordeaux et à des projets santé en partenariat avec Medicina
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Responsable logistique (bénévolat)}\hfill 01/2023 - 12/2025\\
+    Bureau des Sports – Université Catholique de Lille\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Organisé la logistique d’événements sportifs et coordonné les équipes bénévoles
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Membre pôle humanitaire}\hfill 01/2025 - 12/2028\\
+    Association Hope\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Planifié une action humanitaire locale et collecté des fonds pour son financement
+    \end{itemize}
+  \end{minipage}}
+
+\medskip\fullrule
+
+% ---------- Éducation -------------------------------------------
+\cvsection{Éducation}
+\vspace{0.3cm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{MSc Project Management for Business}\hfill 09/2027 - 06/2028\\
+    SKEMA Business School – Campus Paris, Sophia Antipolis \& Belo Horizonte\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Méthodes avancées de gestion de projet, stratégie et conduite du changement
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Licence Économie et Gestion Internationale}\hfill 09/2022 - 06/2025\\
+    Université Catholique de Lille\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Économie, finance et management international – semestre d’échange à Van Lang University (Ho Chi Minh)
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Baccalauréat général (Mathématiques \& SES) – Mention Bien}\hfill 09/2021 - 06/2022\\
+    Lycée La Favorite, Lyon\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Mathématiques, sciences économiques et sociales
+    \end{itemize}
+  \end{minipage}}
+
+\medskip\fullrule
+
+% ---------- Compétences -----------------------------------------
+\cvsection{Compétences}
+\vspace{0.3cm}
+
+\begin{tabular}{@{}p{0.25\linewidth}p{0.18\linewidth}p{0.18\linewidth}p{0.18\linewidth}}\cicon RSE & \cicon Gestion de projet & \cicon Audit & \cicon Reporting \\
+\cicon Analyse de données & \cicon Communication & \cicon Leadership & \cicon Marketing responsable \\
+\cicon Coordination & \cicon Évaluation d’impact & ~ & ~ \\\end{tabular}   % grille 3 lignes × 4 colonnes
+
+\end{document}

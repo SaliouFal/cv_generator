@@ -68,7 +68,7 @@
 \ifx\relax%%PHOTO_FILE%%\relax\else
   \begin{tikzpicture}
     \clip (0,0) circle (1.8cm) node[anchor=center]
-          {\includegraphics[width=0.5\textwidth]{%%PHOTO_FILE%%}};
+          {\includegraphics[width=0.2\textwidth]{%%PHOTO_FILE%%}};
   \end{tikzpicture}
 \fi
 
@@ -87,15 +87,15 @@
   \faMapMarker & %%ADDRESS_LINE2%% \\[2pt]
   \faLinkedin & \href{%%LINKEDIN_URL%%}{%%LINKEDIN_HANDLE%%}
 \end{tabular}
-\vspace{0.2cm}
+
 % ---- Skills ----------------------------------------------------------
 \cvsection{COMPÉTENCES}
 %%SKILL_ITEMS%%
-\vspace{0.2cm}
+
 % ---- Languages -------------------------------------------------------
 \cvsection{LANGUES}
 %%LANGUAGE_ITEMS%%
-\vspace{0.2cm}
+
 % ---- Interests -------------------------------------------------------
 \cvsection{INTÉRÊTS}
 %%HOBBY_ITEMS%%

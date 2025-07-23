@@ -1,0 +1,176 @@
+\documentclass[a4paper]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{a4paper,left=1.5cm,right=1cm,top=1cm,bottom=1cm}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[absolute,overlay]{textpos}
+% \usepackage{eso-pic}               % image de fond – supprimé car plus utilisé
+\usepackage{textcomp}
+\usepackage{newtxtext}
+\usepackage{fontawesome5}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=6mm}
+\usepackage{times}                % même police que votre exemple
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\let\origcolorbox\colorbox    % sauvegarde
+\renewcommand{\colorbox}[2]{#2}% neutralise le fond
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Définition d’un gris très clair (~95 % blanc)
+\definecolor{verylightgray}{HTML}{F5F5F5}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagecolor{verylightgray}   % fond gris très clair
+% le texte est noir par défaut ; aucune redéfinition nécessaire
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\pagecolor{lightgray}     % fond gris clair
+\color{black}             % texte en noir
+
+% Vous pouvez ajuster la nuance si besoin : par ex. \pagecolor{gray!15}
+
+\providecolor{sidetext}{rgb}{1,1,1}
+\definecolor{maincolor}{HTML}{ffffff}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\fullrule}{\hspace{-1.5cm}\rule{\paperwidth}{0.4pt}}
+\newcommand{\cvsection}[1]{%
+  \vspace{6pt}\textbf{\Large #1}\par\vspace{2pt}}
+\newcommand{\cicon}[1]{%
+  \tikz[baseline]{\draw[fill=white] (0,0.1) circle[radius=0.1cm];}~#1}
+
+\setlength{\parindent}{0pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+% ---------- Photo ------------------------------------------------
+\ifx\relax\relax\else
+\begin{textblock*}{4cm}(0.2cm,0.3cm)
+  \includegraphics[width=2.5cm,clip,keepaspectratio]{}
+\end{textblock*}
+ \fi
+% ---------- En-tête ---------------------------------------------
+\begin{center}
+  {\fontsize{44pt}{24pt}\selectfont\bfseries Saoane Leon}
+
+  \bigskip
+  {\Large Responsable RSE – Stratégies Développement Durable \& ESG}
+
+  \bigskip\bigskip
+  \faMapMarker~8 rue Frank, Paris, France\ 
+  \quad\faEnvelope~\href{mailto:ssssssss@see.fr}{ssssssss@see.fr}
+
+  \bigskip
+  % Badge LinkedIn (retirez-le si inutile)
+  \faPhone~ +33 6 00 00 00 00
+  \quad \faLinkedin\ \href{Syno Sionnnne llourye}{Syno Sionnnne llourye}
+ 
+
+  %\vspace{-0.3cm}
+  
+\end{center}
+%\medskip\fullrule
+ \vspace{0.6cm}
+% ---------- Profil ----------------------------------------------
+\cvsection{Profil}
+\vspace{0.3cm}
+Professionnelle engagée dans la responsabilité sociétale des entreprises, je suis passée du conseil à la direction RSE auprès d’organisations variées. Mon parcours international et mon MSc en management de projet renforcent ma capacité à piloter des programmes durables et multiculturels. Orientée résultats, j’excelle dans la mesure d’impact et l’amélioration continue, mobilise les équipes et traduis les enjeux ESG en plans d’action concrets. Je souhaite aujourd’hui rejoindre une organisation pour déployer des initiatives RSE ambitieuses et mesurables.
+
+\medskip\fullrule
+
+% ---------- Expérience ------------------------------------------
+\cvsection{Expérience}
+\vspace{0.3cm}
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Responsable RSE}\hfill 01/2032 - 12/2035\\
+    La Rosée\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Défini et déployé la stratégie RSE, assortie d’indicateurs de performance pour suivre les progrès. \item Coordonné des actions de sensibilisation afin de diffuser les bonnes pratiques auprès de l’ensemble des équipes.
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Chargé de projet RSE}\hfill 09/2030 - 12/2032\\
+    La Rosée\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Mis à jour la cartographie des risques et conduit des audits internes pour garantir la conformité. \item Formé les collaborateurs aux normes RSE et assuré un reporting régulier aux parties prenantes.
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Consultante junior}\hfill 09/2028 - 08/2030\\
+    Kimso\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Accompagné associations et fondations dans la structuration de projets à impact social. \item Réalisé des évaluations d’impact afin d’optimiser l’efficacité et la pérennité des initiatives.
+    \end{itemize}
+  \end{minipage}}
+
+\medskip\fullrule
+
+% ---------- Éducation -------------------------------------------
+\cvsection{Éducation}
+\vspace{0.3cm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{MSc Project Management for Business}\hfill 09/2027 - 06/2028\\
+    Skema Business School – Campus de Paris, Belo Horizonte et Sophia Antipolis\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Gestion de projet, pilotage de la performance et planification stratégique \item Études de cas internationaux sur la conduite du changement et l’innovation
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Licence d’Économie et de Gestion Internationale}\hfill 09/2022 - 06/2025\\
+    Université Catholique de Lille\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Analyse économique, finance d’entreprise et commerce international \item Semestre d’échange à Van Lang University (Vietnam) favorisant l’ouverture interculturelle
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Baccalauréat Général (Mathématiques, SES)}\hfill 09/2021 - 06/2022\\
+    Lycée La Favorite, Lyon\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Approfondissement des mathématiques et sciences économiques et sociales \item Développement de compétences analytiques, statistiques et rédactionnelles
+    \end{itemize}
+  \end{minipage}}
+
+\medskip\fullrule
+
+% ---------- Compétences -----------------------------------------
+\cvsection{Compétences}
+\vspace{0.3cm}
+
+\begin{tabular}{@{}p{0.25\linewidth}p{0.18\linewidth}p{0.18\linewidth}p{0.18\linewidth}}\cicon Responsabilité sociétale (RSE) & \cicon Gestion de projet & \cicon Audit interne & \cicon Reporting ESG \\
+\cicon Gestion des risques & \cicon Management d'équipe & \cicon Conseil & \cicon Mesure d'impact \\
+\cicon Conduite du changement & \cicon Communication & ~ & ~ \\\end{tabular}   % grille 3 lignes × 4 colonnes
+
+\end{document}

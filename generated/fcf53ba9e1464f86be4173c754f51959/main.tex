@@ -55,14 +55,14 @@
       % Photo (s’affiche seulement si %%PHOTO_FILE%% ≠ vide)
       \ifx\relax%%PHOTO_FILE%%\relax\else
         \vspace{2ex}\null\hfill
-        \includegraphics[width=0.5\textwidth]{%%PHOTO_FILE%%}
+        \includegraphics[width=0.65\textwidth]{%%PHOTO_FILE%%}
         \hfill\null
       \fi
 
       % -------- Profil -------------------------------------------
       \headleft{Profil}
       \begingroup           % ouvre un groupe local
-         % rétablit la justification pleine
+       \justifying         % rétablit la justification pleine
         %%SUMMARY%%
       \endgroup             % referme : on revient à \raggedright
 
