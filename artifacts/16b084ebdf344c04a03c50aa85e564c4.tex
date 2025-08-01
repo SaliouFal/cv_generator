@@ -1,0 +1,214 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{geometry}
+\geometry{a4paper,left=0.6cm,right=0.7cm,top=1.5cm,bottom=1cm,columnsep=0.8cm}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{newtxtext}
+\usepackage{fontawesome}          % icônes de base seulement
+\usepackage[hidelinks]{hyperref}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{hyphsubst}
+\usepackage{moresize}
+\usepackage{hyphenat}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usetikzlibrary{calc, positioning}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+
+% icônes manquantes -> puce
+\makeatletter
+\@for\sym:=faBrain,faMicrochip,faHandshakeO,faTools,faNetworkWired,%
+             faDatabase,faServer,faGit,faUsers,faComments,faCalendar,faGroup\do{%
+  \@ifundefined{\sym}{\expandafter\newcommand\csname\sym\endcsname{\textbullet}}{}}
+\makeatother
+
+% couleurs
+\definecolor{maincolor}{HTML}{f0fafc}
+\definecolor{seccolor}{HTML}{ffffff}
+\definecolor{gray}{HTML}{8c94a9}
+\definecolor{sidetext}{HTML}{59cee5}
+
+% bande latérale bleue
+\usepackage{eso-pic}
+\AddToShipoutPictureBG{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[maincolor] (current page.north west) rectangle
+                     ([xshift=0.3\paperwidth] current page.south west);
+  \end{tikzpicture}%
+}
+
+% listes
+\setlist[itemize]{itemsep=-2pt,topsep=0pt,leftmargin=1.08cm}
+\renewcommand{\labelitemi}{\textcolor{sidetext}{\footnotesize$\bullet$}}
+
+\setlength{\parindent}{0pt}
+\usepackage{paracol}
+\columnratio{0.3}
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{paracol}{2}
+% ────────────────────────────────────────
+% Colonne gauche
+% ────────────────────────────────────────
+\color{sidetext}
+\vspace*{-0.5cm}
+
+
+\noindent
+\begin{minipage}{\linewidth}
+  \centering
+  \ifx\relax\relax\else
+  \begin{tikzpicture}
+    \clip (0,0) circle (1.5cm) node[anchor=center]
+      {\includegraphics[width=3cm]{}};
+  \end{tikzpicture}
+  \fi
+
+  \vspace{3mm}
+  {\color{black}\LARGE \textbf{Pape Saliou FALL}}
+
+  \vspace{1mm}
+  {\large Ingénieur Data Scientist / Développeur IA}
+
+  \vspace{3mm}
+  {\color{gray}\rule{\linewidth}{0.4pt}} \\
+\end{minipage}
+
+% ── Coordonnées
+\begin{tabular}{@{}c l}
+  \faPhone &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Téléphone} \\ 07 53 48 14 53
+  \end{tabular} \\
+  \\
+  \faLinkedin &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}LinkedIn} \\
+    \href{linkedin.com/in/pape-saliou-fall-43154a211}{pape-saliou-fall-43154a211}
+  \end{tabular} \\
+  \\
+  \faMapMarker &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Adresse} \\ 95300 Pontoise \\ 
+  \end{tabular} \\
+  \\
+  \faEnvelope &
+  \begin{tabular}[t]{@{}l@{}}
+    {\color{gray}Email} \\
+    \href{mailto:papesalioufall2@gmail.com}{papesalioufall2@gmail.com}
+  \end{tabular} \\
+\end{tabular}
+
+\vspace{2mm}
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
+
+% ── Langues --------------------------------------------------------
+{\color{black}{Langues}}
+
+\vspace{2mm}
+\begin{itemize}[leftmargin=*]
+\item Anglais - \textcolor{gray}{B2}
+\item Français - \textcolor{gray}{Maternelle}\end{itemize}          % ← le placeholder va contenir \begin{itemize}…\end{itemize}
+\vspace{2mm}
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
+
+% ── Compétences ----------------------------------------------------
+\vspace{2mm}
+{\color{black}{Compétences Clés}}
+
+\vspace{2mm}
+\begin{itemize}[leftmargin=*]
+\item Python
+\item SQL
+\item Power BI
+\item Machine Learning
+\item Deep Learning
+\item NLP
+\item TensorFlow\end{itemize}              % ← idem, une vraie liste
+\vspace{2mm}
+{\color{gray}\rule{\linewidth}{0.4pt}} \\
+
+% ── Centres d'intérêt
+\vspace{2mm}
+{\color{black}{Centres d’intérêt}}
+
+\vspace{2mm}
+\begin{itemize}[leftmargin=*]
+\item Football
+\item Natation
+\item Lecture
+\end{itemize}     % ← simple itemize ou tabular
+
+\vfill
+~
+
+% ────────────────────────────────────────
+\switchcolumn
+% Colonne droite
+% ────────────────────────────────────────
+\color{black}
+
+% ── Profil
+\textcolor{black}{\Large \textbf{Profil Professionnel}} \\[2pt]
+Ingénieur Data Scientist et Développeur IA spécialisé en analyse de données, machine learning et deep learning. Capable de convertir des problématiques complexes en solutions opérationnelles, je gère l’ensemble du cycle de vie des projets, de la conception à la mise en production, avec rigueur et esprit d’équipe. À la recherche d’un environnement où innovation et excellence sont au cœur des enjeux. \\[8pt]
+
+% ── Expérience
+\textcolor{black}{\Large \textbf{Expérience Professionnelle}} \\[2pt]
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Data Scientist \& Développeur IA}\hfill depuis 01/2024\\
+    Prepaya\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Conception et déploiement d’une plateforme IA intégrant l’API OpenAI et TensorFlow, accélérant la livraison de solutions internes. \item Mise en place de modèles de machine learning et de séries temporelles pour générer des recommandations prédictives clients. \item Industrialisation des modèles via Flask, PostgreSQL et Heroku, garantissant un déploiement continu et fiable.
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Apprenti Risk Analyst \& Data Scientist}\hfill 12/2022 - 12/2023\\
+    AXA XL (Groupe AXA)\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Automatisation de la collecte de données financières (Python, VBA), réduisant le temps de reporting hebdomadaire de 60 \%. \item Création de tableaux de bord Power BI pour la facturation, améliorant la visibilité des KPIs pour la finance et le management. \item Développement de modèles prédictifs de sinistres pour estimer la probabilité de survenance et optimiser la tarification.
+    \end{itemize}
+  \end{minipage}}
+
+\vspace{3mm}
+
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Apprenti Data Scientist}\hfill 09/2021 - 08/2022\\
+    Prepaya\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Développement de modèles NLP pour la génération automatique de formulaires clients et l’analyse de sentiment. \item Extraction et traitement de données textuelles (Python, BeautifulSoup, PyTorch) pour fournir des insights sur la satisfaction client.
+    \end{itemize}
+  \end{minipage}}   % ← blocs \colorbox{maincolor}{\begin{minipage}…}
+
+\vspace{8mm}
+
+% ── Formation
+\textcolor{black}{\Large \textbf{Formation}} \\[2pt]
+\colorbox{maincolor}{%
+  \begin{minipage}{\linewidth}
+    \noindent
+    \textbf{Master 2 Data Science}\hfill 09/2021 - 03/2022\\
+    Sorbonne Université\\[-0.3em]
+    \begin{itemize}[leftmargin=*]
+      \item Programme axé sur l’analyse de données avancée, le machine learning et le deep learning. \item Projets pratiques : séries temporelles, bases de données et calcul parallèle.
+    \end{itemize}
+  \end{minipage}}       % ← lignes tabular par diplôme
+
+\end{paracol}
+\end{document}
+

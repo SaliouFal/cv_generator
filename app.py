@@ -7,6 +7,7 @@ from threading import Thread  # Ajout pour l'asynchrone
 import time
 import re
 from typing import Dict
+import pandas as pd
 # ─────────────── Configuration générale ────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -24,6 +25,70 @@ app.config.update(
 # Stockage des tâches en cours
 background_tasks = {}
 task_results = {}
+
+
+
+
+
+# …
+ALLOWED_EMAILS = set()         # global
+
+def load_allowed_emails(path: str):
+    global ALLOWED_EMAILS
+    df = pd.read_excel(path, dtype=str)       # une colonne "email"
+    ALLOWED_EMAILS = {e.strip().lower()
+                      for e in df['email'].dropna()}
+    
+load_allowed_emails(BASE_DIR / "allowed.xlsx")
+
+
+
+from functools import wraps
+from flask import abort
+
+def login_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if 'user_email' not in session:
+            # 401 → non authentifié - ou rediriger carrément vers /login
+            return redirect(url_for('login', next=request.path))
+        return f(*args, **kwargs)
+    return wrapper
+
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.html",
+                               next = request.args.get('next','/'))
+    
+    # ----- POST -----
+    email = request.form.get("email","").strip().lower()
+    
+    if email in ALLOWED_EMAILS:
+        session.clear()                  # on remet tout à zéro
+        session["user_email"] = email
+        dest = request.form.get("next") or url_for("index")
+        return redirect(dest)
+    
+    flash("Adresse non reconnue.", "danger")
+    return redirect(url_for("login"))
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+
+
+
+
+
+
+
+
+
 
 with open(BASE_DIR / "config.json", encoding="utf-8") as fh:
     CV_TEMPLATES = json.load(fh)
@@ -549,15 +614,17 @@ def compile_pdf_remote(tex: str, build: Path, extra: dict | None = None) -> Path
         raise
 # ─────────────── Routes ────────────────────────────────────────────
 @app.route("/")
+@login_required
 def index(): return render_template("index.html", templates=CV_TEMPLATES)
 
 @app.route("/select/<template_id>")
 def select_template(template_id):
     if not get_template_meta(template_id): return redirect(url_for("index"))
-    session.clear(); session["template_id"]=template_id
+    session["template_id"]=template_id
     return redirect(url_for("choose_input"))
 
 @app.route("/choose_input")
+@login_required
 def choose_input():
     if "template_id" not in session: return redirect(url_for("index"))
     return render_template("choose_input.html")
@@ -578,6 +645,7 @@ def extract_arrays(form)->dict:
     return out
 
 @app.route("/minidata", methods=["GET","POST"])
+@login_required
 def minidata():
     if request.method=="GET": return render_template("minidata.html")
     session["raw_form"]=request.form.to_dict(flat=False)
@@ -632,6 +700,7 @@ def processing(task_id):
     return render_template("processing.html", task_id=task_id)
 
 @app.route("/generate_from_form")
+
 def generate_from_form():
     task_id = str(uuid.uuid4())
     session["form_task_id"] = task_id
@@ -648,6 +717,7 @@ def generate_from_form():
     return render_template("processing.html", task_id=task_id)
 
 @app.route("/import_cv", methods=["POST"])
+
 def import_cv():
     try:
         # Vérification de la session
@@ -803,6 +873,7 @@ def check_task(task_id):
 
 # ---------- Aperçu / téléchargement --------------------------------
 @app.route("/preview")
+@login_required
 def preview():
     if "pdf_filename" not in session:
         return redirect(url_for("index"))
@@ -831,6 +902,7 @@ def file(filename):
 
 
 @app.route("/download")
+@login_required 
 def download():
     if "pdf_filename" not in session: return redirect(url_for("index"))
     return send_file(app.config["OUTPUT_FOLDER"]/session["pdf_filename"],

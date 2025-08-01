@@ -4,3 +4,5 @@ jinja2
 gunicorn
 python-docx
 requests>=2.31
+pandas
+openpyxl
